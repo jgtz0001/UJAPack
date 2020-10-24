@@ -14,7 +14,7 @@ import java.util.List;
 public class CentroDeLogistica extends PuntoDeControl{
     List<Oficina> listaOficinas;
     
-    CentroDeLogistica(String id, String nombre, String localizacion, String provincia){
+    public CentroDeLogistica(int id, String nombre, String localizacion, String provincia){
         super(id, nombre, localizacion, provincia);
     }
     

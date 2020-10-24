@@ -12,13 +12,13 @@ import java.util.ArrayList;
  * @author Pablo
  */
 public class PuntoDeControl {
-    private String id;
+    private int id;
     private String nombre;
     private String localizacion;
     private String provincia;
     ArrayList conexiones;
 
-    PuntoDeControl(String id, String nombre, String localizacion, String provincia) {
+    PuntoDeControl(int id, String nombre, String localizacion, String provincia) {
         this.id = id;
         this.nombre = nombre;
         this.localizacion = localizacion;
@@ -29,11 +29,11 @@ public class PuntoDeControl {
         return null;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

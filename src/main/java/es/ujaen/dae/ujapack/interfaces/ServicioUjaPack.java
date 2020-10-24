@@ -27,6 +27,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import java.util.Set;
 import org.json.JSONObject;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -91,7 +92,7 @@ public class ServicioUjaPack {
         return null;
     }
 
-    void anadirJSON(String file) throws IOException {
+    public void anadirJSON(String file) throws IOException {
 //JSONObject myObject = new JSONObject();
         HashMap nodos = new HashMap<>();
         Map<Integer, ArrayList<Integer>> conexionesTemp = new HashMap<>();
@@ -117,8 +118,9 @@ public class ServicioUjaPack {
             
 
             int id = Integer.parseInt(centroStr);
-//no va el getAsString();
-            String nombre = centroJson.get("nombre").toString();
+            String nombre = centroJson.get("nombre").getAsString();
+            String localizacion=centroJson.get("localizacion").getAsString();
+            CentroDeLogistica c=new CentroDeLogistica(id,nombre,localizacion,"");
             Nodo centroNodo = new Nodo(id, nombre);
 
             nodos.put(id, centroNodo);
@@ -128,8 +130,8 @@ public class ServicioUjaPack {
 
             for (JsonElement provincia : provincias) {
                 Nodo nodoProvincia = new Nodo(contadorProvincias++, provincia.getAsString());
-                nodoProvincia.setConexiones(centroNodo);
-                centroNodo.setConexiones(nodoProvincia);
+                nodoProvincia.setConexiones(centroNodo.conexiones);
+                centroNodo.setConexiones(nodoProvincia.conexiones);
                 nodos.put(nodoProvincia.getId(), nodoProvincia);
             }
             
@@ -141,6 +143,8 @@ public class ServicioUjaPack {
             }
         }
     }
+    
+  
 
     public class Nodo {
 
