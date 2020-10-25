@@ -5,6 +5,7 @@
  */
 package es.ujaen.dae.ujapack.entidades;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,8 +15,8 @@ import java.util.List;
 public class CentroDeLogistica extends PuntoDeControl{
     List<Oficina> listaOficinas;
     
-    public CentroDeLogistica(int id, String nombre, String localizacion, String provincia){
-        super(id, nombre, localizacion, provincia);
+    public CentroDeLogistica(int id, String nombre, String localizacion, ArrayList provincia, ArrayList conexiones){
+        super(id, nombre, localizacion, provincia, conexiones);
     }
     
 }

@@ -8,29 +8,18 @@ package es.ujaen.dae.ujapack.interfaces;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Paquete;
 import es.ujaen.dae.ujapack.entidades.PuntoDeControl;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.lang.*;
-import java.util.Arrays;
-import java.util.Map;
 import java.util.Random;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonParser;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
-import java.util.Set;
-import org.json.JSONObject;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import java.io.File;
+import java.nio.file.Files;
 
 /**
  *
@@ -38,30 +27,29 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
  */
 public class ServicioUjaPack {
 
-    ArrayList<PuntoDeControl> puntosDeControl;
-    HashMap<Integer, Paquete> paquetes;
-    ArrayList<Cliente> clientes;
+    private ArrayList<PuntoDeControl> puntosDeControl;
+    private HashMap<Integer, Paquete> paquetes;
+    private ArrayList<Cliente> clientes;
 
     void altaEnvio(float peso, float anchura, Cliente remitente, Cliente destinatario) {
         Random rand = new Random();
         Integer localizador = rand.nextInt();
 
-        while (paquetes.containsKey(rand)) {
+        while (getPaquetes().containsKey(rand)) {
             localizador = rand.nextInt();
         }
 
 //habria que meter la función calcularpuntoscontrol
         Paquete paquet = new Paquete(localizador, "Preparado", (float) 20.4, (float) 10, (float) 10);
-        paquetes.put(localizador, paquet);
+        getPaquetes().put(localizador, paquet);
     }
 
     String verEstado(int localizador) {
         if (!paquetes.containsKey(localizador)) {
             throw new IllegalArgumentException("Este localizador: " + localizador + " no existe");
         }
-        return paquetes.get(localizador).getEstado();
+        return getPaquetes().get(localizador).getEstado();
     }
-
 
     String avisaEstado(int localizador, LocalDateTime fechaLlegada, LocalDateTime fechaSalida) {
         if (!paquetes.containsKey(localizador)) {
@@ -75,7 +63,7 @@ public class ServicioUjaPack {
 
     ArrayList<Paquete> listaPaquetes(String dni) {
         ArrayList<Paquete> lista = new ArrayList();
-        for (Paquete value : paquetes.values()) {
+        for (Paquete value : getPaquetes().values()) {
             if (value.getRemitente().getDni() == dni) {
                 lista.add(value);
             }
@@ -84,7 +72,7 @@ public class ServicioUjaPack {
     }
 
     float calcularImporte(int numPuntosControl, float peso, float altura, float anchura) {
-        float importe = (peso *altura * anchura * numPuntosControl / 1000);
+        float importe = (peso * altura * anchura * numPuntosControl / 1000);
         return importe;
     }
 
@@ -92,87 +80,87 @@ public class ServicioUjaPack {
         return null;
     }
 
-    public void anadirJSON(String file) throws IOException {
-//JSONObject myObject = new JSONObject();
-        HashMap nodos = new HashMap<>();
-        Map<Integer, ArrayList<Integer>> conexionesTemp = new HashMap<>();
-        int contadorProvincias = 100;
+    public void leerJson() throws IOException {
+        String jsonStr = Files.readString(new File("redujapack.json").toPath());
+        JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
+        //System.out.println(raiz.keySet());
 
-        FileReader fr = new FileReader(file);
-        BufferedReader br = new BufferedReader(fr);
+        for (int i = 1; i <= raiz.size(); i++) {
+            JsonObject centro1 = raiz.getAsJsonObject(String.valueOf(i));
+            int id = i;
+            String nombre = centro1.get("nombre").getAsString();
+            String localizacion = centro1.get("localización").getAsString();
 
-        StringBuilder strb = new StringBuilder();
-        String strAux = null;
+            //System.out.println(centro1.getAsJsonArray("conexiones"));
+            JsonArray provincias = centro1.getAsJsonArray("provincias");
+            JsonArray conexiones = centro1.getAsJsonArray("conexiones");
 
-        while ((strAux = br.readLine()) != null) {
-            strb.append(strAux);
-        }
-
-        String jsonStr = strb.toString();
-        Gson gson = new Gson();
-        JsonObject raiz = gson.fromJson(jsonStr, JsonObject.class);
-        Set<String> centrosLogSetStr = raiz.keySet();
-
-        for (String centroStr : centrosLogSetStr) {
-            JsonObject centroJson = raiz.getAsJsonObject(centroStr);
-            
-
-            int id = Integer.parseInt(centroStr);
-            String nombre = centroJson.get("nombre").getAsString();
-            String localizacion=centroJson.get("localizacion").getAsString();
-            CentroDeLogistica c=new CentroDeLogistica(id,nombre,localizacion,"");
-            Nodo centroNodo = new Nodo(id, nombre);
-
-            nodos.put(id, centroNodo);
-            
-            
-            JsonArray provincias = centroJson.getAsJsonArray("provincias");
-
-            for (JsonElement provincia : provincias) {
-                Nodo nodoProvincia = new Nodo(contadorProvincias++, provincia.getAsString());
-                nodoProvincia.setConexiones(centroNodo.conexiones);
-                centroNodo.setConexiones(nodoProvincia.conexiones);
-                nodos.put(nodoProvincia.getId(), nodoProvincia);
+            ArrayList<String> listdata = new ArrayList<String>();
+            ArrayList listdata2 = new ArrayList();
+            for (int j = 0; j < provincias.size(); j++) {
+                listdata.add(provincias.get(j).getAsString());
             }
-            
-            JsonArray conexiones=centroJson.getAsJsonArray("conexiones");
-            ArrayList<Integer>conexTemp=new ArrayList<>();
-            
-            for (JsonElement conexion: conexiones){
-                conexTemp.add(Integer.parseInt(conexion.getAsString()));
+            for (int j = 0; j < conexiones.size(); j++) {
+                listdata2.add(conexiones.get(j));
             }
+            PuntoDeControl punto = new PuntoDeControl();
+            //puntosDeControl.add(punto);
+            punto.setId(i);
+            punto.setNombre(nombre);
+            punto.setLocalizacion(localizacion);
+            punto.setProvincia(listdata);
+            punto.setConexiones(listdata2);
+            puntosDeControl.add(punto);
+            
+            System.out.println("--------------------------------");
+            System.out.println(punto.getId());
+            System.out.println(punto.getNombre());
+            System.out.println(punto.getLocalizacion());
+            System.out.println(punto.getProvincia());
+            System.out.println(punto.getConexiones());
+            
         }
     }
-    
-  
 
-    public class Nodo {
-
-        private int id;
-        private String nombre;
-        private Map<Integer, Nodo> conexiones;
-
-        public Nodo(int id, String nombre) {
-            this.id = id;
-            this.nombre = nombre;
-            conexiones = new HashMap<>();
-        }
-
-        public void setConexiones(Map<Integer, Nodo> conexiones) {
-            this.conexiones = conexiones;
-        }
-        public int getId(){ 
-            return id;
-        }
-        
-         public String getNombre() {
-            return nombre;
-        }
-
-        public void setNombre(String nombre) {
-            this.nombre = nombre;
-        }
-        
+    /**
+     * @return the puntosDeControl
+     */
+    public ArrayList<PuntoDeControl> getPuntosDeControl() {
+        return puntosDeControl;
     }
 
+    /**
+     * @param puntosDeControl the puntosDeControl to set
+     */
+    public void setPuntosDeControl(ArrayList<PuntoDeControl> puntosDeControl) {
+        this.puntosDeControl = puntosDeControl;
+    }
+
+    /**
+     * @return the paquetes
+     */
+    public HashMap<Integer, Paquete> getPaquetes() {
+        return paquetes;
+    }
+
+    /**
+     * @param paquetes the paquetes to set
+     */
+    public void setPaquetes(HashMap<Integer, Paquete> paquetes) {
+        this.paquetes = paquetes;
+    }
+
+    /**
+     * @return the clientes
+     */
+    public ArrayList<Cliente> getClientes() {
+        return clientes;
+    }
+
+    /**
+     * @param clientes the clientes to set
+     */
+    public void setClientes(ArrayList<Cliente> clientes) {
+        this.clientes = clientes;
+    }
 }

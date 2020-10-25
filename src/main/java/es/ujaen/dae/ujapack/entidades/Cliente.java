@@ -7,7 +7,7 @@ package es.ujaen.dae.ujapack.entidades;
 
 /**
  *
- * @author jenar
+ * @author zafra
  */
 public class Cliente {
     private String dni;
