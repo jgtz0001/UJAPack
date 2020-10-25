@@ -18,10 +18,6 @@
         private ArrayList<String> provincia;
         private ArrayList conexiones;
 
-        public PuntoDeControl(){
-            
-        }
-        
         public PuntoDeControl(int id, String nombre, String localizacion, ArrayList<String> provincia, ArrayList conexiones) {
             this.id = id;
             this.nombre = nombre;

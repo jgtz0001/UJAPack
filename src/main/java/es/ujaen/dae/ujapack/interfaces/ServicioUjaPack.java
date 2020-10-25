@@ -86,7 +86,6 @@ public class ServicioUjaPack {
     public void leerJson() throws IOException {
         String jsonStr = Files.readString(new File("redujapack.json").toPath());
         JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
-        //System.out.println(raiz.keySet());
 
         for (int i = 1; i <= raiz.size(); i++) {
             JsonObject centro1 = raiz.getAsJsonObject(String.valueOf(i));
@@ -106,22 +105,8 @@ public class ServicioUjaPack {
             for (int j = 0; j < conexiones.size(); j++) {
                 listdata2.add(conexiones.get(j));
             }
-            PuntoDeControl punto = new PuntoDeControl();
-            //puntosDeControl.add(punto);
-            punto.setId(i);
-            punto.setNombre(nombre);
-            punto.setLocalizacion(localizacion);
-            punto.setProvincia(listdata);
-            punto.setConexiones(listdata2);
+            PuntoDeControl punto = new PuntoDeControl(id, nombre,localizacion,listdata,listdata2);
             puntosDeControl.add(punto);
-            
-            System.out.println("--------------------------------");
-            System.out.println(punto.getId());
-            System.out.println(punto.getNombre());
-            System.out.println(punto.getLocalizacion());
-            System.out.println(punto.getProvincia());
-            System.out.println(punto.getConexiones());
-            
         }
     }
 
