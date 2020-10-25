@@ -51,6 +51,19 @@ public class Paquete {
         this.altura = altura;
     }    
     
+    public static boolean checkLocalizador (int localizador){
+        if( Integer.toString(localizador).length()== 10)
+            return true;
+        return false;
+    }
+    
+    public static boolean checkRepiteLocalizador (int localizador1, int localizador2){
+        
+        if( localizador1 == localizador2 )
+            return true;
+        
+        return false;
+    }
     //Esto hay que cambiarlo pero no se que hacia esta función.
     //Envio getEnvio(){    }
    
