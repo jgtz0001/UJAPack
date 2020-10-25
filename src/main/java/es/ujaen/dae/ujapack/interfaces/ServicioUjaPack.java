@@ -49,7 +49,7 @@ public class ServicioUjaPack {
         while (paquetes.containsKey(rand)) {
             localizador = rand.nextInt();
         }
-//habria que meter la función calcular importe
+
 //habria que meter la función calcularpuntoscontrol
         Paquete paquet = new Paquete(localizador, "Preparado", (float) 20.4, (float) 10, (float) 10);
         paquetes.put(localizador, paquet);
@@ -62,7 +62,7 @@ public class ServicioUjaPack {
         return paquetes.get(localizador).getEstado();
     }
 
-//para que se quiere la fecha de llegada?
+
     String avisaEstado(int localizador, LocalDateTime fechaLlegada, LocalDateTime fechaSalida) {
         if (!paquetes.containsKey(localizador)) {
             throw new IllegalArgumentException("Este localizador: " + localizador + " no existe");
