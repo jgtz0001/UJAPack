@@ -21,15 +21,18 @@ import com.google.gson.JsonObject;
 import java.io.File;
 import java.nio.file.Files;
 
-/**
- *
- * @author Pablo
- */
+
 public class ServicioUjaPack {
 
     private ArrayList<PuntoDeControl> puntosDeControl;
     private HashMap<Integer, Paquete> paquetes;
     private ArrayList<Cliente> clientes;
+    
+   public ServicioUjaPack() {
+        puntosDeControl=new ArrayList<PuntoDeControl>();
+        paquetes=new HashMap<Integer, Paquete> ();
+        clientes= new ArrayList<Cliente> ();
+    }
 
     void altaEnvio(float peso, float anchura, Cliente remitente, Cliente destinatario) {
         Random rand = new Random();
