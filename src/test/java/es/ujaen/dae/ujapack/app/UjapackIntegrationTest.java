@@ -5,7 +5,9 @@
  */
 package es.ujaen.dae.ujapack.app;
 
+import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Paquete;
+import es.ujaen.dae.ujapack.interfaces.ServicioUjaPack;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -25,6 +27,7 @@ public class UjapackIntegrationTest {
     
     @Autowired
     UjapackApplication ujaPack;
+    ServicioUjaPack serviPack;
     
     public UjapackIntegrationTest() {
     }
@@ -80,5 +83,20 @@ public class UjapackIntegrationTest {
       Assertions.assertFalse(Paquete.checkRepiteLocalizador(localizadorCheck1,localizadorCheck3));
 
        
+    }
+    @Test
+    public void TestEnvio(){
+      String dni1 = "26054589";
+      String dni2 = "75896325";
+      String dni3 = "75896325";
+      String dir1 = "Av Jaen";
+      String dir2 = "Calle Barcelona";
+      String dir3 = "Calle Barcelona";
+      String loc1 = "Jaen";
+      String loc2 = "Madrid";
+      String loc3 = "Madrid";
+        
+         Assertions.assertTrue(Paquete.checkEnvio(dni1,dni2,dir1,dir2,loc1,loc2));
+         Assertions.assertFalse(Paquete.checkEnvio(dni2,dni3,dir2,dir3,loc2,loc3));
     }
 }
