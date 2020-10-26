@@ -20,18 +20,19 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.File;
 import java.nio.file.Files;
-
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class ServicioUjaPack {
 
     private ArrayList<PuntoDeControl> puntosDeControl;
     private HashMap<Integer, Paquete> paquetes;
     private ArrayList<Cliente> clientes;
-    
-   public ServicioUjaPack() {
-        puntosDeControl=new ArrayList<PuntoDeControl>();
-        paquetes=new HashMap<Integer, Paquete> ();
-        clientes= new ArrayList<Cliente> ();
+
+    public ServicioUjaPack() {
+        puntosDeControl = new ArrayList<PuntoDeControl>();
+        paquetes = new HashMap<Integer, Paquete>();
+        clientes = new ArrayList<Cliente>();
     }
 
     void altaEnvio(float peso, float anchura, Cliente remitente, Cliente destinatario) {
@@ -79,10 +80,45 @@ public class ServicioUjaPack {
         return importe;
     }
 
-    List<PuntoDeControl> calcularRutaPaquete(String localidadRem, String localidadDest) {
+    /*ArrayList<PuntoDeControl> calcularRutaPaquete(String localidadRem, String localidadDest) {
+        int idRem=0, idDest;
+        for (int i = 1; i < puntosDeControl.size(); i++) {
+            if (puntosDeControl.get(i).getProvincia().contains(localidadRem));
+                idRem = puntosDeControl.get(i).getId();
+            if (puntosDeControl.get(i).getProvincia().contains(localidadDest));
+                idDest = puntosDeControl.get(i).getId();
+        }        
+        ArrayList sol=new ArrayList();
+        boolean [] visitado =new boolean[10];
+        sol.add(idRem);
         return null;
     }
+    
+    ArrayList ruta(int idRem, int idDest, ArrayList<PuntoDeControl>p, ArrayList sol){
+        
+        if(p.get(idRem).getConexiones().contains(idDest)){
+             sol.add(idDest);
+             return sol;
+        }
+            
+        if (sol.add(p.get(idRem).getConexiones().size()>=2)){
+            ArrayList p1 = new ArrayList();
+            ArrayList p2 = new ArrayList();
+            p1 = ruta(idRem, idDest, p, sol);
+            p2 = ruta(idRem, idDest, p, sol);
+            if ()
+        }
 
+        for (int i = 0 ; i < p.get(idRem).getConexiones().size(); i++){
+            sol.add(p.get(idRem).getConexiones().get(i));
+        }
+        
+        
+        if (prof.contains(idRem))
+        
+        return null;
+    }*/
+    
     public void leerJson() throws IOException {
         String jsonStr = Files.readString(new File("redujapack.json").toPath());
         JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
@@ -105,7 +141,7 @@ public class ServicioUjaPack {
             for (int j = 0; j < conexiones.size(); j++) {
                 listdata2.add(conexiones.get(j));
             }
-            PuntoDeControl punto = new PuntoDeControl(id, nombre,localizacion,listdata,listdata2);
+            PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, listdata, listdata2);
             puntosDeControl.add(punto);
         }
     }

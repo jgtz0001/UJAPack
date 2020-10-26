@@ -6,6 +6,7 @@
 package es.ujaen.dae.ujapack.entidades;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public class Paquete {
     private LocalDateTime fechaSalida;
     private float peso;
     private float altura;
-    private List<PasoPorPuntoDeControl> pasanPaquetes;
+    private ArrayList<PasoPorPuntoDeControl> pasanPaquetes;
     private Cliente remitente;
     private Cliente destinatario;
     //Envio
@@ -38,6 +39,9 @@ public class Paquete {
         this.fechaSalida = fechaSalida;
         this.peso = peso;
         this.altura = altura;
+        destinatario = new Cliente();
+        remitente = new Cliente();
+        //pasanPaquetes = new List<PasoPorPuntoDeControl>();
     }
     
     public Paquete(int localizador, String estado, float importe, float peso, float altura) {
@@ -57,7 +61,7 @@ public class Paquete {
         return false;
     }
     
-    public static boolean checkRepiteLocalizador (int localizador1, int localizador2){
+    public static boolean checkRepiteLocalizador (int localizador1, int localizador2){        
         
         if( localizador1 == localizador2 )
             return true;
@@ -134,14 +138,14 @@ public class Paquete {
     /**
      * @return the pasanPaquetes
      */
-    public List<PasoPorPuntoDeControl> getPasanPaquetes() {
+    public ArrayList<PasoPorPuntoDeControl> getPasanPaquetes() {
         return pasanPaquetes;
     }
 
     /**
      * @param pasanPaquetes the pasanPaquetes to set
      */
-    public void setPasanPaquetes(List<PasoPorPuntoDeControl> pasanPaquetes) {
+    public void setPasanPaquetes(ArrayList<PasoPorPuntoDeControl> pasanPaquetes) {
         this.pasanPaquetes = pasanPaquetes;
     }
 
