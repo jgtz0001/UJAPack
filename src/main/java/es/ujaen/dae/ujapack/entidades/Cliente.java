@@ -17,7 +17,8 @@ public class Cliente {
     private String direccion;
     private String localidad;
 
-    Cliente(String nombre, String apellidos, String email, String direccion, String localidad) {
+    public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad) {
+        this.dni = dni;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.email = email;

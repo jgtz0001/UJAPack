@@ -60,10 +60,17 @@ public class Paquete {
             return true;
         return false;
     }
+     public static boolean checkEnvio(String dni1, String dni2 ,String dir1, String dir2, String loc1, String loc2){
+       
+       if((dni1 != dni2) || (dir1!= dir2)|| ( loc1!= loc2 ))
+           return true;
+       
+       return false;
+   }
     
     public static boolean checkRepiteLocalizador (int localizador1, int localizador2){        
         
-        if( localizador1 == localizador2 )
+        if( localizador1 == localizador2)
             return true;
         
         return false;

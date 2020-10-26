@@ -35,7 +35,7 @@ public class ServicioUjaPack {
         clientes = new ArrayList<Cliente>();
     }
 
-    void altaEnvio(float peso, float anchura, Cliente remitente, Cliente destinatario) {
+   public  void altaEnvio(float peso, float anchura, Cliente remitente, Cliente destinatario) {
         Random rand = new Random();
         Integer localizador = rand.nextInt();
 
@@ -47,6 +47,7 @@ public class ServicioUjaPack {
         Paquete paquet = new Paquete(localizador, "Preparado", (float) 20.4, (float) 10, (float) 10);
         getPaquetes().put(localizador, paquet);
     }
+  
 
     String verEstado(int localizador) {
         if (!paquetes.containsKey(localizador)) {
