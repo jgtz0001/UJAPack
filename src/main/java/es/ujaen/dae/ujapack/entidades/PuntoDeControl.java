@@ -16,64 +16,18 @@
         private String nombre;
         private String localizacion;
         private ArrayList<String> provincia;
-        private ArrayList conexiones;
+       
 
-        public PuntoDeControl(int id, String nombre, String localizacion, ArrayList<String> provincia, ArrayList conexiones) {
+        public PuntoDeControl(int id, String nombre, String localizacion, ArrayList<String> provincia) {
             this.id = id;
             this.nombre = nombre;
             this.localizacion = localizacion;
             this.provincia = provincia;
-            this.conexiones = conexiones;
         }
         
-        ArrayList calcularPuntoControlActual(){
-            return null;
-        }
+//        ArrayList calcularPuntoControlActual(){
+//            return null;
+//        }
 
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getNombre() {
-            return nombre;
-        }
-
-        public void setNombre(String nombre) {
-            this.nombre = nombre;
-        }
-
-        public String getLocalizacion() {
-            return localizacion;
-        }
-
-        public void setLocalizacion(String localizacion) {
-            this.localizacion = localizacion;
-        }
-
-        public ArrayList getProvincia() {
-            return provincia;
-        }
-
-        public void setProvincia(ArrayList provincia) {
-            this.provincia = provincia;
-        }
-
-        /**
-         * @return the conexiones
-         */
-        public ArrayList getConexiones() {
-            return conexiones;
-        }
-
-        /**
-         * @param conexiones the conexiones to set
-         */
-        public void setConexiones(ArrayList conexiones) {
-            this.conexiones = conexiones;
-        }
 
     }

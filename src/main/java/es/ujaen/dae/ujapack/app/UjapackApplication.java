@@ -1,6 +1,6 @@
 package es.ujaen.dae.ujapack.app;
 
-import es.ujaen.dae.ujapack.interfaces.ServicioUjaPack;
+import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
 import java.io.*;
 import java.text.ParseException;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,9 +10,9 @@ public class UjapackApplication {
 
     public static void main(String[] args) throws FileNotFoundException, IOException, ParseException {
 
-        ServicioUjaPack uja = new ServicioUjaPack();
-        System.out.println("Guardando datos...");
-        uja.leerJson();
-        System.out.println("Datos guardados correctamente.");
+//        ServicioUjaPack uja = new ServicioUjaPack();
+//        System.out.println("Guardando datos...");
+//        uja.leerJson();
+//        System.out.println("Datos guardados correctamente.");
     }
 }

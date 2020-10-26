@@ -21,45 +21,4 @@ public class PasoPorPuntoDeControl {
         pasoControl = p;
     }
 
-    /**
-     * @return the fechaLlegada
-     */
-    public LocalDateTime getFechaLlegada() {
-        return fechaLlegada;
-    }
-
-    /**
-     * @param fechaLlegada the fechaLlegada to set
-     */
-    public void setFechaLlegada(LocalDateTime fechaLlegada) {
-        this.fechaLlegada = fechaLlegada;
-    }
-
-    /**
-     * @return the fechaSalida
-     */
-    public LocalDateTime getFechaSalida() {
-        return fechaSalida;
-    }
-
-    /**
-     * @param fechaSalida the fechaSalida to set
-     */
-    public void setFechaSalida(LocalDateTime fechaSalida) {
-        this.fechaSalida = fechaSalida;
-    }
-
-    /**
-     * @return the pasoControl
-     */
-    public PuntoDeControl getPasoControl() {
-        return pasoControl;
-    }
-
-    /**
-     * @param pasoControl the pasoControl to set
-     */
-    public void setPasoControl(PuntoDeControl pasoControl) {
-        this.pasoControl = pasoControl;
-    }
 }

@@ -3,7 +3,7 @@
 * To change this template file, choose Tools | Templates
 * and open the template in the editor.
  */
-package es.ujaen.dae.ujapack.interfaces;
+package es.ujaen.dae.ujapack.beans;
 
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Paquete;
@@ -28,32 +28,52 @@ public class ServicioUjaPack {
     private ArrayList<PuntoDeControl> puntosDeControl;
     private HashMap<Integer, Paquete> paquetes;
     private ArrayList<Cliente> clientes;
+    private static final long LIMIT = 10000000000L;
+    private static long last = 0;
 
-    public ServicioUjaPack() {
+    ServicioUjaPack() {
         puntosDeControl = new ArrayList<PuntoDeControl>();
         paquetes = new HashMap<Integer, Paquete>();
         clientes = new ArrayList<Cliente>();
     }
 
-   public  void altaEnvio(float peso, float anchura, Cliente remitente, Cliente destinatario) {
-        Random rand = new Random();
-        Integer localizador = rand.nextInt();
+    public boolean buscaPorDni(String dni) {
+        for (Cliente cli : clientes) {
+            if (cli.getDni() == dni) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-        while (getPaquetes().containsKey(rand)) {
-            localizador = rand.nextInt();
+    public static long getID() {
+        // 10 digits.
+        long id = System.currentTimeMillis() % LIMIT;
+        if (id <= last) {
+            id = (last + 1) % LIMIT;
+        }
+        return last = id;
+    }
+
+    public void altaEnvio(float peso, float anchura, Cliente remitente, Cliente destinatario) {
+        if (buscaPorDni(destinatario.getDni()) == false) {
+            clientes.add(destinatario);
         }
 
-//habria que meter la función calcularpuntoscontrol
-        Paquete paquet = new Paquete(localizador, "Preparado", (float) 20.4, (float) 10, (float) 10);
-        getPaquetes().put(localizador, paquet);
+        Integer localizador = (int) getID();
+        while (!paquetes.containsKey(localizador)) {
+            localizador = (int) getID();
+        }
+
+        Paquete paquet = new Paquete(localizador, (float) 20.4, (float) 10, (float) 10);
+        paquetes.put(localizador, paquet);
     }
-  
 
     String verEstado(int localizador) {
         if (!paquetes.containsKey(localizador)) {
             throw new IllegalArgumentException("Este localizador: " + localizador + " no existe");
         }
-        return getPaquetes().get(localizador).getEstado();
+        return paquetes.get(localizador).getEstado().toString();
     }
 
     String avisaEstado(int localizador, LocalDateTime fechaLlegada, LocalDateTime fechaSalida) {
@@ -68,7 +88,7 @@ public class ServicioUjaPack {
 
     ArrayList<Paquete> listaPaquetes(String dni) {
         ArrayList<Paquete> lista = new ArrayList();
-        for (Paquete value : getPaquetes().values()) {
+        for (Paquete value : paquetes.values()) {
             if (value.getRemitente().getDni() == dni) {
                 lista.add(value);
             }
@@ -119,7 +139,6 @@ public class ServicioUjaPack {
         
         return null;
     }*/
-    
     public void leerJson() throws IOException {
         String jsonStr = Files.readString(new File("redujapack.json").toPath());
         JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
@@ -135,14 +154,14 @@ public class ServicioUjaPack {
             JsonArray conexiones = centro1.getAsJsonArray("conexiones");
 
             ArrayList<String> listdata = new ArrayList<String>();
-            ArrayList listdata2 = new ArrayList();
+            //ArrayList listdata2 = new ArrayList();
             for (int j = 0; j < provincias.size(); j++) {
                 listdata.add(provincias.get(j).getAsString());
             }
-            for (int j = 0; j < conexiones.size(); j++) {
-                listdata2.add(conexiones.get(j));
-            }
-            PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, listdata, listdata2);
+//            for (int j = 0; j < conexiones.size(); j++) {
+//                listdata2.add(conexiones.get(j));
+//            }
+            PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, listdata);
             puntosDeControl.add(punto);
         }
     }
@@ -161,19 +180,7 @@ public class ServicioUjaPack {
         this.puntosDeControl = puntosDeControl;
     }
 
-    /**
-     * @return the paquetes
-     */
-    public HashMap<Integer, Paquete> getPaquetes() {
-        return paquetes;
-    }
-
-    /**
-     * @param paquetes the paquetes to set
-     */
-    public void setPaquetes(HashMap<Integer, Paquete> paquetes) {
-        this.paquetes = paquetes;
-    }
+    
 
     /**
      * @return the clientes

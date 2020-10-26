@@ -7,7 +7,7 @@ package es.ujaen.dae.ujapack.app;
 
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Paquete;
-import es.ujaen.dae.ujapack.interfaces.ServicioUjaPack;
+import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;

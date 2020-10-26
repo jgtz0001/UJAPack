@@ -6,17 +6,28 @@
 package es.ujaen.dae.ujapack.entidades;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  * @author jenar
  */
-public class CentroDeLogistica extends PuntoDeControl{
-    List<Oficina> listaOficinas;
-    
-    public CentroDeLogistica(int id, String nombre, String localizacion, ArrayList provincia, ArrayList conexiones){
-        super(id, nombre, localizacion, provincia, conexiones);
+public class CentroDeLogistica extends PuntoDeControl {
+
+    Oficina listaOficinas;
+    private ArrayList<Integer> conexiones;
+
+    public CentroDeLogistica(int id, String nombre, String localizacion, ArrayList<String> provincia, ArrayList<Integer> conexiones) {
+        super(id, nombre, localizacion, provincia);
+        listaOficinas = new Oficina(id, nombre, localizacion, provincia,conexiones);
+        this.conexiones = conexiones;
     }
+
+    /**
+     * @return the conexiones
+     */
+    public ArrayList<Integer> getConexiones() {
+        return conexiones;
+    }
+
     
 }
