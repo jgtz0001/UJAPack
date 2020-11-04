@@ -6,6 +6,8 @@
 package es.ujaen.dae.ujapack.entidades;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -15,11 +17,13 @@ public class CentroDeLogistica extends PuntoDeControl {
 
     Oficina listaOficinas;
     private ArrayList<Integer> conexiones;
+    private HashMap<Integer, List<String>> ruta;
 
     public CentroDeLogistica(int id, String nombre, String localizacion, ArrayList<String> provincia, ArrayList<Integer> conexiones) {
         super(id, nombre, localizacion, provincia);
-        listaOficinas = new Oficina(id, nombre, localizacion, provincia,conexiones);
+        this.listaOficinas = new Oficina(id, nombre, localizacion, provincia,conexiones);
         this.conexiones = conexiones;
+        this.ruta = new HashMap<Integer, List<String>>();
     }
 
     /**
@@ -27,6 +31,20 @@ public class CentroDeLogistica extends PuntoDeControl {
      */
     public ArrayList<Integer> getConexiones() {
         return conexiones;
+    }
+
+    /**
+     * @return the ruta
+     */
+    public HashMap<Integer, List<String>> getRuta() {
+        return ruta;
+    }
+
+    /**
+     * @param ruta the ruta to set
+     */
+    public void setRuta(HashMap<Integer, List<String>> ruta) {
+        this.ruta = ruta;
     }
 
     

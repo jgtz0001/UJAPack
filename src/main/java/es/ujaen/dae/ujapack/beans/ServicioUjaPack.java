@@ -12,24 +12,37 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import java.io.File;
 import java.nio.file.Files;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class ServicioUjaPack {
+
+    class Nodo {
+
+        Integer id;
+        private ArrayList<Integer> lista;
+        ArrayList<Integer> conexionesId;
+
+        Nodo(Integer _id, ArrayList<Integer> conexiones) {
+            this.id = _id;
+            lista = null;
+            lista.add(_id);
+            conexionesId = conexiones;
+        }
+    }
 
     private ArrayList<PuntoDeControl> puntosDeControl;
     private HashMap<Integer, Paquete> paquetes;
     private ArrayList<Cliente> clientes;
     private static final long LIMIT = 10000000000L;
     private static long last = 0;
+    private ArrayList<CentroDeLogistica> centros;
+    private Integer[][] matriz;
 
     ServicioUjaPack() {
         puntosDeControl = new ArrayList<PuntoDeControl>();
@@ -101,44 +114,6 @@ public class ServicioUjaPack {
         return importe;
     }
 
-    /*ArrayList<PuntoDeControl> calcularRutaPaquete(String localidadRem, String localidadDest) {
-        int idRem=0, idDest;
-        for (int i = 1; i < puntosDeControl.size(); i++) {
-            if (puntosDeControl.get(i).getProvincia().contains(localidadRem));
-                idRem = puntosDeControl.get(i).getId();
-            if (puntosDeControl.get(i).getProvincia().contains(localidadDest));
-                idDest = puntosDeControl.get(i).getId();
-        }        
-        ArrayList sol=new ArrayList();
-        boolean [] visitado =new boolean[10];
-        sol.add(idRem);
-        return null;
-    }
-    
-    ArrayList ruta(int idRem, int idDest, ArrayList<PuntoDeControl>p, ArrayList sol){
-        
-        if(p.get(idRem).getConexiones().contains(idDest)){
-             sol.add(idDest);
-             return sol;
-        }
-            
-        if (sol.add(p.get(idRem).getConexiones().size()>=2)){
-            ArrayList p1 = new ArrayList();
-            ArrayList p2 = new ArrayList();
-            p1 = ruta(idRem, idDest, p, sol);
-            p2 = ruta(idRem, idDest, p, sol);
-            if ()
-        }
-
-        for (int i = 0 ; i < p.get(idRem).getConexiones().size(); i++){
-            sol.add(p.get(idRem).getConexiones().get(i));
-        }
-        
-        
-        if (prof.contains(idRem))
-        
-        return null;
-    }*/
     public void leerJson() throws IOException {
         String jsonStr = Files.readString(new File("redujapack.json").toPath());
         JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
@@ -154,16 +129,79 @@ public class ServicioUjaPack {
             JsonArray conexiones = centro1.getAsJsonArray("conexiones");
 
             ArrayList<String> listdata = new ArrayList<String>();
-            //ArrayList listdata2 = new ArrayList();
+            ArrayList listdata2 = new ArrayList();
             for (int j = 0; j < provincias.size(); j++) {
                 listdata.add(provincias.get(j).getAsString());
             }
-//            for (int j = 0; j < conexiones.size(); j++) {
-//                listdata2.add(conexiones.get(j));
-//            }
+            for (int j = 0; j < conexiones.size(); j++) {
+                listdata2.add(conexiones.get(j));
+            }
             PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, listdata);
             puntosDeControl.add(punto);
+
+            CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
+            centros.add(centroNuevo);
         }
+    }
+
+    Nodo nodoConexiones(Integer id) {
+        for (int i = 0; i < centros.size(); i++) {
+            if (centros.get(i).getId() == id) {
+                Nodo n = new Nodo(id, centros.get(i).getConexiones());
+                return n;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<Integer> busquedaAnchura(Integer origen, Integer destino, ArrayList<Integer> conexiones) {
+        boolean[] visitados = new boolean[11];
+        ArrayList<Nodo> arrayBusquedaNodos = new ArrayList<Nodo>();
+        ArrayList<Integer> arrayBusquedaIds = new ArrayList<Integer>();
+
+        for (int i = 0; i < 10; i++) {
+            visitados[i] = false;
+        }
+
+        Integer contador = 0;
+
+        while (contador != 10) { //!arrayBusqueda.contains(destino)
+            for (Integer enlace : arrayBusquedaNodos.get(contador).conexionesId) {
+                //si el id del nodo esta a false, significa que no esta visitado
+                //así nos evitamos una lista infinita
+                if (!visitados[arrayBusquedaNodos.get(contador).id]) {
+                    //Creamos un nuevo nodo con el id, conectando con el centro logístico en centros, dentro de nodoconexiones
+                    //tambien tendria las conexiones del nodo, para seguir buscando si no se encuentra a la primera
+                    Nodo n = nodoConexiones(arrayBusquedaNodos.get(contador).id);
+
+                    //Si el nodo se crea a null, significa que algo va mal, el id es incorrecto ()
+                    if (n != null) {
+                        //esto es solo para el primero, para que se añada al camino
+                        if (n.lista.contains(origen)) {
+                            n.lista.add(origen);
+                        }
+
+                        //se añade el enlace, que es su conexion basicamente.
+                        n.lista.add(enlace);
+                        //se añade el nodo al arrayBusquedaNodos para que no se quede solo con el primer nodo
+                        //por lo que aumenta la lista de nodos a recorrer en caso de que no haya sido el primero en encontrarlo.
+                        //sin esto, peta claramente, porque quieres acceder a una posición que no existe
+                        arrayBusquedaNodos.add(n);
+                        //si al añadir este, es el destino, tendriamos el camino desde el origen, hasta el destino.
+                        if (arrayBusquedaIds.contains(destino)) {
+                            //devuelve la lista del nodo desde el origen hasta el destino, por el camino mas corto.
+                            return n.lista;
+                        }
+                    }
+                }
+                //visitados[arrayBusquedaNodos.get(contador).id] = true;
+            }
+            //Al acabar el for, tendríamos el nodo visitado, por lo que lo marcamos
+            visitados[arrayBusquedaNodos.get(contador).id] = true;
+            contador++; //En el momento que se visiten los 10 nodos del grafo saldriamos del while.
+        }
+        //devolveriamos un null en caso de que el destino no haya sido encontrado.
+        return null;
     }
 
     /**
@@ -179,8 +217,6 @@ public class ServicioUjaPack {
     public void setPuntosDeControl(ArrayList<PuntoDeControl> puntosDeControl) {
         this.puntosDeControl = puntosDeControl;
     }
-
-    
 
     /**
      * @return the clientes
