@@ -13,6 +13,13 @@ import java.util.ArrayList;
  */
 public class PuntoDeControl {
 
+    /**
+     * @return the localizacion
+     */
+    public String getLocalizacion() {
+        return localizacion;
+    }
+
     private int id;
     private String nombre;
     private String localizacion;
@@ -25,9 +32,6 @@ public class PuntoDeControl {
         this.provincia = provincia;
     }
 
-//        ArrayList calcularPuntoControlActual(){
-//            return null;
-//        }
     /**
      * @return the id
      */

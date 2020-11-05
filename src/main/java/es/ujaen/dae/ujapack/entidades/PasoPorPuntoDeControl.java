@@ -20,5 +20,9 @@ public class PasoPorPuntoDeControl {
         fechaLlegada = LocalDateTime.now();
         pasoControl = p;
     }
+    
+    void salida(){
+        fechaSalida = LocalDateTime.now();
+    }
 
 }

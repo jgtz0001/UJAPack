@@ -24,6 +24,7 @@ public class Paquete {
     private float peso;
     private float altura;
     private ArrayList<PasoPorPuntoDeControl> pasanPaquetes;
+    private ArrayList<String> ruta;
     private Cliente remitente;
     private Cliente destinatario;
 
@@ -34,7 +35,7 @@ public class Paquete {
         Envio;
     }
 
-    public Paquete(int localizador, float importe, float peso, float altura) {
+    public Paquete(int localizador, float importe, float peso, float altura, PuntoDeControl p) {
         this.localizador = localizador;
         this.numPuntosControl = 0;
         this.estado = estado.Transito;
@@ -43,6 +44,7 @@ public class Paquete {
         this.fechaSalida = null;
         this.peso = peso;
         this.altura = altura;
+        PasoPorPuntoDeControl primero = new PasoPorPuntoDeControl(p);
     }
 
     public static boolean checkLocalizador(int localizador) {
@@ -95,5 +97,19 @@ public class Paquete {
     public Estado getEstado() {
             return estado;
         }
+
+    /**
+     * @return the ruta
+     */
+    public ArrayList<String> getRuta() {
+        return ruta;
+    }
+
+    /**
+     * @param ruta the ruta to set
+     */
+    public void setRuta(ArrayList<String> ruta) {
+        this.ruta = ruta;
+    }
 
 }

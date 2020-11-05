@@ -16,14 +16,16 @@ public class Cliente {
     private String email;
     private String direccion;
     private String localidad;
+    private String provincia;
 
-    public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad) {
+    public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia) {
         this.dni = dni;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.email = email;
         this.direccion = direccion;
         this.localidad = localidad;
+        this.provincia = provincia;
     }
     
     public Cliente(){
@@ -35,6 +37,20 @@ public class Cliente {
      */
     public String getDni() {
         return dni;
+    }
+
+    /**
+     * @return the provincia
+     */
+    public String getProvincia() {
+        return provincia;
+    }
+
+    /**
+     * @return the localidad
+     */
+    public String getLocalidad() {
+        return localidad;
     }
 
     
