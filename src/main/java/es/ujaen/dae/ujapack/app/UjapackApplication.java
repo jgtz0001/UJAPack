@@ -10,9 +10,6 @@ public class UjapackApplication {
 
     public static void main(String[] args) throws FileNotFoundException, IOException, ParseException {
 
-//        ServicioUjaPack uja = new ServicioUjaPack();
-//        System.out.println("Guardando datos...");
-//        uja.leerJson();
-//        System.out.println("Datos guardados correctamente.");
+
     }
 }

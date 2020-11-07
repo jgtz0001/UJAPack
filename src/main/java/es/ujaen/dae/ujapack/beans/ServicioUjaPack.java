@@ -49,7 +49,7 @@ public class ServicioUjaPack {
         clientes = new ArrayList<Cliente>();
     }
 
-    public boolean buscaPorDni(String dni) {
+    private boolean buscaPorDni(String dni) {
         for (Cliente cli : clientes) {
             if (cli.getDni() == dni) {
                 return true;
@@ -211,7 +211,7 @@ public class ServicioUjaPack {
         return null;
     }
 
-    public ArrayList<String> rutaString(ArrayList<Integer> rutaEnIds) {
+     ArrayList<String> rutaString(ArrayList<Integer> rutaEnIds) {
         ArrayList<String> rutaStr = new ArrayList<String>();
         for (int i = 0; i < rutaEnIds.size(); i++) {
             rutaStr.add(centros.get(i).getLocalizacion());
@@ -219,7 +219,7 @@ public class ServicioUjaPack {
         return rutaStr;
     }
 
-    public ArrayList<String> busquedaAnchura(Integer origen, Integer destino, ArrayList<Integer> conexiones) {
+    ArrayList<String> busquedaAnchura(Integer origen, Integer destino, ArrayList<Integer> conexiones) {
         boolean[] visitados = new boolean[11];
         ArrayList<Nodo> arrayBusquedaNodos = new ArrayList<Nodo>();
         ArrayList<Integer> arrayBusquedaIds = new ArrayList<Integer>();
