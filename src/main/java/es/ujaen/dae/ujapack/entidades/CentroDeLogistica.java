@@ -1,7 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
  */
 package es.ujaen.dae.ujapack.entidades;
 
@@ -15,13 +15,13 @@ import java.util.List;
  */
 public class CentroDeLogistica extends PuntoDeControl {
 
-    Oficina listaOficinas;
+    //Oficina listaOficinas;
     private ArrayList<Integer> conexiones;
     private HashMap<Integer, List<String>> ruta;
 
     public CentroDeLogistica(int id, String nombre, String localizacion, ArrayList<String> provincia, ArrayList<Integer> conexiones) {
         super(id, nombre, localizacion, provincia);
-        this.listaOficinas = new Oficina(id, nombre, localizacion, provincia,conexiones);
+//this.listaOficinas = new Oficina(id, nombre, localizacion, provincia,conexiones);
         this.conexiones = conexiones;
         this.ruta = new HashMap<Integer, List<String>>();
     }
@@ -47,5 +47,4 @@ public class CentroDeLogistica extends PuntoDeControl {
         this.ruta = ruta;
     }
 
-    
 }
