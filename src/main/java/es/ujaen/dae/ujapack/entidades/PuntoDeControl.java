@@ -1,7 +1,7 @@
 /*
-     * To change this license header, choose License Headers in Project Properties.
-     * To change this template file, choose Tools | Templates
-     * and open the template in the editor.
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
  */
 package es.ujaen.dae.ujapack.entidades;
 
@@ -13,18 +13,13 @@ import java.util.ArrayList;
  */
 public class PuntoDeControl {
 
-    /**
-     * @return the localizacion
-     */
-    public String getLocalizacion() {
-        return localizacion;
-    }
-
     private int id;
-    private String nombre;
-    private String localizacion;
-    private ArrayList<String> provincia;
+    String nombre;
+    String localizacion;
+    ArrayList<String> provincia;
 
+    public PuntoDeControl(){}
+    
     public PuntoDeControl(int id, String nombre, String localizacion, ArrayList<String> provincia) {
         this.id = id;
         this.nombre = nombre;
@@ -46,4 +41,17 @@ public class PuntoDeControl {
         return nombre;
     }
 
+    /**
+     * @return the provincia
+     */
+    public ArrayList<String> getProvincia() {
+        return provincia;
+    }
+
+    /**
+     * @return the localizacion
+     */
+    public String getLocalizacion() {
+        return localizacion;
+    }
 }

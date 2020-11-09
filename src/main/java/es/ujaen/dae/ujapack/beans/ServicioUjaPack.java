@@ -19,6 +19,7 @@ import com.google.gson.JsonObject;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import java.io.File;
 import java.nio.file.Files;
+import java.util.Collections;
 
 public class ServicioUjaPack {
 
@@ -30,9 +31,13 @@ public class ServicioUjaPack {
 
         Nodo(Integer _id, ArrayList<Integer> conexiones) {
             this.id = _id;
-            lista = null;
+            lista = new ArrayList<Integer>();
             lista.add(_id);
             conexionesId = conexiones;
+        }
+
+        public ArrayList<Integer> getConexionesId() {
+            return conexionesId;
         }
     }
 
@@ -43,13 +48,14 @@ public class ServicioUjaPack {
     private static long last = 0;
     private ArrayList<CentroDeLogistica> centros;
 
-    ServicioUjaPack() {
+    public ServicioUjaPack() {
         puntosDeControl = new ArrayList<PuntoDeControl>();
         paquetes = new HashMap<Integer, Paquete>();
         clientes = new ArrayList<Cliente>();
+        centros = new ArrayList<CentroDeLogistica>();
     }
 
-    public boolean buscaPorDni(String dni) {
+    private boolean buscaPorDni(String dni) {
         for (Cliente cli : clientes) {
             if (cli.getDni() == dni) {
                 return true;
@@ -59,7 +65,7 @@ public class ServicioUjaPack {
     }
 
     public static long getID() {
-        // 10 digits.
+// 10 digits.
         long id = System.currentTimeMillis() % LIMIT;
         if (id <= last) {
             id = (last + 1) % LIMIT;
@@ -67,13 +73,13 @@ public class ServicioUjaPack {
         return last = id;
     }
 
-    public void altaEnvio(float peso, float anchura, float altura, Cliente remitente, Cliente destinatario) {
+    public ArrayList<String> altaEnvio(float peso, float anchura, float altura, Cliente remitente, Cliente destinatario) {
         if (buscaPorDni(destinatario.getDni()) == false) {
             clientes.add(destinatario);
         }
 
         Integer localizador = (int) getID();
-        while (!paquetes.containsKey(localizador)) {
+        while (paquetes.containsKey(localizador)) {
             localizador = (int) getID();
         }
 
@@ -83,25 +89,10 @@ public class ServicioUjaPack {
         float costeEnvio = 0;
 
         if (idProvinciaDest != 0 && idProvinciaRem != 0) {
-            //ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, centros.get(idProvinciaRem).getConexiones());
-            //calcular importe
-            //costeEnvio = calcularImporte(ruta.size(), peso, altura, anchura);
-            if (remitente.getProvincia() == destinatario.getProvincia()) {
-                ruta.add(remitente.getProvincia());
-                costeEnvio = calcularImporte(ruta.size(), peso, altura, anchura);
-            } else {
-                if (idProvinciaDest == idProvinciaRem) {
-                    ruta.add(remitente.getProvincia());
-                    ruta.add(centros.get(idProvinciaRem).getLocalizacion());
-                    ruta.add(destinatario.getProvincia());
-                    costeEnvio = calcularImporte(ruta.size(), peso, altura, anchura);
-                } else {
-                    ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, centros.get(idProvinciaRem).getConexiones());
-                    ruta = rutaFinal(ruta, remitente.getProvincia(), destinatario.getProvincia());
-                    costeEnvio = calcularImporte(ruta.size(), peso, altura, anchura);
-                }
-            }
-            PuntoDeControl p = null;//puede petar por no inicializarlo bien
+            ruta = calcularRutaPaquete(remitente.getLocalidad(), destinatario.getLocalidad());
+            costeEnvio = calcularImporte(ruta.size(), peso, altura, anchura);
+
+            PuntoDeControl p = new PuntoDeControl();
             for (int i = 0; i < puntosDeControl.size(); i++) {
                 if (puntosDeControl.get(i).getLocalizacion() == ruta.get(0)) {
                     p = puntosDeControl.get(i);
@@ -111,11 +102,12 @@ public class ServicioUjaPack {
             Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, p);
             paquet.setRuta(ruta);
             paquetes.put(localizador, paquet);
-            System.out.print("El paquete ha sido creado con exito.");
+            System.out.println("El paquete ha sido creado con exito.");
         } else {
-            System.out.print("El paquete no ha podido ser creado.");
+            System.out.println("El paquete no ha podido ser creado.");
             throw new IllegalArgumentException("El id no coincide");
         }
+        return ruta;
     }
 
     ArrayList<String> rutaFinal(ArrayList<String> rutaIncompleta, String provinciaRem, String provinciaDest) {
@@ -129,9 +121,10 @@ public class ServicioUjaPack {
     }
 
     Integer obtenerId(String provincia) {
+        String localizacion = "";
         for (int i = 0; i < centros.size(); i++) {
-            //localizacion del centro == provincia del cliente donde reside
-            if (provincia == centros.get(i).getLocalizacion()) {
+            localizacion = centros.get(i).getLocalizacion();
+            if (provincia.equals(localizacion)) {
                 return centros.get(i).getId();
             }
         }
@@ -181,7 +174,6 @@ public class ServicioUjaPack {
             String nombre = centro1.get("nombre").getAsString();
             String localizacion = centro1.get("localización").getAsString();
 
-            //System.out.println(centro1.getAsJsonArray("conexiones"));
             JsonArray provincias = centro1.getAsJsonArray("provincias");
             JsonArray conexiones = centro1.getAsJsonArray("conexiones");
 
@@ -191,85 +183,107 @@ public class ServicioUjaPack {
                 listdata.add(provincias.get(j).getAsString());
             }
             for (int j = 0; j < conexiones.size(); j++) {
-                listdata2.add(conexiones.get(j));
+                listdata2.add(conexiones.get(j).getAsInt());
             }
             PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, listdata);
             puntosDeControl.add(punto);
 
             CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
             centros.add(centroNuevo);
+
         }
     }
 
-    Nodo nodoConexiones(Integer id) {
+    Nodo nodoConexiones(ArrayList<Integer> lista, Integer id, boolean[] visitados) {
         for (int i = 0; i < centros.size(); i++) {
             if (centros.get(i).getId() == id) {
                 Nodo n = new Nodo(id, centros.get(i).getConexiones());
+                for (int j=0; j<lista.size(); j++){
+                    n.lista.add(lista.get(j));
+                } 
+
                 return n;
             }
         }
         return null;
     }
 
-    public ArrayList<String> rutaString(ArrayList<Integer> rutaEnIds) {
+    ArrayList<String> rutaString(ArrayList<Integer> rutaEnIds) {
         ArrayList<String> rutaStr = new ArrayList<String>();
         for (int i = 0; i < rutaEnIds.size(); i++) {
-            rutaStr.add(centros.get(i).getLocalizacion());
+            rutaStr.add(centros.get(rutaEnIds.get(i)-1).getLocalizacion());
         }
+        Collections.reverse(rutaStr);
         return rutaStr;
     }
 
-    public ArrayList<String> busquedaAnchura(Integer origen, Integer destino, ArrayList<Integer> conexiones) {
+    ArrayList<String> busquedaAnchura(Integer origen, Integer destino, ArrayList<Integer> conexiones) {
         boolean[] visitados = new boolean[11];
+        boolean[] conexionesVisitadas = new boolean[11];
         ArrayList<Nodo> arrayBusquedaNodos = new ArrayList<Nodo>();
         ArrayList<Integer> arrayBusquedaIds = new ArrayList<Integer>();
 
         for (int i = 0; i < 10; i++) {
             visitados[i] = false;
+            conexionesVisitadas[i] = false;
         }
 
         Integer contador = 0;
 
+        Nodo primero = new Nodo(origen, conexiones);
+        arrayBusquedaNodos.add(primero);
+        ArrayList<Integer> conexionesWhile = new ArrayList<Integer>();
+        ArrayList<Integer> copiaPrimero = new ArrayList<Integer>();
         while (contador != 10) { //!arrayBusqueda.contains(destino)
-            for (Integer enlace : arrayBusquedaNodos.get(contador).conexionesId) {
-                //si el id del nodo esta a false, significa que no esta visitado
-                //así nos evitamos una lista infinita
+            primero = arrayBusquedaNodos.get(contador);
+            conexionesWhile = arrayBusquedaNodos.get(contador).conexionesId;
+            for (int i = 0; i < conexionesWhile.size(); i++) {
                 if (!visitados[arrayBusquedaNodos.get(contador).id]) {
-                    //Creamos un nuevo nodo con el id, conectando con el centro logístico en centros, dentro de nodoconexiones
-                    //tambien tendria las conexiones del nodo, para seguir buscando si no se encuentra a la primera
-                    Nodo n = nodoConexiones(arrayBusquedaNodos.get(contador).id);
+                    ArrayList<Integer> auxiliarNo = arrayBusquedaNodos.get(contador).getConexionesId();
 
-                    //Si el nodo se crea a null, significa que algo va mal, el id es incorrecto ()
+                    copiaPrimero = primero.lista;
+                    Nodo n = nodoConexiones(copiaPrimero, auxiliarNo.get(i), conexionesVisitadas);
                     if (n != null) {
-                        //esto es solo para el primero, para que se añada al camino
-                        if (n.lista.contains(origen)) {
-                            n.lista.add(origen);
-                            if (arrayBusquedaIds.contains(destino)) {
-                                //devuelve la lista del nodo desde el origen hasta el destino, por el camino mas corto.
-                                return rutaString(n.lista);
+                        if (!visitados[auxiliarNo.get(i)]) {
+                            if (!conexionesVisitadas[auxiliarNo.get(i)]) {
+                                arrayBusquedaIds.add(auxiliarNo.get(i));
+                                conexionesVisitadas[auxiliarNo.get(i)] = true;
                             }
+                            arrayBusquedaNodos.add(n);
                         }
-
-                        //se añade el enlace, que es su conexion basicamente.
-                        n.lista.add(enlace);
-                        //se añade el nodo al arrayBusquedaNodos para que no se quede solo con el primer nodo
-                        //por lo que aumenta la lista de nodos a recorrer en caso de que no haya sido el primero en encontrarlo.
-                        //sin esto, peta claramente, porque quieres acceder a una posición que no existe
-                        arrayBusquedaNodos.add(n);
-                        //si al añadir este, es el destino, tendriamos el camino desde el origen, hasta el destino.
-                        if (arrayBusquedaIds.contains(destino)) {
-                            //devuelve la lista del nodo desde el origen hasta el destino, por el camino mas corto.
+                        if (n.lista.contains(destino)) {
                             return rutaString(n.lista);
                         }
                     }
                 }
-                //visitados[arrayBusquedaNodos.get(contador).id] = true;
             }
-            //Al acabar el for, tendríamos el nodo visitado, por lo que lo marcamos
             visitados[arrayBusquedaNodos.get(contador).id] = true;
-            contador++; //En el momento que se visiten los 10 nodos del grafo saldriamos del while.
+            contador++;
         }
-        //devolveriamos un null en caso de que el destino no haya sido encontrado.
+        return null;
+    }
+
+    ArrayList<String> calcularRutaPaquete(String localidadRem, String localidadDes) {
+        Integer idRem = 0;
+        Integer idDest = 0;
+        ArrayList<String> ruta = new ArrayList<String>();
+        for (int i = 0; i < puntosDeControl.size(); i++) {
+            if (idRem != 0 && idDest != 0) {
+                break;
+            } else {
+                if (puntosDeControl.get(i).getProvincia().contains(localidadRem)) {
+                    idRem = puntosDeControl.get(i).getId();
+                }
+                if (puntosDeControl.get(i).getProvincia().contains(localidadDes)) {
+                    idDest = puntosDeControl.get(i).getId();
+                }
+            }
+        }
+
+        if (idRem != 0 && idDest != 0) {
+            ruta = busquedaAnchura(idRem, idDest, centros.get(idRem - 1).getConexiones());
+            return ruta;
+        }
         return null;
     }
 

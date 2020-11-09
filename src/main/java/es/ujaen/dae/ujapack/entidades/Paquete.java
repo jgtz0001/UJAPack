@@ -32,7 +32,8 @@ public class Paquete {
     public enum Estado {
         Transito,
         Reparto,
-        Envio;
+        Envio,
+        Extraviado;
     }
 
     public Paquete(int localizador, float importe, float peso, float altura, PuntoDeControl p) {
