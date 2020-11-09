@@ -18,6 +18,8 @@ public class PuntoDeControl {
     String localizacion;
     ArrayList<String> provincia;
 
+    public PuntoDeControl(){}
+    
     public PuntoDeControl(int id, String nombre, String localizacion, ArrayList<String> provincia) {
         this.id = id;
         this.nombre = nombre;

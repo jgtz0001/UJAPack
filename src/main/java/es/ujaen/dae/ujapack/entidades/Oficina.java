@@ -17,7 +17,6 @@ public class Oficina extends PuntoDeControl {
 
     Oficina(int id, String nombre, String localizacion, ArrayList<String> provincia, ArrayList<Integer> conexiones) {
         super(id, nombre, localizacion, provincia);
-//listaLogistica = new CentroDeLogistica(id, nombre, localizacion, provincia, conexiones);
     }
 
 }

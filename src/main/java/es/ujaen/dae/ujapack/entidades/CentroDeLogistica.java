@@ -21,7 +21,6 @@ public class CentroDeLogistica extends PuntoDeControl {
 
     public CentroDeLogistica(int id, String nombre, String localizacion, ArrayList<String> provincia, ArrayList<Integer> conexiones) {
         super(id, nombre, localizacion, provincia);
-//this.listaOficinas = new Oficina(id, nombre, localizacion, provincia,conexiones);
         this.conexiones = conexiones;
         this.ruta = new HashMap<Integer, List<String>>();
     }
