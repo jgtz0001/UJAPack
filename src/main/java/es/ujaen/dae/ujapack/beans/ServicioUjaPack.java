@@ -121,10 +121,10 @@ public class ServicioUjaPack {
     }
 
     Integer obtenerId(String provincia) {
-        String localizacion = "";
+        ArrayList<String> localizacion = new ArrayList<String>();
         for (int i = 0; i < centros.size(); i++) {
-            localizacion = centros.get(i).getLocalizacion();
-            if (provincia.equals(localizacion)) {
+            localizacion = centros.get(i).getProvincia();
+            if (localizacion.contains(provincia)) {
                 return centros.get(i).getId();
             }
         }
@@ -282,11 +282,23 @@ public class ServicioUjaPack {
 
         if (idRem != 0 && idDest != 0) {
             ruta = busquedaAnchura(idRem, idDest, centros.get(idRem - 1).getConexiones());
-            return ruta;
+            if (!ruta.contains(localidadDes))
+                ruta.add(localidadDes);
+            if (!ruta.contains(localidadRem))
+                ruta = añade(localidadRem, ruta);
         }
-        return null;
+        return ruta;
     }
 
+    ArrayList<String> añade (String localidadRem, ArrayList<String> ruta){
+        ArrayList<String> rutaFinal =  new ArrayList<String>();
+        rutaFinal.add(localidadRem);
+        for (int i=0; i< ruta.size(); i++){
+            rutaFinal.add(ruta.get(i));
+        }
+        return rutaFinal;
+    }
+    
     /**
      * @return the puntosDeControl
      */
