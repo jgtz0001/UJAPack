@@ -8,6 +8,7 @@ package es.ujaen.dae.ujapack.app;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Paquete;
 import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
+import java.util.ArrayList;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -85,7 +86,7 @@ public class UjapackIntegrationTest {
        
     }
     @Test
-    public void TestEnvio(){
+    public void testEnvio(){
       String dni1 = "26054589";
       String dni2 = "75896325";
       String dni3 = "75896325";
@@ -99,4 +100,36 @@ public class UjapackIntegrationTest {
          Assertions.assertTrue(Paquete.checkEnvio(dni1,dni2,dir1,dir2,loc1,loc2));
          Assertions.assertFalse(Paquete.checkEnvio(dni2,dni3,dir2,dir3,loc2,loc3));
     }
+    
+    @Test
+    public void testRutas (){
+        
+        int localizador1= 1234567891;
+        int localizador2= 1234515261;
+
+        
+        ArrayList<String> rutas1 = new ArrayList<String>();
+        rutas1.add("Lucena");
+        rutas1.add("Cordoba");
+        rutas1.add("Sevilla");
+        rutas1.add("Toledo");
+        rutas1.add("Madrid");
+        
+       
+       ArrayList<String> rutas2 = new ArrayList<String>();
+        rutas2.add("Lucena");
+        rutas2.add("Cordoba");
+        rutas2.add("Sevilla");
+        rutas2.add("Toledo");
+        rutas2.add("Madrid");
+        rutas2.add("Getafe");
+        
+        Assertions.assertTrue(Paquete.testRepiteEnvio(rutas1,rutas2,localizador1,localizador2));
+        Assertions.assertFalse(Paquete.testRepiteEnvio(rutas1,rutas1,localizador1,localizador1));
+        
+    }
+    
+    
+    
+    
 }
