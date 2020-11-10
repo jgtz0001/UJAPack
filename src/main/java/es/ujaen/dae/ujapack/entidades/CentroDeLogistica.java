@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class CentroDeLogistica extends PuntoDeControl {
 
-    //Oficina listaOficinas;
+    Oficina listaOficinas;
     private ArrayList<Integer> conexiones;
     private HashMap<Integer, List<String>> ruta;
 
@@ -23,6 +23,7 @@ public class CentroDeLogistica extends PuntoDeControl {
         super(id, nombre, localizacion, provincia);
         this.conexiones = conexiones;
         this.ruta = new HashMap<Integer, List<String>>();
+        listaOficinas = new Oficina();
     }
 
     /**
@@ -30,6 +31,13 @@ public class CentroDeLogistica extends PuntoDeControl {
      */
     public ArrayList<Integer> getConexiones() {
         return conexiones;
+    }
+    
+    /**
+     * @return the conexiones
+     */
+    public ArrayList<String> getProvincias() {
+        return provincia;
     }
 
     /**
