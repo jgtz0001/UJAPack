@@ -72,7 +72,14 @@ public class Paquete {
 
         return false;
     }
-
+    
+    
+    public static boolean testRepiteEnvio(ArrayList<String> ruta1, ArrayList<String> ruta2, int localizador1,int localizador2) {
+        if ((ruta1 == ruta2)&&(localizador1 == localizador2)) {
+            return false;
+        }
+        return true;
+    }
     
     /**
      * @return the pasanPaquetes
