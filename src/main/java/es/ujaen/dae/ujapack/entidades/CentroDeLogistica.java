@@ -53,5 +53,5 @@ public class CentroDeLogistica extends PuntoDeControl {
     public void setRuta(HashMap<Integer, List<String>> ruta) {
         this.ruta = ruta;
     }
-
+    
 }

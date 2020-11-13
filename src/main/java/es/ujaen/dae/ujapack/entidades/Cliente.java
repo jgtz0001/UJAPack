@@ -1,21 +1,39 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
  */
 package es.ujaen.dae.ujapack.entidades;
+
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  *
  * @author zafra
  */
-public class Cliente {
+@Entity
+public class Cliente implements Serializable {
+
+    @Id
+//@Pattern(regexp=exprReg.DNI)
+    @Size(min = 9, max = 9)
     private String dni;
+    @NotBlank
     private String nombre;
+    @NotBlank
     private String apellidos;
+    @NotBlank
     private String email;
+    @NotBlank
     private String direccion;
+    @NotBlank
     private String localidad;
+    @NotBlank
     private String provincia;
 
     public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia) {
@@ -27,9 +45,9 @@ public class Cliente {
         this.localidad = localidad;
         this.provincia = provincia;
     }
-    
-    public Cliente(){
-        
+
+    public Cliente() {
+
     }
 
     /**
@@ -53,5 +71,4 @@ public class Cliente {
         return localidad;
     }
 
-    
 }
