@@ -41,31 +41,32 @@ public class ServicioUjaPack {
         }
     }
 
-    private ArrayList<PuntoDeControl> puntosDeControl;
+    private HashMap<Integer, PuntoDeControl> puntosDeControl;
     private HashMap<Integer, Paquete> paquetes;
-    private ArrayList<Cliente> clientes;
+    private HashMap<Integer, Cliente> clientes;
     private static final long LIMIT = 10000000000L;
     private static long last = 0;
-    private ArrayList<CentroDeLogistica> centros;
+    private HashMap<Integer, CentroDeLogistica> centros;
 
+    /*
+    * Constructor de la clase.
+    */
     public ServicioUjaPack() {
-        puntosDeControl = new ArrayList<PuntoDeControl>();
+        puntosDeControl = new HashMap<Integer, PuntoDeControl>();
         paquetes = new HashMap<Integer, Paquete>();
-        clientes = new ArrayList<Cliente>();
-        centros = new ArrayList<CentroDeLogistica>();
+        clientes = new HashMap<Integer, Cliente>();
+        centros = new HashMap<Integer, CentroDeLogistica>();
     }
 
     private boolean buscaPorDni(String dni) {
-        for (Cliente cli : clientes) {
-            if (cli.getDni() == dni) {
-                return true;
-            }
-        }
-        return false;
+        return clientes.containsKey(dni);
     }
 
+    /*
+    * Este metodo genera ids aleatorios de 10 digitos.
+    * @return el id localizador.
+    */
     public static long getID() {
-// 10 digits.
         long id = System.currentTimeMillis() % LIMIT;
         if (id <= last) {
             id = (last + 1) % LIMIT;
@@ -73,9 +74,18 @@ public class ServicioUjaPack {
         return last = id;
     }
 
+    /*
+    * altaEnvio es una función que de manera interna, crea el paquete con todos los atributos de su clase.
+    * @param peso Corresponde al peso del paquete.
+    * @param anchoura Medida sobre el paquete.
+    * @param altura Medida sobre el paquete.
+    * @param remitente Cliente que manda el paquete.
+    * @param destinatario Cliente a que va dirigido el paquete.
+    + @return Devuelve la ruta que va a seguir el paquete.
+    */
     public ArrayList<String> altaEnvio(float peso, float anchura, float altura, Cliente remitente, Cliente destinatario) {
         if (buscaPorDni(destinatario.getDni()) == false) {
-            clientes.add(destinatario);
+            clientes.put(Integer.parseInt(destinatario.getDni()), destinatario);
         }
 
         Integer localizador = (int) getID();
@@ -89,16 +99,11 @@ public class ServicioUjaPack {
         float costeEnvio = 0;
 
         if (idProvinciaDest != 0 && idProvinciaRem != 0) {
-            ruta = calcularRutaPaquete(remitente.getLocalidad(), destinatario.getLocalidad());
+            ruta = calcularRutaPaquete(remitente.getLocalidad(), destinatario.getLocalidad(), idProvinciaRem, idProvinciaDest);
             costeEnvio = calcularImporte(ruta.size(), peso, altura, anchura);
 
             PuntoDeControl p = new PuntoDeControl();
-            for (int i = 0; i < puntosDeControl.size(); i++) {
-                if (puntosDeControl.get(i).getLocalizacion() == ruta.get(0)) {
-                    p = puntosDeControl.get(i);
-                    break;
-                }
-            }
+            p = puntosDeControl.get(idProvinciaRem);
             Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, p);
             paquet.setRuta(ruta);
             paquetes.put(localizador, paquet);
@@ -110,28 +115,26 @@ public class ServicioUjaPack {
         return ruta;
     }
 
-    ArrayList<String> rutaFinal(ArrayList<String> rutaIncompleta, String provinciaRem, String provinciaDest) {
-        ArrayList<String> rutaCompleta = new ArrayList<String>();
-        rutaCompleta.add(provinciaRem);
-        for (int i = 0; i < rutaIncompleta.size(); i++) {
-            rutaCompleta.add(rutaIncompleta.get(i));
-        }
-        rutaCompleta.add(provinciaDest);
-        return rutaCompleta;
-    }
-
+    /*
+    * Se utiliza para obtener el id del centro de logística en el que se encuentra a través de la provincia.
+    * @param provinica Provinica de la que tenemos que encontrar el id.
+    * @return devuelve el id del centro donde se encuentra la provincia.
+    */
     Integer obtenerId(String provincia) {
-        ArrayList<String> localizacion = new ArrayList<String>();
-        for (int i = 0; i < centros.size(); i++) {
-            localizacion = centros.get(i).getProvincia();
-            if (localizacion.contains(provincia)) {
-                return centros.get(i).getId();
-            }
+        for (HashMap.Entry<Integer, CentroDeLogistica> entry : centros.entrySet()) {
+            Integer id = entry.getKey();
+            CentroDeLogistica value = entry.getValue();
+            if(value.getProvincia().contains(provincia))
+                return id;
         }
-
         return null;
     }
 
+    /*
+    * Avisa del estado al cliente.
+    * @param localizador Identificador del paquete.
+    * @return devuelve un string con el estado del paquete.
+    */
     String verEstado(int localizador) {
         if (!paquetes.containsKey(localizador)) {
             throw new IllegalArgumentException("Este localizador: " + localizador + " no existe");
@@ -139,6 +142,9 @@ public class ServicioUjaPack {
         return paquetes.get(localizador).getEstado().toString();
     }
 
+    /*
+    * Avisa del estado, queda por acabar
+    */
     String avisaEstado(int localizador, LocalDateTime fechaLlegada, LocalDateTime fechaSalida) {
         if (!paquetes.containsKey(localizador)) {
             throw new IllegalArgumentException("Este localizador: " + localizador + " no existe");
@@ -149,21 +155,37 @@ public class ServicioUjaPack {
         return ("El paquete con localizador: " + localizador + " ha salido a las: " + fechaSalida);
     }
 
+    /*
+    * Funcion que devuelve todos los paquetes que ha enviado un cliente.
+    * @param dni DNI del cliente.
+    * @return devuelve la lista de paquetes que ha enviado el cliente.
+    */
     ArrayList<Paquete> listaPaquetes(String dni) {
         ArrayList<Paquete> lista = new ArrayList();
         for (Paquete value : paquetes.values()) {
-            if (value.getRemitente().getDni() == dni) {
+            if (value.getRemitente().getDni().equals(dni)) {
                 lista.add(value);
             }
         }
         return lista;
     }
 
+    /*
+    * Devuleve el importe al crear un paquete.
+    * @param numPuntosControl Número de puntos de control por los que pasa el paquete.
+    * @param peso Peso del paquete.
+    * @param altura Altura del paquete.
+    * @param anchura Anchura del paquete.
+    * @return devuelve el coste de enviar el paquete.
+    */
     float calcularImporte(int numPuntosControl, float peso, float altura, float anchura) {
         float importe = (peso * altura * anchura * numPuntosControl / 1000);
         return importe;
     }
 
+    /*
+    * Función que se encarga de leer un Json y añadir los datos a las estructuras.
+    */
     public void leerJson() throws IOException {
         String jsonStr = Files.readString(new File("redujapack.json").toPath());
         JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
@@ -186,37 +208,56 @@ public class ServicioUjaPack {
                 listdata2.add(conexiones.get(j).getAsInt());
             }
             PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, listdata);
-            puntosDeControl.add(punto);
+            puntosDeControl.put(id, punto);
 
             CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
-            centros.add(centroNuevo);
+            centros.put(id, centroNuevo);
 
         }
     }
 
+    /*
+    * Crea los nodos con las conexiones que se le pasan (id).
+    * @param lista Lista que contiene los ids por los que pasa el paquete antes de llegar a ese nodo.
+    * @param id Id el cual se va a añadir al nodo si no esta visitado.
+    * @param visitados Vector estático booleano que contiene los ya visitados para no meter repetidos.
+    * @return devuelve un nodo con todos sus atributos completos.
+    */
     Nodo nodoConexiones(ArrayList<Integer> lista, Integer id, boolean[] visitados) {
-        for (int i = 0; i < centros.size(); i++) {
-            if (centros.get(i).getId() == id) {
-                Nodo n = new Nodo(id, centros.get(i).getConexiones());
-                for (int j=0; j<lista.size(); j++){
+       for (HashMap.Entry<Integer, CentroDeLogistica> entry : centros.entrySet()) {
+            Integer idMap = entry.getKey();
+            if (idMap.equals(id)){
+                CentroDeLogistica value = entry.getValue();
+                Nodo n = new Nodo(id, value.getConexiones());
+                for (int j = 0; j < lista.size(); j++) {
                     n.lista.add(lista.get(j));
-                } 
-
+                }
                 return n;
-            }
+            }    
         }
         return null;
     }
 
+    /*
+    * Cambia el array de enteros a su respectivo nombre del centro logístico.
+    * @param rutaEnIds ArrayList que contiene la ruta en ids.
+    * @return devuelve la ruta con los nombres de los centros por los que pasa.
+    */
     ArrayList<String> rutaString(ArrayList<Integer> rutaEnIds) {
         ArrayList<String> rutaStr = new ArrayList<String>();
         for (int i = 0; i < rutaEnIds.size(); i++) {
-            rutaStr.add(centros.get(rutaEnIds.get(i)-1).getLocalizacion());
+            rutaStr.add(centros.get(rutaEnIds.get(i)).getLocalizacion());
         }
         Collections.reverse(rutaStr);
         return rutaStr;
     }
 
+    /*
+    * Algoritmo que encuentra la ruta mas corta recorriendo un grafo establecido por las conexiones de cada centro logístico.
+    * @param origen Identificador del ponto de control de donde saldría el paquete.
+    * @param destino Identificador del punto de control a donde llegaría el paquete
+    * @param conexiones ArrayList que tiene las conexiones del punto de control.
+    */
     ArrayList<String> busquedaAnchura(Integer origen, Integer destino, ArrayList<Integer> conexiones) {
         boolean[] visitados = new boolean[11];
         boolean[] conexionesVisitadas = new boolean[11];
@@ -263,68 +304,69 @@ public class ServicioUjaPack {
         return null;
     }
 
-    ArrayList<String> calcularRutaPaquete(String localidadRem, String localidadDes) {
-        Integer idRem = 0;
-        Integer idDest = 0;
+    
+    /*
+    * Calcula la ruta del paquete.
+    * @param localidadRem Localidad del remitente.
+    * @param localidadDes Localidad del destinatario.
+    * @param idProvinciaRem Identificador de la provincia donde se encuentra el remitente.
+    * @param idProvinciaDest Identificador de la provincia del destinatario.
+    */
+    ArrayList<String> calcularRutaPaquete(String localidadRem, String localidadDes, Integer idProvinciaRem, Integer idProvinciaDest) {
         ArrayList<String> ruta = new ArrayList<String>();
-        for (int i = 0; i < puntosDeControl.size(); i++) {
-            if (idRem != 0 && idDest != 0) {
-                break;
-            } else {
-                if (puntosDeControl.get(i).getProvincia().contains(localidadRem)) {
-                    idRem = puntosDeControl.get(i).getId();
-                }
-                if (puntosDeControl.get(i).getProvincia().contains(localidadDes)) {
-                    idDest = puntosDeControl.get(i).getId();
-                }
-            }
-        }
-
-        if (idRem != 0 && idDest != 0) {
-            ruta = busquedaAnchura(idRem, idDest, centros.get(idRem - 1).getConexiones());
-            if (!ruta.contains(localidadDes))
+        if (idProvinciaRem != 0 && idProvinciaDest != 0) {
+            ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, centros.get(idProvinciaRem).getConexiones());
+            if (!ruta.contains(localidadDes)) {
                 ruta.add(localidadDes);
-            if (!ruta.contains(localidadRem))
+            }
+            if (!ruta.contains(localidadRem)) {
                 ruta = añade(localidadRem, ruta);
+            }
         }
         return ruta;
     }
 
-    ArrayList<String> añade (String localidadRem, ArrayList<String> ruta){
-        ArrayList<String> rutaFinal =  new ArrayList<String>();
+    /*
+    * Función que añade la localidad del remitente que falta, depositandolo en primer lugar.
+    * @param localidadRem Localidad del remitente.
+    * @param ruta ArrayList que tiene la ruta sin completar.
+    * @return devuelve la ruta completa.
+    */
+    ArrayList<String> añade(String localidadRem, ArrayList<String> ruta) {
+        ArrayList<String> rutaFinal = new ArrayList<String>();
         rutaFinal.add(localidadRem);
-        for (int i=0; i< ruta.size(); i++){
+        for (int i = 0; i < ruta.size(); i++) {
             rutaFinal.add(ruta.get(i));
         }
         return rutaFinal;
     }
-    
+
     /**
      * @return the puntosDeControl
      */
-    public ArrayList<PuntoDeControl> getPuntosDeControl() {
+    public HashMap<Integer, PuntoDeControl> getPuntosDeControl() {
         return puntosDeControl;
     }
 
     /**
      * @param puntosDeControl the puntosDeControl to set
      */
-    public void setPuntosDeControl(ArrayList<PuntoDeControl> puntosDeControl) {
+    public void setPuntosDeControl(HashMap<Integer, PuntoDeControl> puntosDeControl) {
         this.puntosDeControl = puntosDeControl;
     }
 
     /**
      * @return the clientes
      */
-    public ArrayList<Cliente> getClientes() {
+    public HashMap<Integer, Cliente> getClientes() {
         return clientes;
     }
 
     /**
      * @param clientes the clientes to set
      */
-    public void setClientes(ArrayList<Cliente> clientes) {
+    public void setClientes(HashMap<Integer, Cliente> clientes) {
         this.clientes = clientes;
     }
-    
+
 }
