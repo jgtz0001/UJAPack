@@ -159,7 +159,7 @@ public class ServicioUjaPack {
         return lista;
     }
 
-    float calcularImporte(int numPuntosControl, float peso, float altura, float anchura) {
+    public float calcularImporte(int numPuntosControl, float peso, float altura, float anchura) {
         float importe = (peso * altura * anchura * numPuntosControl / 1000);
         return importe;
     }
@@ -198,9 +198,9 @@ public class ServicioUjaPack {
         for (int i = 0; i < centros.size(); i++) {
             if (centros.get(i).getId() == id) {
                 Nodo n = new Nodo(id, centros.get(i).getConexiones());
-                for (int j=0; j<lista.size(); j++){
+                for (int j = 0; j < lista.size(); j++) {
                     n.lista.add(lista.get(j));
-                } 
+                }
 
                 return n;
             }
@@ -211,7 +211,7 @@ public class ServicioUjaPack {
     ArrayList<String> rutaString(ArrayList<Integer> rutaEnIds) {
         ArrayList<String> rutaStr = new ArrayList<String>();
         for (int i = 0; i < rutaEnIds.size(); i++) {
-            rutaStr.add(centros.get(rutaEnIds.get(i)-1).getLocalizacion());
+            rutaStr.add(centros.get(rutaEnIds.get(i) - 1).getLocalizacion());
         }
         Collections.reverse(rutaStr);
         return rutaStr;
@@ -282,23 +282,37 @@ public class ServicioUjaPack {
 
         if (idRem != 0 && idDest != 0) {
             ruta = busquedaAnchura(idRem, idDest, centros.get(idRem - 1).getConexiones());
-            if (!ruta.contains(localidadDes))
+            if (!ruta.contains(localidadDes)) {
                 ruta.add(localidadDes);
-            if (!ruta.contains(localidadRem))
+            }
+            if (!ruta.contains(localidadRem)) {
                 ruta = añade(localidadRem, ruta);
+            }
         }
         return ruta;
     }
 
-    ArrayList<String> añade (String localidadRem, ArrayList<String> ruta){
-        ArrayList<String> rutaFinal =  new ArrayList<String>();
+    ArrayList<String> añade(String localidadRem, ArrayList<String> ruta) {
+        ArrayList<String> rutaFinal = new ArrayList<String>();
         rutaFinal.add(localidadRem);
-        for (int i=0; i< ruta.size(); i++){
+        for (int i = 0; i < ruta.size(); i++) {
             rutaFinal.add(ruta.get(i));
         }
         return rutaFinal;
     }
-    
+
+    //test
+    public  boolean testRutaJ(ArrayList<String> localizaciones, ArrayList<Integer> conex) {
+
+        for (int i = 0; i < localizaciones.size(); i++) {
+            if (null == ServicioUjaPack.this.busquedaAnchura(i, i + 1, conex)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * @return the puntosDeControl
      */
@@ -326,5 +340,5 @@ public class ServicioUjaPack {
     public void setClientes(ArrayList<Cliente> clientes) {
         this.clientes = clientes;
     }
-    
+
 }

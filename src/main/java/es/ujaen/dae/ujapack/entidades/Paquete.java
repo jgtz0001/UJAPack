@@ -5,27 +5,45 @@
  */
 package es.ujaen.dae.ujapack.entidades;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  *
  * @author jenar
  */
-public class Paquete {
-
+@Entity
+public class Paquete implements Serializable {
+    @Id
+    @Size(min = 10, max = 10)
     private int localizador;
+    @NotBlank
     private int numPuntosControl;
+    @NotBlank
     private Estado estado;
+    @NotBlank
     private float importe;
+    @NotBlank
     private LocalDateTime fechaLlegada;
+    @NotBlank
     private LocalDateTime fechaSalida;
+    @NotBlank
     private float peso;
+    @NotBlank
     private float altura;
+    @NotBlank
     private ArrayList<PasoPorPuntoDeControl> pasanPaquetes;
+    @NotBlank
     private ArrayList<String> ruta;
+    @NotBlank
     private Cliente remitente;
+    @NotBlank
     private Cliente destinatario;
 
 
