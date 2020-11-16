@@ -1,10 +1,7 @@
 package es.ujaen.dae.ujapack.app;
 
-import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
-import es.ujaen.dae.ujapack.entidades.Cliente;
 import java.io.*;
 import java.text.ParseException;
-import java.util.ArrayList;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -18,5 +15,5 @@ public class UjapackApplication {
         SpringApplication servidor = new SpringApplication(UjapackApplication.class);
         ApplicationContext context = servidor.run(args);
 
-            }
-        }
+    }
+}

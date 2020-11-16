@@ -6,13 +6,11 @@
 package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
 
 /**
  *
  * @author zafra
  */
-@Entity
 public class Cliente implements Serializable {
 
     private String dni;
