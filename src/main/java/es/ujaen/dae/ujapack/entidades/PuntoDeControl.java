@@ -7,26 +7,15 @@ package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 /**
  *
  * @author Pablo
  */
-   @Entity 
 public class PuntoDeControl implements Serializable{
-    @Id
-    @Max(10)
     private int id;
-    @NotEmpty
     String nombre;
-    @NotEmpty
     String localizacion;
-    @NotBlank
     ArrayList<String> provincia;
 
     public PuntoDeControl(){}

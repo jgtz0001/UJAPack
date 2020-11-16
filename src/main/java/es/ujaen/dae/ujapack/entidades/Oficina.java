@@ -7,17 +7,13 @@ package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import javax.persistence.Entity;
-import javax.validation.constraints.NotBlank;
 
 /**
  *
  * @author jenar
  */
-    @Entity
 public class Oficina extends PuntoDeControl implements Serializable{
 
-    @NotBlank
     CentroDeLogistica listaLogistica;
 
     Oficina(int id, String nombre, String localizacion, ArrayList<String> provincia, ArrayList<Integer> conexiones) {

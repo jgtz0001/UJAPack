@@ -9,21 +9,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.validation.constraints.NotBlank;
 
 /**
  *
  * @author jenar
  */
-    @Entity
 public class CentroDeLogistica extends PuntoDeControl implements Serializable {
 
-    @NotBlank
-    Oficina listaOficinas;
-    @NotBlank
+    Oficina listaOficinas;    
     private ArrayList<Integer> conexiones;
-    @NotBlank
     private HashMap<Integer, List<String>> ruta;
 
     public CentroDeLogistica(int id, String nombre, String localizacion, ArrayList<String> provincia, ArrayList<Integer> conexiones) {
