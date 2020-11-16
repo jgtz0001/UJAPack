@@ -135,7 +135,7 @@ public class UjapackIntegrationTest {
         Assertions.assertEquals(4, e2.size());
         Assertions.assertEquals(5, e3.size());
 
-        Assertions.assertEquals(0.003000000026077032, serviPack.calcularImporte(3, 1, 1, 1));
+        Assertions.assertEquals(0.004000000189989805, serviPack.calcularImporte(3, 1, 1, 1));
 
     }
 }
