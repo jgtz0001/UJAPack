@@ -182,7 +182,7 @@ public class ServicioUjaPack {
 * @return devuelve el coste de enviar el paquete.
      */
     public float calcularImporte(int numPuntosControl, float peso, float altura, float anchura) {
-        float importe = (peso * altura * anchura * numPuntosControl / 1000);
+        float importe = (peso * altura * anchura * (numPuntosControl+1) / 1000);
         return importe;
     }
 
