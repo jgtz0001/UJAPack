@@ -5,27 +5,41 @@
  */
 package es.ujaen.dae.ujapack.entidades;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  *
  * @author jenar
  */
-public class Paquete {
-
+@Entity
+public class Paquete implements Serializable {
+    @Id
+    @Size(min = 10, max = 10)
     private int localizador;
+    @NotBlank
     private int numPuntosControl;
+    @NotBlank
     private Estado estado;
+    @NotBlank
     private float importe;
-    private LocalDateTime fechaLlegada;
-    private LocalDateTime fechaSalida;
+    @NotBlank
     private float peso;
+    @NotBlank
     private float altura;
+    @NotBlank
     private ArrayList<PasoPorPuntoDeControl> pasanPaquetes;
+    @NotBlank
     private ArrayList<String> ruta;
+    @NotBlank
     private Cliente remitente;
+    @NotBlank
     private Cliente destinatario;
 
 
@@ -36,16 +50,16 @@ public class Paquete {
         Extraviado;
     }
 
-    public Paquete(int localizador, float importe, float peso, float altura, PuntoDeControl p) {
+    public Paquete(int localizador, float importe, float peso, float altura, PuntoDeControl p ) {
         this.localizador = localizador;
         this.numPuntosControl = 0;
         this.estado = estado.Transito;
         this.importe = importe;
-        this.fechaLlegada = null;
-        this.fechaSalida = null;
         this.peso = peso;
         this.altura = altura;
+        this.pasanPaquetes = new ArrayList<PasoPorPuntoDeControl>();
         PasoPorPuntoDeControl primero = new PasoPorPuntoDeControl(p);
+        pasanPaquetes.add(primero);
     }
 
     public static boolean checkLocalizador(int localizador) {
@@ -79,6 +93,23 @@ public class Paquete {
             return false;
         }
         return true;
+    }
+    
+    public void envia(LocalDateTime fechaSalida, PuntoDeControl punto){
+        Integer tama = pasanPaquetes.size() - 1;
+        if (tama.equals(numPuntosControl)){
+            if (estado.equals(estado.Reparto)){
+                estado = Estado.Envio;
+            }else{
+                estado = Estado.Reparto;
+            }
+            
+        }else{
+            this.pasanPaquetes.get(tama).setFechaSalida(fechaSalida);
+            PasoPorPuntoDeControl nuevo = new PasoPorPuntoDeControl(punto);
+            pasanPaquetes.add(nuevo);
+        }
+        
     }
     
     /**
@@ -118,6 +149,7 @@ public class Paquete {
      */
     public void setRuta(ArrayList<String> ruta) {
         this.ruta = ruta;
+        this.numPuntosControl = ruta.size();
     }
 
 }

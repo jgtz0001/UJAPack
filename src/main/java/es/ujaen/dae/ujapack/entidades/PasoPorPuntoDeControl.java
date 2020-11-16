@@ -5,24 +5,62 @@
  */
 package es.ujaen.dae.ujapack.entidades;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
 /**
  *
  * @author Pablo
  */
-public class PasoPorPuntoDeControl {
+    @Entity
+public class PasoPorPuntoDeControl implements Serializable{
+
+    /**
+     * @return the pasoControl
+     */
+    public PuntoDeControl getPasoControl() {
+        return pasoControl;
+    }
+
+    /**
+     * @param pasoControl the pasoControl to set
+     */
+    public void setPasoControl(PuntoDeControl pasoControl) {
+        this.pasoControl = pasoControl;
+    }
+
+    /**
+     * @param fechaLlegada the fechaLlegada to set
+     */
+    public void setFechaLlegada(LocalDateTime fechaLlegada) {
+        this.fechaLlegada = fechaLlegada;
+    }
+
+    /**
+     * @param fechaSalida the fechaSalida to set
+     */
+    public void setFechaSalida(LocalDateTime fechaSalida) {
+        this.fechaSalida = fechaSalida;
+    }
+    @Id
+    @NotBlank
+    public PuntoDeControl pasoControl;
+    @NotBlank
     private LocalDateTime fechaLlegada;
+    @NotBlank
     private LocalDateTime fechaSalida;
-    private PuntoDeControl pasoControl;
+   
     
-    PasoPorPuntoDeControl(PuntoDeControl p){
+    public PasoPorPuntoDeControl(PuntoDeControl p){
         fechaLlegada = LocalDateTime.now();
         pasoControl = p;
     }
     
     void salida(){
-        fechaSalida = LocalDateTime.now();
+        setFechaSalida(LocalDateTime.now());
     }
 
 }
