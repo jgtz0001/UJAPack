@@ -25,7 +25,7 @@ import javax.validation.constraints.Size;
 public class Cliente implements Serializable {
 
     @Id
-    @Size(min = 7, max = 7)
+    @Size(min = 8, max = 8)
     private String dni;
     @NotBlank
     @NotEmpty

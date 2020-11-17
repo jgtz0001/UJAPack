@@ -18,13 +18,28 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import es.ujaen.dae.ujapack.entidades.PasoPorPuntoDeControl;
+import es.ujaen.dae.ujapack.repositorios.RepositorioCliente;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Collections;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ServicioUjaPack {
+    
+@Autowired
+RepositorioCliente RepositorioClientes;
 
-    class Nodo {
+    private final HashMap<Integer, PuntoDeControl> puntosDeControl;
+    private final HashMap<Integer, Paquete> paquetes;
+    private final HashMap<Integer, Cliente> clientes;
+    private static final long LIMIT = 10000000000L;
+    private static long last = 0;
+    private final HashMap<Integer, CentroDeLogistica> centros;
+
+    
+        class Nodo {
 
         Integer id;
         private ArrayList<Integer> lista;
@@ -41,14 +56,6 @@ public class ServicioUjaPack {
             return conexionesId;
         }
     }
-
-    private final HashMap<Integer, PuntoDeControl> puntosDeControl;
-    private final HashMap<Integer, Paquete> paquetes;
-    private final HashMap<Integer, Cliente> clientes;
-    private static final long LIMIT = 10000000000L;
-    private static long last = 0;
-    private final HashMap<Integer, CentroDeLogistica> centros;
-
     /*
 * Constructor de la clase.
      */
@@ -80,7 +87,14 @@ public class ServicioUjaPack {
         }
         return last = id;
     }
-
+    public void altaCliente(Cliente cliente){
+        
+        if(RepositorioClientes.buscar(cliente.getDni()).isPresent()){
+             throw new IllegalArgumentException("El cliente ya existe");
+        }
+       RepositorioClientes.guardar(cliente);
+    }
+    
     /*
 * alta Envio es una función que de manera interna, crea el paquete con todos los atributos de su clase.
 * @param peso Corresponde al peso del paquete.
