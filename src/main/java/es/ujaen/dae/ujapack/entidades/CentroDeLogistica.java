@@ -9,15 +9,21 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.validation.constraints.NotBlank;
 
 /**
  *
  * @author jenar
  */
+@Entity
 public class CentroDeLogistica extends PuntoDeControl implements Serializable {
 
-    Oficina listaOficinas;    
+    @NotBlank
+    Oficina listaOficinas;
+    @NotBlank
     private ArrayList<Integer> conexiones;
+    @NotBlank
     private HashMap<Integer, List<String>> ruta;
 
     public CentroDeLogistica(int id, String nombre, String localizacion, ArrayList<String> provincia, ArrayList<Integer> conexiones) {
@@ -33,7 +39,7 @@ public class CentroDeLogistica extends PuntoDeControl implements Serializable {
     public ArrayList<Integer> getConexiones() {
         return conexiones;
     }
-    
+
     /**
      * @return the conexiones
      */
@@ -54,5 +60,5 @@ public class CentroDeLogistica extends PuntoDeControl implements Serializable {
     public void setRuta(HashMap<Integer, List<String>> ruta) {
         this.ruta = ruta;
     }
-    
+
 }

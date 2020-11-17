@@ -1,29 +1,45 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
  */
 package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  *
  * @author jenar
  */
+@Entity
 public class Paquete implements Serializable {
-
+    
+    @Id
+    @Size(min = 10, max = 10)
     private int localizador;
+    @NotBlank
     private int numPuntosControl;
+    @NotBlank
     private Estado estado;
+    @NotBlank
     private float importe;
+    @NotBlank
     private float peso;
+    @NotBlank
     private float altura;
+    @NotBlank
     private ArrayList<PasoPorPuntoDeControl> pasanPaquetes;
+    @NotBlank
     private ArrayList<String> ruta;
+    @NotBlank
     private Cliente remitente;
+    @NotBlank
     private Cliente destinatario;
 
     public enum Estado {
@@ -88,7 +104,7 @@ public class Paquete implements Serializable {
                 estado = Estado.Entregado;
             }
         } else {
-            this.pasanPaquetes.get(tama-1).setFechaSalida(fechaSalida);
+            this.pasanPaquetes.get(tama - 1).setFechaSalida(fechaSalida);
             PasoPorPuntoDeControl nuevo = new PasoPorPuntoDeControl(punto);
             pasanPaquetes.add(nuevo);
         }
