@@ -6,8 +6,11 @@
 package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -22,7 +25,7 @@ import javax.validation.constraints.Size;
 public class Cliente implements Serializable {
 
     @Id
-    @Size(min = 9, max = 9)
+    @Size(min = 8, max = 8)
     private String dni;
     @NotBlank
     @NotEmpty
@@ -42,6 +45,14 @@ public class Cliente implements Serializable {
     @NotBlank
     @NotEmpty
     private String provincia;
+    
+    @OneToMany
+    @JoinColumn(name="remitente_dni")
+    List<Paquete> PaqueteRemitente;
+    
+    @OneToMany
+    @JoinColumn(name="destinatario_dni")
+    List<Paquete> PaqueteDestinatario;
 
     public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia) {
         this.dni = dni;

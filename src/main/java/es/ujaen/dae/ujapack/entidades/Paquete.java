@@ -41,6 +41,8 @@ public class Paquete implements Serializable {
     private Cliente remitente;
     @NotBlank
     private Cliente destinatario;
+    
+ 
 
     public enum Estado {
         En_transito,
