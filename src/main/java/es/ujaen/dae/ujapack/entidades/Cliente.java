@@ -7,6 +7,12 @@ package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -15,12 +21,26 @@ import javax.persistence.Entity;
 @Entity
 public class Cliente implements Serializable {
 
+    @Id
+    @Size(min = 9, max = 9)
     private String dni;
+    @NotBlank
+    @NotEmpty
     private String nombre;
+    @NotBlank
+    @NotEmpty
     private String apellidos;
+    @NotBlank
+    @Email
     private String email;
+    @NotBlank
+    @NotEmpty
     private String direccion;
+    @NotBlank
+    @NotEmpty
     private String localidad;
+    @NotBlank
+    @NotEmpty
     private String provincia;
 
     public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia) {

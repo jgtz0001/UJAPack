@@ -1,19 +1,31 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
  */
 package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
 /**
  *
  * @author Pablo
  */
-public class PasoPorPuntoDeControl implements Serializable{
-
+@Entity
+public class PasoPorPuntoDeControl implements Serializable {
+    
+    @NotBlank
+    public PuntoDeControl pasoControl;
+    @Id
+    @NotBlank
+    private LocalDateTime fechaLlegada;
+    @NotBlank
+    private LocalDateTime fechaSalida;
+    
     /**
      * @return the pasoControl
      */
@@ -42,18 +54,23 @@ public class PasoPorPuntoDeControl implements Serializable{
         this.fechaSalida = fechaSalida;
     }
 
-    public PuntoDeControl pasoControl;
-    private LocalDateTime fechaLlegada;
-    private LocalDateTime fechaSalida;
    
-    
-    public PasoPorPuntoDeControl(PuntoDeControl p){
+
+    public PasoPorPuntoDeControl(PuntoDeControl p) {
         fechaLlegada = LocalDateTime.now();
         pasoControl = p;
     }
-    
-    void salida(){
+
+    void salida() {
         setFechaSalida(LocalDateTime.now());
+    }
+
+    public LocalDateTime getFechaLlegada() {
+        return fechaLlegada;
+    }
+
+    public LocalDateTime getFechaSalida() {
+        return fechaSalida;
     }
 
 }

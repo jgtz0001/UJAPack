@@ -42,18 +42,21 @@ public class ServicioUjaPack {
         }
     }
 
-    private final HashMap<Integer, PuntoDeControl> puntosDeControl = new HashMap<Integer, PuntoDeControl>();
-    private final HashMap<Integer, Paquete> paquetes = new HashMap<Integer, Paquete>();
-    private final HashMap<Integer, Cliente> clientes = new HashMap<Integer, Cliente>();
+    private final HashMap<Integer, PuntoDeControl> puntosDeControl;
+    private final HashMap<Integer, Paquete> paquetes;
+    private final HashMap<Integer, Cliente> clientes;
     private static final long LIMIT = 10000000000L;
     private static long last = 0;
-    private final HashMap<Integer, CentroDeLogistica> centros = new HashMap<Integer, CentroDeLogistica>();
+    private final HashMap<Integer, CentroDeLogistica> centros;
 
     /*
 * Constructor de la clase.
      */
     public ServicioUjaPack() {
-
+        puntosDeControl = new HashMap<Integer, PuntoDeControl>();
+        paquetes = new HashMap<Integer, Paquete>();
+        clientes = new HashMap<Integer, Cliente>();
+        centros = new HashMap<Integer, CentroDeLogistica>();
         try {
             leerJson();
         } catch (IOException ex) {
@@ -111,9 +114,7 @@ public class ServicioUjaPack {
             Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, p);
             paquet.setRuta(ruta);
             paquetes.put(localizador, paquet);
-            System.out.println("El paquete ha sido creado con exito.");
         } else {
-            System.out.println("El paquete no ha podido ser creado.");
             throw new IllegalArgumentException("El id no coincide");
         }
         return ruta;
@@ -148,16 +149,20 @@ public class ServicioUjaPack {
     }
 
     /*
-* Avisa del estado, queda por acabar
+    * Avisa del estado y envia el paquete.
+    * @param localizador Identificador del paquete.
+    * @param fechaSalida Fecha de Salida del paquete.
+    * @param punto Punto de control al que llega el paquete.
+    * @return cadena de caracteres informando al cliente.
      */
     String avisaEstado(int localizador, LocalDateTime fechaSalida, PuntoDeControl punto) {
         if (!paquetes.containsKey(localizador)) {
-            throw new IllegalArgumentException("Este localizador: " + localizador + " no existe");         
+            throw new IllegalArgumentException("Este localizador: " + localizador + " no existe");
         }
         paquetes.get(localizador).envia(fechaSalida, punto);
         return ("El paquete: " + localizador + " ha salido a las: " + fechaSalida + " hacia: " + punto.getNombre());
     }
-    
+
     /*
 * Funcion que devuelve todos los paquetes que ha enviado un cliente.
 * @param dni DNI del cliente.
@@ -182,7 +187,7 @@ public class ServicioUjaPack {
 * @return devuelve el coste de enviar el paquete.
      */
     public float calcularImporte(int numPuntosControl, float peso, float altura, float anchura) {
-        float importe = (peso * altura * anchura * (numPuntosControl+1) / 1000);
+        float importe = (peso * altura * anchura * (numPuntosControl + 1) / 1000);
         return importe;
     }
 
@@ -335,9 +340,8 @@ public class ServicioUjaPack {
 
     /*
     *
-    */
-    
-    /*
+     */
+ /*
 * Función que añade la localidad del remitente que falta, depositandolo en primer lugar.
 * @param localidadRem Localidad del remitente.
 * @param ruta ArrayList que tiene la ruta sin completar.
