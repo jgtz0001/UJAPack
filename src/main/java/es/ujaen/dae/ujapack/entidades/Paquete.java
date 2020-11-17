@@ -14,29 +14,29 @@ import java.util.ArrayList;
  * @author jenar
  */
 public class Paquete implements Serializable {
-    private int localizador;  
-    private int numPuntosControl;   
-    private Estado estado;   
-    private float importe;   
-    private float peso; 
-    private float altura;   
-    private ArrayList<PasoPorPuntoDeControl> pasanPaquetes;   
-    private ArrayList<String> ruta;   
-    private Cliente remitente;  
+
+    private int localizador;
+    private int numPuntosControl;
+    private Estado estado;
+    private float importe;
+    private float peso;
+    private float altura;
+    private ArrayList<PasoPorPuntoDeControl> pasanPaquetes;
+    private ArrayList<String> ruta;
+    private Cliente remitente;
     private Cliente destinatario;
 
-
     public enum Estado {
-        Transito,
-        Reparto,
-        Envio,
+        En_transito,
+        En_reparto,
+        Entregado,
         Extraviado;
     }
 
-    public Paquete(int localizador, float importe, float peso, float altura, PuntoDeControl p ) {
+    public Paquete(int localizador, float importe, float peso, float altura, PuntoDeControl p) {
         this.localizador = localizador;
         this.numPuntosControl = 0;
-        this.estado = estado.Transito;
+        this.estado = estado.En_transito;
         this.importe = importe;
         this.peso = peso;
         this.altura = altura;
@@ -69,32 +69,31 @@ public class Paquete implements Serializable {
 
         return false;
     }
-    
-    
-    public static boolean testRepiteEnvio(ArrayList<String> ruta1, ArrayList<String> ruta2, int localizador1,int localizador2) {
-        if ((ruta1 == ruta2)&&(localizador1 == localizador2)) {
+
+    public static boolean testRepiteEnvio(ArrayList<String> ruta1, ArrayList<String> ruta2, int localizador1, int localizador2) {
+        if ((ruta1 == ruta2) && (localizador1 == localizador2)) {
             return false;
         }
         return true;
     }
-    
-    public void envia(LocalDateTime fechaSalida, PuntoDeControl punto){
-        Integer tama = pasanPaquetes.size() - 1;
-        if (tama.equals(numPuntosControl)){
-            if (estado.equals(estado.Reparto)){
-                estado = Estado.Envio;
-            }else{
-                estado = Estado.Reparto;
+
+    public void envia(LocalDateTime fechaSalida, PuntoDeControl punto) {
+        Integer tama = pasanPaquetes.size();
+        if (estado.equals(estado.En_transito)) {
+            estado = estado.En_reparto;
+        }
+
+        if (tama.equals(numPuntosControl)) {
+            if (estado.equals(estado.En_reparto)) {
+                estado = Estado.Entregado;
             }
-            
-        }else{
-            this.pasanPaquetes.get(tama).setFechaSalida(fechaSalida);
+        } else {
+            this.pasanPaquetes.get(tama-1).setFechaSalida(fechaSalida);
             PasoPorPuntoDeControl nuevo = new PasoPorPuntoDeControl(punto);
             pasanPaquetes.add(nuevo);
         }
-        
     }
-    
+
     /**
      * @return the pasanPaquetes
      */
@@ -115,10 +114,10 @@ public class Paquete implements Serializable {
     public Cliente getRemitente() {
         return remitente;
     }
-    
+
     public Estado getEstado() {
-            return estado;
-        }
+        return estado;
+    }
 
     /**
      * @return the ruta

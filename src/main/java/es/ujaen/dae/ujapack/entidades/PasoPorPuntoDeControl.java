@@ -56,4 +56,14 @@ public class PasoPorPuntoDeControl implements Serializable{
         setFechaSalida(LocalDateTime.now());
     }
 
+    public LocalDateTime getFechaLlegada() {
+        return fechaLlegada;
+    }
+
+    public LocalDateTime getFechaSalida() {
+        return fechaSalida;
+    }
+    
+    
+
 }

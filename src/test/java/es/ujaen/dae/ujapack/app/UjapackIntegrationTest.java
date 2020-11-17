@@ -8,7 +8,9 @@ package es.ujaen.dae.ujapack.app;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Paquete;
 import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
+import es.ujaen.dae.ujapack.entidades.PuntoDeControl;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
@@ -137,5 +139,41 @@ public class UjapackIntegrationTest {
 
         Assertions.assertEquals(0.004000000189989805, serviPack.calcularImporte(3, 1, 1, 1));
 
+    }
+
+    /*
+     String avisaEstado(int localizador, LocalDateTime fechaSalida, PuntoDeControl punto) {
+        if (!paquetes.containsKey(localizador)) {
+            throw new IllegalArgumentException("Este localizador: " + localizador + " no existe");         
+        }
+        paquetes.get(localizador).envia(fechaSalida, punto);
+        return ("El paquete: " + localizador + " ha salido a las: " + fechaSalida + " hacia: " + punto.getNombre());
+    }
+     */
+    @Test
+    public void testAvisaEstado() throws IOException {
+        Cliente Remitente1 = new Cliente("12323234", "", "", "", "", "Jaén", "Jaén");
+        Cliente Destinatario0 = new Cliente("12334243", "", "", "", "", "Córdoba", "Córdoba");
+
+        ArrayList<String> e0 = new ArrayList<String>();
+        ArrayList<String> e1 = new ArrayList<String>();
+
+        e0 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
+
+        ArrayList<String> provincias = new ArrayList<String>();
+        PuntoDeControl p = new PuntoDeControl(1, "CL Andalucía-Extremadura", "Sevilla", provincias);
+        Paquete paquet = new Paquete(1234567890, (float) 0.004000000189989805, 1, 1, p);
+        paquet.setRuta(e0);
+
+        Assertions.assertEquals("En_transito", paquet.getEstado().toString());
+        paquet.envia(LocalDateTime.now(), p);
+
+        Assertions.assertNotNull(paquet.getPasanPaquetes().get(0).getFechaLlegada());
+
+        Assertions.assertEquals("En_reparto", paquet.getEstado().toString());
+        paquet.envia(LocalDateTime.now(), p);
+
+        paquet.envia(LocalDateTime.now(), p);
+        Assertions.assertEquals("Entregado", paquet.getEstado().toString());
     }
 }
