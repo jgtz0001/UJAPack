@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
 
-@SpringBootApplication(scanBasePackages = "es.ujaen.dae.ujapack.app")
+@SpringBootApplication(scanBasePackages = "es.ujaen.dae.ujapack.beans")
 @EntityScan(basePackages = "es.ujaen.dae.ujapack.entidades")
 public class UjapackApplication {
 
