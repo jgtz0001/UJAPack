@@ -141,15 +141,6 @@ public class UjapackIntegrationTest {
 
     }
 
-    /*
-     String avisaEstado(int localizador, LocalDateTime fechaSalida, PuntoDeControl punto) {
-        if (!paquetes.containsKey(localizador)) {
-            throw new IllegalArgumentException("Este localizador: " + localizador + " no existe");         
-        }
-        paquetes.get(localizador).envia(fechaSalida, punto);
-        return ("El paquete: " + localizador + " ha salido a las: " + fechaSalida + " hacia: " + punto.getNombre());
-    }
-     */
     @Test
     public void testAvisaEstado() throws IOException {
         Cliente Remitente1 = new Cliente("12323234", "", "", "", "", "Jaén", "Jaén");
