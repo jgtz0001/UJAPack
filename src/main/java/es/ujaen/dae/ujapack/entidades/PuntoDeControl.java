@@ -34,6 +34,7 @@ public class PuntoDeControl implements Serializable {
     @NotBlank
     ArrayList<String> provincia;
     
+    
   
 
     public PuntoDeControl() {

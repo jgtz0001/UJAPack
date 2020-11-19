@@ -30,8 +30,9 @@ public class PasoPorPuntoDeControl implements Serializable {
     private LocalDateTime fechaSalida;
     
     @OneToOne
-    @JoinColumn(name="fecha_llegada")
-    List<PuntoDeControl> PasoControl;
+    @JoinColumn(name="paso_control")
+    List<PuntoDeControl> Pasocontrol;
+
     /**
      * @return the pasoControl
      */
