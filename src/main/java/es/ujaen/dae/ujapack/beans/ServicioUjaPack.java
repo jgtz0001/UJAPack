@@ -19,6 +19,7 @@ import com.google.gson.JsonObject;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import es.ujaen.dae.ujapack.entidades.PasoPorPuntoDeControl;
 import es.ujaen.dae.ujapack.repositorios.RepositorioCliente;
+import es.ujaen.dae.ujapack.repositorios.RepositorioPaquete;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Collections;
@@ -27,9 +28,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ServicioUjaPack {
-    
-@Autowired
-RepositorioCliente RepositorioClientes;
+
+    @Autowired
+    RepositorioCliente RepositorioClientes;
 
     private final HashMap<Integer, PuntoDeControl> puntosDeControl;
     private final HashMap<Integer, Paquete> paquetes;
@@ -38,8 +39,7 @@ RepositorioCliente RepositorioClientes;
     private static long last = 0;
     private final HashMap<Integer, CentroDeLogistica> centros;
 
-    
-        class Nodo {
+    class Nodo {
 
         Integer id;
         private ArrayList<Integer> lista;
@@ -56,6 +56,7 @@ RepositorioCliente RepositorioClientes;
             return conexionesId;
         }
     }
+
     /*
 * Constructor de la clase.
      */
@@ -87,14 +88,15 @@ RepositorioCliente RepositorioClientes;
         }
         return last = id;
     }
-    public void altaCliente(Cliente cliente){
-        
-        if(RepositorioClientes.buscar(cliente.getDni()).isPresent()){
-             throw new IllegalArgumentException("El cliente ya existe");
+
+    public void altaCliente(Cliente cliente) {
+
+        if (RepositorioClientes.buscar(cliente.getDni()).isPresent()) {
+            throw new IllegalArgumentException("El cliente ya existe");
         }
-       RepositorioClientes.guardar(cliente);
+        RepositorioClientes.guardar(cliente);
     }
-    
+
     /*
 * alta Envio es una función que de manera interna, crea el paquete con todos los atributos de su clase.
 * @param peso Corresponde al peso del paquete.
@@ -105,14 +107,24 @@ RepositorioCliente RepositorioClientes;
 + @return Devuelve la ruta que va a seguir el paquete.
      */
     public ArrayList<String> altaEnvio(float peso, float anchura, float altura, Cliente remitente, Cliente destinatario) {
-        if (buscaPorDni(destinatario.getDni()) == false) {
-            clientes.put(Integer.parseInt(destinatario.getDni()), destinatario);
+//        if (buscaPorDni(destinatario.getDni()) == false) {
+//          clientes.put(Integer.parseInt(destinatario.getDni()), destinatario);
+//        }
+
+        if (!RepositorioClientes.buscar(destinatario.getDni()).isPresent()) {
+            altaCliente(destinatario);
         }
 
+//        Integer localizador = (int) getID();
+//        while (paquetes.containsKey(localizador)) {
+//            localizador = (int) getID();
+//        }
         Integer localizador = (int) getID();
-        while (paquetes.containsKey(localizador)) {
-            localizador = (int) getID();
-        }
+//        boolean esta;
+//        do {
+//            localizador = (int) getID();
+//            esta = RepositorioPaquete.buscar(localizador);
+//        } while (!esta);
 
         Integer idProvinciaRem = obtenerId(remitente.getProvincia());
         Integer idProvinciaDest = obtenerId(destinatario.getProvincia());

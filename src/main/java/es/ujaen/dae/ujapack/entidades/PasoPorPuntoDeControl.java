@@ -7,8 +7,11 @@ package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -26,6 +29,9 @@ public class PasoPorPuntoDeControl implements Serializable {
     @NotBlank
     private LocalDateTime fechaSalida;
     
+    @OneToOne
+    @JoinColumn(name="fecha_llegada")
+    List<PuntoDeControl> PasoControl;
     /**
      * @return the pasoControl
      */
