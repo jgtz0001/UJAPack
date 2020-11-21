@@ -5,14 +5,41 @@
  */
 package es.ujaen.dae.ujapack.entidades;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  *
  * @author Pablo
  */
-public class PasoPorPuntoDeControl implements Serializable{
+public class PasoPorPuntoDeControl{
+
+    /**
+     * @return the fechaLlegada
+     */
+    public LocalDateTime getFechaLlegada() {
+        return fechaLlegada;
+    }
+
+    /**
+     * @return the fechaSalida
+     */
+    public LocalDateTime getFechaSalida() {
+        return fechaSalida;
+    }
+
+    public PuntoDeControl pasoControl;
+    private LocalDateTime fechaLlegada;
+    private LocalDateTime fechaSalida;
+   
+    
+    public PasoPorPuntoDeControl(PuntoDeControl p){
+        fechaLlegada = LocalDateTime.now();
+        pasoControl = p;
+    }
+    
+    void salida(){
+        setFechaSalida(LocalDateTime.now());
+    }
 
     /**
      * @return the pasoControl
@@ -41,29 +68,5 @@ public class PasoPorPuntoDeControl implements Serializable{
     public void setFechaSalida(LocalDateTime fechaSalida) {
         this.fechaSalida = fechaSalida;
     }
-
-    public PuntoDeControl pasoControl;
-    private LocalDateTime fechaLlegada;
-    private LocalDateTime fechaSalida;
-   
-    
-    public PasoPorPuntoDeControl(PuntoDeControl p){
-        fechaLlegada = LocalDateTime.now();
-        pasoControl = p;
-    }
-    
-    void salida(){
-        setFechaSalida(LocalDateTime.now());
-    }
-
-    public LocalDateTime getFechaLlegada() {
-        return fechaLlegada;
-    }
-
-    public LocalDateTime getFechaSalida() {
-        return fechaSalida;
-    }
-    
-    
 
 }
