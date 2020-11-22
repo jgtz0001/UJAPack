@@ -32,8 +32,8 @@ public class PasoPorPuntoDeControl{
     private LocalDateTime fechaSalida;
    
     
-    public PasoPorPuntoDeControl(PuntoDeControl p){
-        fechaLlegada = LocalDateTime.now();
+    public PasoPorPuntoDeControl(PuntoDeControl p, LocalDateTime fechaEntrada){
+        fechaLlegada = fechaEntrada;
         pasoControl = p;
     }
     

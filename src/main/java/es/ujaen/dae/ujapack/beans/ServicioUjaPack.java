@@ -96,9 +96,9 @@ public class ServicioUjaPack {
 * @param altura Medida sobre el paquete.
 * @param remitente Cliente que manda el paquete.
 * @param destinatario Cliente a que va dirigido el paquete.
-+ @return Devuelve la ruta que va a seguir el paquete.
++ @return Devuelve el paquete.
      */
-    public ArrayList<PuntoDeControl> altaEnvio(float peso, float anchura, float altura, Cliente remitente, Cliente destinatario) {
+    public Paquete altaEnvio(float peso, float anchura, float altura, Cliente remitente, Cliente destinatario) {
         if (buscaPorDni(destinatario.getDni()) == false) {
             clientes.put(Integer.parseInt(destinatario.getDni()), destinatario);
         }
@@ -113,16 +113,37 @@ public class ServicioUjaPack {
         ArrayList<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
         float costeEnvio = 0;
 
-        if (idProvinciaDest != 0 && idProvinciaRem != 0) {
-            ruta = calcularRutaPaquete(remitente.getLocalidad(), destinatario.getLocalidad(), idProvinciaRem, idProvinciaDest);
-            costeEnvio = calcularImporte(ruta.size(), peso, altura, anchura);
-
-            Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, ruta);
-            paquetes.put(localizador, paquet);
-        } else {
+        if (idProvinciaDest == 0 || idProvinciaRem == 0) {
             throw new IdIncorrecto();
         }
-        return ruta;
+        ruta = calcularRutaPaquete(remitente.getLocalidad(), destinatario.getLocalidad(), idProvinciaRem, idProvinciaDest);
+        costeEnvio = calcularImporte(ruta.size(), peso, altura, anchura);
+
+        ruta = completaRuta(ruta, remitente.getProvincia(), destinatario.getProvincia());
+
+        Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, ruta);
+        paquetes.put(localizador, paquet);
+        return paquet;
+    }
+
+    private ArrayList<PuntoDeControl> completaRuta(ArrayList<PuntoDeControl> ruta, String provinciaRem, String provinciaDest) {
+        Integer idRem = obtenerId(provinciaRem);
+        Integer idDest = obtenerId(provinciaDest);
+        PuntoDeControl puntoControlRem = new PuntoDeControl(idRem, provinciaRem);
+        PuntoDeControl puntoControlDest = new PuntoDeControl(idDest, provinciaDest);
+
+        ArrayList<PuntoDeControl> rutaDefinitiva = new ArrayList<PuntoDeControl>();
+        if (!ruta.get(0).getLocalizacion().equals(provinciaRem)) {
+            rutaDefinitiva.add(puntoControlRem);
+        }
+
+        for (int i = 0; i < ruta.size(); i++) {
+            rutaDefinitiva.add(ruta.get(i));
+        }
+        if (!ruta.get(ruta.size()-1).getLocalizacion().equals(provinciaDest)) {
+            rutaDefinitiva.add(puntoControlDest);
+        }
+        return rutaDefinitiva;
     }
 
     /*
@@ -164,7 +185,7 @@ public class ServicioUjaPack {
         if (!paquetes.containsKey(localizador)) {
             throw new LocalizadorNoExiste();
         }
-        paquetes.get(localizador).envia(fechaSalida, punto);
+        paquetes.get(localizador).notificaSalida(fechaSalida, punto);
         return (fechaSalida + punto.getNombre());
     }
 
@@ -175,10 +196,10 @@ public class ServicioUjaPack {
      */
     private ArrayList<Paquete> listaPaquetes(String dni) {
         ArrayList<Paquete> lista = new ArrayList();
-        if (dni.length() != 8){
+        if (dni.length() != 8) {
             throw new DNINoValido();
         }
-        if (clientes.containsKey(dni)){
+        if (clientes.containsKey(dni)) {
             throw new DNINoEncontrado();
         }
         for (Paquete value : paquetes.values()) {
@@ -291,6 +312,9 @@ public class ServicioUjaPack {
         Integer contador = 0;
 
         Nodo primero = new Nodo(origen, conexiones);
+        if (origen.equals(destino)) {
+            return rutaString(primero.lista);
+        }
         arrayBusquedaNodos.add(primero);
         ArrayList<Integer> conexionesWhile = new ArrayList<Integer>();
         ArrayList<Integer> copiaPrimero = new ArrayList<Integer>();
