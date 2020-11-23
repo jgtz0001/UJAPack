@@ -120,8 +120,8 @@ public class ServicioUjaPack {
         costeEnvio = calcularImporte(ruta.size(), peso, altura, anchura);
 
         ruta = completaRuta(ruta, remitente.getProvincia(), destinatario.getProvincia());
-
-        Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, ruta);
+ 
+       Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, ruta);
         paquetes.put(localizador, paquet);
         return paquet;
     }
