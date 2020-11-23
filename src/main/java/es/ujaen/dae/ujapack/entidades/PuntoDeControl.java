@@ -33,6 +33,13 @@ public class PuntoDeControl implements Serializable {
     public PuntoDeControl() {
     }
 
+    public PuntoDeControl(int id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+        this.localizacion = nombre;
+        this.provincia = null;
+    }
+
     public PuntoDeControl(int id, String nombre, String localizacion, ArrayList<String> provincia) {
         this.id = id;
         this.nombre = nombre;
