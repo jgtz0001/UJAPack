@@ -33,11 +33,15 @@ public class PuntoDeControl implements Serializable {
     String localizacion;
     @NotBlank
     ArrayList<String> provincia;
-    
-    
-  
 
     public PuntoDeControl() {
+    }
+
+    public PuntoDeControl(int id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+        this.localizacion = nombre;
+        this.provincia = null;
     }
 
     public PuntoDeControl(int id, String nombre, String localizacion, ArrayList<String> provincia) {

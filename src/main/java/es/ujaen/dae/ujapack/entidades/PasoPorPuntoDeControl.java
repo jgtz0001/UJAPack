@@ -20,7 +20,7 @@ import javax.validation.constraints.NotBlank;
  */
 @Entity
 public class PasoPorPuntoDeControl implements Serializable {
-    
+
     @NotBlank
     public PuntoDeControl pasoControl;
     @Id
@@ -28,10 +28,33 @@ public class PasoPorPuntoDeControl implements Serializable {
     private LocalDateTime fechaLlegada;
     @NotBlank
     private LocalDateTime fechaSalida;
-    
+
     @OneToOne
-    @JoinColumn(name="paso_control")
+    @JoinColumn(name = "paso_control")
     List<PuntoDeControl> Pasocontrol;
+
+    public PasoPorPuntoDeControl(PuntoDeControl p, LocalDateTime fechaEntrada) {
+        fechaLlegada = fechaEntrada;
+        pasoControl = p;
+    }
+
+    /**
+     * @return the fechaLlegada
+     */
+    public LocalDateTime getFechaLlegada() {
+        return fechaLlegada;
+    }
+
+    /**
+     * @return the fechaSalida
+     */
+    public LocalDateTime getFechaSalida() {
+        return fechaSalida;
+    }
+
+    void salida() {
+        setFechaSalida(LocalDateTime.now());
+    }
 
     /**
      * @return the pasoControl
@@ -59,25 +82,6 @@ public class PasoPorPuntoDeControl implements Serializable {
      */
     public void setFechaSalida(LocalDateTime fechaSalida) {
         this.fechaSalida = fechaSalida;
-    }
-
-   
-
-    public PasoPorPuntoDeControl(PuntoDeControl p) {
-        fechaLlegada = LocalDateTime.now();
-        pasoControl = p;
-    }
-
-    void salida() {
-        setFechaSalida(LocalDateTime.now());
-    }
-
-    public LocalDateTime getFechaLlegada() {
-        return fechaLlegada;
-    }
-
-    public LocalDateTime getFechaSalida() {
-        return fechaSalida;
     }
 
 }

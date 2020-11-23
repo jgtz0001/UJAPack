@@ -5,6 +5,8 @@
  */
 package es.ujaen.dae.ujapack.entidades;
 
+import es.ujaen.dae.ujapack.excepciones.FechaIncorrecta;
+import es.ujaen.dae.ujapack.excepciones.PuntoDeControlEquivocado;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -22,7 +25,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 public class Paquete implements Serializable {
-    
+
     @Id
     @Size(min = 10, max = 10)
     private int localizador;
@@ -38,83 +41,82 @@ public class Paquete implements Serializable {
     private float altura;
     @NotBlank
     private ArrayList<PasoPorPuntoDeControl> pasanPaquetes;
-    @NotBlank
-    private ArrayList<String> ruta;
+   
+    private ArrayList<PuntoDeControl> ruta;
     @NotBlank
     private Cliente remitente;
     @NotBlank
     private Cliente destinatario;
-    
-    
+
     @OneToMany
-    @JoinColumn(name="pasanPaquetes")
+    @JoinColumn(name = "pasanPaquetes")
     List<PasoPorPuntoDeControl> Pasanpaquetes;
 
     public enum Estado {
-        En_transito,
-        En_reparto,
+        EnTransito,
+        EnReparto,
         Entregado,
         Extraviado;
     }
 
-    public Paquete(int localizador, float importe, float peso, float altura, PuntoDeControl p) {
+    public Paquete(int localizador, float importe, float peso, float altura, ArrayList<PuntoDeControl> ruta) {
         this.localizador = localizador;
-        this.numPuntosControl = 0;
-        this.estado = estado.En_transito;
+        this.numPuntosControl = ruta.size();
+        this.estado = estado.EnTransito;
         this.importe = importe;
         this.peso = peso;
         this.altura = altura;
+        this.ruta = ruta;
         this.pasanPaquetes = new ArrayList<PasoPorPuntoDeControl>();
-        PasoPorPuntoDeControl primero = new PasoPorPuntoDeControl(p);
+
+        PasoPorPuntoDeControl primero = new PasoPorPuntoDeControl(ruta.get(0), LocalDateTime.now());
         pasanPaquetes.add(primero);
     }
 
-    public static boolean checkLocalizador(int localizador) {
-        if (Integer.toString(localizador).length() == 10) {
-            return true;
+    void controlaExcepciones(PuntoDeControl punto) {
+        for (int i = 0; i < pasanPaquetes.size(); i++) {
+            if (pasanPaquetes.get(i).pasoControl.localizacion.equals(punto.localizacion))//Aquí encontraria un punto de control repetido, por lo que no valdría.
+            {
+                throw new PuntoDeControlEquivocado();
+            }
         }
-        return false;
-    }
-
-    public static boolean checkEnvio(String dni1, String dni2, String dir1, String dir2, String loc1, String loc2) {
-
-        if ((dni1 != dni2) || (dir1 != dir2) || (loc1 != loc2)) {
-            return true;
+        boolean esta = false;
+        for (int i = 0; i < ruta.size(); i++) {
+            if (ruta.get(i).getLocalizacion().equals(punto.localizacion)) {
+                esta = true;
+                break;
+            }
         }
-
-        return false;
-    }
-
-    public static boolean checkRepiteLocalizador(int localizador1, int localizador2) {
-
-        if (localizador1 == localizador2) {
-            return true;
+        if (!esta) {
+            throw new PuntoDeControlEquivocado(); // El punto de control no correspondería con la ruta.
         }
 
-        return false;
-    }
-
-    public static boolean testRepiteEnvio(ArrayList<String> ruta1, ArrayList<String> ruta2, int localizador1, int localizador2) {
-        if ((ruta1 == ruta2) && (localizador1 == localizador2)) {
-            return false;
+        if (!ruta.get(pasanPaquetes.size()).localizacion.equals(punto.localizacion)) {
+            throw new PuntoDeControlEquivocado(); // El punto de control proporcionado esta adelantado con la ruta.
         }
-        return true;
     }
 
-    public void envia(LocalDateTime fechaSalida, PuntoDeControl punto) {
+    public void notificaSalida(LocalDateTime fechaSalida, PuntoDeControl punto) {
+        controlaExcepciones(punto);
+
+        PasoPorPuntoDeControl nuevo = new PasoPorPuntoDeControl(punto, fechaSalida);
+        pasanPaquetes.add(nuevo);
+    }
+
+    public void notificaEntrada(LocalDateTime fechaEntrada) {
         Integer tama = pasanPaquetes.size();
-        if (estado.equals(estado.En_transito)) {
-            estado = estado.En_reparto;
-        }
 
         if (tama.equals(numPuntosControl)) {
-            if (estado.equals(estado.En_reparto)) {
-                estado = Estado.Entregado;
+            if (estado.equals(estado.EnReparto)) {
+                estado = estado.Entregado;
+            } else {
+                estado = estado.EnReparto;
             }
         } else {
-            this.pasanPaquetes.get(tama - 1).setFechaSalida(fechaSalida);
-            PasoPorPuntoDeControl nuevo = new PasoPorPuntoDeControl(punto);
-            pasanPaquetes.add(nuevo);
+            if (this.pasanPaquetes.get(tama - 1).getFechaLlegada().isAfter(fechaEntrada)) {
+                throw new FechaIncorrecta();
+            }
+            this.pasanPaquetes.get(tama - 1).setFechaSalida(fechaEntrada);
         }
     }
 
@@ -144,18 +146,25 @@ public class Paquete implements Serializable {
     }
 
     /**
+     * @return the numPuntosControl
+     */
+    public int getControl() {
+        return numPuntosControl;
+    }
+
+    /**
      * @return the ruta
      */
-    public ArrayList<String> getRuta() {
+    public ArrayList<PuntoDeControl> getRuta() {
         return ruta;
     }
 
     /**
      * @param ruta the ruta to set
      */
-    public void setRuta(ArrayList<String> ruta) {
+    public void setRuta(ArrayList<PuntoDeControl> ruta) {
         this.ruta = ruta;
-        this.numPuntosControl = ruta.size();
+//this.numPuntosControl = ruta.size();
     }
 
 }
