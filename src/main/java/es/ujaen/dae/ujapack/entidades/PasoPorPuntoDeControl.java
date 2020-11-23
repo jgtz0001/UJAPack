@@ -5,6 +5,7 @@
  */
 package es.ujaen.dae.ujapack.entidades;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.Id;
