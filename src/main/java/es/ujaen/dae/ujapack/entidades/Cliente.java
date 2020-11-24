@@ -13,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -28,22 +27,17 @@ public class Cliente implements Serializable {
     @Size(min = 8, max = 8)
     private String dni;
     @NotBlank
-    @NotEmpty
     private String nombre;
     @NotBlank
-    @NotEmpty
     private String apellidos;
     @NotBlank
     @Email
     private String email;
     @NotBlank
-    @NotEmpty
     private String direccion;
     @NotBlank
-    @NotEmpty
     private String localidad;
     @NotBlank
-    @NotEmpty
     private String provincia;
     
     @OneToMany

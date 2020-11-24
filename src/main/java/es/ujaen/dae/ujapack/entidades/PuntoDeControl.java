@@ -15,7 +15,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 /**
  *
@@ -27,9 +26,9 @@ public class PuntoDeControl implements Serializable {
     @Id
     @Max(10)
     private int id;
-    @NotEmpty
+    @NotBlank
     String nombre;
-    @NotEmpty
+    @NotBlank
     String localizacion;
     @NotBlank
     ArrayList<String> provincia;

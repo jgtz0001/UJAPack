@@ -16,7 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -41,7 +40,7 @@ public class Paquete implements Serializable {
     private float altura;
     @NotBlank
     private ArrayList<PasoPorPuntoDeControl> pasanPaquetes;
-
+    @NotBlank
     private ArrayList<PuntoDeControl> ruta;
     @NotBlank
     private Cliente remitente;
