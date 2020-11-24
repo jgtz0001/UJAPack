@@ -49,7 +49,22 @@ public class Paquete implements Serializable {
         pasanPaquetes.add(primero);
     }
 
-    void controlaExcepciones(PuntoDeControl punto) {
+    void controlaExcepcionesSalida(PuntoDeControl punto) {
+        boolean esta = false;
+        for (int i = 0; i < ruta.size(); i++) {
+            if (ruta.get(i).getLocalizacion().equals(punto.localizacion)) {
+                esta = true;
+                break;
+            }
+        }
+        if (!esta) {
+            throw new PuntoDeControlEquivocado(); // El punto de control no correspondería con la ruta.
+        }
+
+        
+    }
+    
+    void controlaExcepcionesEntrada(PuntoDeControl punto) {
         for (int i = 0; i < pasanPaquetes.size(); i++) {
             if (pasanPaquetes.get(i).pasoControl.localizacion.equals(punto.localizacion))//Aquí encontraria un punto de control repetido, por lo que no valdría.
             {
@@ -72,14 +87,15 @@ public class Paquete implements Serializable {
         }
     }
 
-    public void notificaSalida(LocalDateTime fechaSalida, PuntoDeControl punto) {
-        controlaExcepciones(punto);
+    public void notificaEntrada(LocalDateTime fechaEntrada, PuntoDeControl punto) {
+        controlaExcepcionesEntrada(punto);
 
-        PasoPorPuntoDeControl nuevo = new PasoPorPuntoDeControl(punto, fechaSalida);
+        PasoPorPuntoDeControl nuevo = new PasoPorPuntoDeControl(punto, fechaEntrada);
         pasanPaquetes.add(nuevo);
     }
 
-    public void notificaEntrada(LocalDateTime fechaEntrada) {
+    public void notificaSalida(LocalDateTime fechaSalida, PuntoDeControl punto) {
+        controlaExcepcionesSalida(punto);     // Con esto te aseguras de que el punto de control es el correcto.
         Integer tama = pasanPaquetes.size();
 
         if (tama.equals(numPuntosControl)) {
@@ -89,10 +105,10 @@ public class Paquete implements Serializable {
                 estado = estado.EnReparto;
             }
         } else {
-            if (this.pasanPaquetes.get(tama - 1).getFechaLlegada().isAfter(fechaEntrada)) {
+            if (this.pasanPaquetes.get(tama - 1).getFechaLlegada().isAfter(fechaSalida)) {
                 throw new FechaIncorrecta();
             }
-            this.pasanPaquetes.get(tama - 1).setFechaSalida(fechaEntrada);
+            this.pasanPaquetes.get(tama - 1).setFechaLlegada(fechaSalida);
         }
     }
 
@@ -117,8 +133,8 @@ public class Paquete implements Serializable {
         return remitente;
     }
 
-    public Estado getEstado() {
-        return estado;
+    public String getEstado() {
+        return estado.toString();
     }
 
     /**
@@ -141,6 +157,13 @@ public class Paquete implements Serializable {
     public void setRuta(ArrayList<PuntoDeControl> ruta) {
         this.ruta = ruta;
         //this.numPuntosControl = ruta.size();
+    }
+
+    /**
+     * @return the localizador
+     */
+    public int getLocalizador() {
+        return localizador;
     }
 
 }

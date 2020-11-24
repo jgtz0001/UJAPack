@@ -181,12 +181,28 @@ public class ServicioUjaPack {
     * @param punto Punto de control al que llega el paquete.
     * @return cadena de caracteres informando al cliente.
      */
-    public String avisaEstado(int localizador, LocalDateTime fechaSalida, PuntoDeControl punto) {
+    public String notificarSalida(int localizador, LocalDateTime fechaSalida, PuntoDeControl punto) {
         if (!paquetes.containsKey(localizador)) {
             throw new LocalizadorNoExiste();
         }
         paquetes.get(localizador).notificaSalida(fechaSalida, punto);
+        
         return (fechaSalida + punto.getNombre());
+    }
+    
+    /*
+    * Avisa del estado y envia el paquete.
+    * @param localizador Identificador del paquete.
+    * @param fechaEntrada Fecha de Entrada del paquete.
+    * @param punto Punto de control al que llega el paquete.
+    * @return cadena de caracteres informando al cliente.
+     */
+    public String notificarEntrada(int localizador, LocalDateTime fechaEntrada, PuntoDeControl punto) {
+        if (!paquetes.containsKey(localizador)) {
+            throw new LocalizadorNoExiste();
+        }
+        paquetes.get(localizador).notificaEntrada(fechaEntrada, punto);
+        return (fechaEntrada + punto.getNombre());
     }
 
     /*
