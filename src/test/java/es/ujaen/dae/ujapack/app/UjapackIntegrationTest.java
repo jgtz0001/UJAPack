@@ -59,35 +59,19 @@ public class UjapackIntegrationTest {
     public void testAvisaEstado() throws IOException {
         Cliente Remitente1 = new Cliente("12323234", "", "", "", "", "Jaén", "Jaén");
         Cliente Destinatario0 = new Cliente("12334243", "", "", "", "", "Córdoba", "Córdoba");
-
-        /*Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
-
-        Assertions.assertEquals("EnTransito", paquet.getEstado().toString());
-
-        paquet.notificaSalida(LocalDateTime.now(), paquet.getRuta().get(1));
-        Assertions.assertEquals("EnTransito", paquet.getEstado().toString());
-
-        paquet.notificaEntrada(LocalDateTime.now(), paquet.getRuta().get(1));
-        paquet.notificaSalida(LocalDateTime.now(), paquet.getRuta().get(2));
-
-        paquet.notificaEntrada(LocalDateTime.now(), paquet.getRuta().get(2));              
-        
-        Assertions.assertEquals("EnReparto", paquet.getEstado().toString());
-    
-        paquet.notificaEntrada(LocalDateTime.now(),paquet.getRuta().get(2));
-        Assertions.assertEquals("Entregado", paquet.getEstado().toString());*/
         
         Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
         
         Assertions.assertEquals("EnTransito", paquet.getEstado());
         
-        serviPack.notificarEntrada(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(1));
         serviPack.notificarSalida(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(1));
+        serviPack.notificarEntrada(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(1));
         
         Assertions.assertEquals("EnTransito", paquet.getEstado());
         
-        serviPack.notificarEntrada(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(2));
         serviPack.notificarSalida(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(2));
+        serviPack.notificarEntrada(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(2));
+     
         
         Assertions.assertEquals("EnReparto", paquet.getEstado());
         
@@ -110,41 +94,41 @@ public class UjapackIntegrationTest {
         PuntoDeControl punto = new PuntoDeControl(5, "CL Cataluña", "Barcelona", null);
 
         Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
-            paquet.notificaEntrada(LocalDateTime.now(), paquet.getRuta().get(1));
+            serviPack.notificarSalida(paquet.getLocalizador(),fechaSalida, punto);
         });
 
     }
     
     
-//
-//    @Test
-//    public void testRutaIncorrectaPuntoDeRutaAtrasado() throws IOException {
-//        Cliente Remitente1 = new Cliente("12323234", "", "", "", "", "Jaén", "Jaén");
-//        Cliente Destinatario0 = new Cliente("12334243", "", "", "", "", "Córdoba", "Córdoba");
-//
-//        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
-//
-//        LocalDateTime fechaSalida = LocalDateTime.now();
-//        PuntoDeControl punto = new PuntoDeControl(1, "Jaén", "Jaén", null);
-//
-//        Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
-//            paquet.notificaSalida(fechaSalida, punto);
-//        });
-//    }
-//
-//    @Test
-//    public void testRutaIncorrectaPuntoDeRutaAdelantado() throws IOException {
-//        Cliente Remitente1 = new Cliente("12323234", "", "", "", "", "Jaén", "Jaén");
-//        Cliente Destinatario0 = new Cliente("12334243", "", "", "", "", "Córdoba", "Córdoba");
-//
-//        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
-//
-//        LocalDateTime fechaSalida = LocalDateTime.now();
-//        PuntoDeControl punto = new PuntoDeControl(1, "Córdoba", "Córdoba", null);
-//
-//        Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
-//            paquet.notificaSalida(fechaSalida, punto);
-//        });
-//    } 
+
+    @Test
+    public void testRutaIncorrectaPuntoDeRutaAtrasado() throws IOException {
+        Cliente Remitente1 = new Cliente("12323234", "", "", "", "", "Jaén", "Jaén");
+        Cliente Destinatario0 = new Cliente("12334243", "", "", "", "", "Córdoba", "Córdoba");
+
+        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
+
+        LocalDateTime fechaSalida = LocalDateTime.now();
+        PuntoDeControl punto = new PuntoDeControl(1, "Jaén", "Jaén", null);
+
+        Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
+            serviPack.notificarSalida(paquet.getLocalizador(),fechaSalida, punto);
+        });
+    }
+
+    @Test
+    public void testRutaIncorrectaPuntoDeRutaAdelantado() throws IOException {
+        Cliente Remitente1 = new Cliente("12323234", "", "", "", "", "Jaén", "Jaén");
+        Cliente Destinatario0 = new Cliente("12334243", "", "", "", "", "Córdoba", "Córdoba");
+
+        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
+
+        LocalDateTime fechaSalida = LocalDateTime.now();
+        PuntoDeControl punto = new PuntoDeControl(1, "Córdoba", "Córdoba", null);
+
+        Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
+             serviPack.notificarSalida(paquet.getLocalizador(),fechaSalida, punto);
+        });
+    } 
 
 }

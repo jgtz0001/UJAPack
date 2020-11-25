@@ -51,6 +51,7 @@ public class Paquete implements Serializable {
 
     void controlaExcepcionesSalida(PuntoDeControl punto) {
         boolean esta = false;
+        Integer tama = pasanPaquetes.size();
         for (int i = 0; i < ruta.size(); i++) {
             if (ruta.get(i).getLocalizacion().equals(punto.localizacion)) {
                 esta = true;
@@ -61,9 +62,14 @@ public class Paquete implements Serializable {
             throw new PuntoDeControlEquivocado(); // El punto de control no correspondería con la ruta.
         }
 
-        
+        if (!tama.equals(numPuntosControl)) {
+            if (!ruta.get(pasanPaquetes.size()).localizacion.equals(punto.localizacion)) {
+                throw new PuntoDeControlEquivocado(); // El punto de control no correspondería con la ruta.
+            }
+        }
+
     }
-    
+
     void controlaExcepcionesEntrada(PuntoDeControl punto) {
         for (int i = 0; i < pasanPaquetes.size(); i++) {
             if (pasanPaquetes.get(i).pasoControl.localizacion.equals(punto.localizacion))//Aquí encontraria un punto de control repetido, por lo que no valdría.
@@ -101,13 +107,15 @@ public class Paquete implements Serializable {
         if (tama.equals(numPuntosControl)) {
             if (estado.equals(estado.EnReparto)) {
                 estado = estado.Entregado;
-            } else {
+            }
+
+        } else {
+            if (tama.equals(numPuntosControl - 1)) {
                 estado = estado.EnReparto;
             }
-        } else {
-            if (this.pasanPaquetes.get(tama - 1).getFechaLlegada().isAfter(fechaSalida)) {
-                throw new FechaIncorrecta();
-            }
+//            if (this.pasanPaquetes.get(tama - 1).getFechaLlegada().isAfter(fechaSalida)) {
+//                throw new FechaIncorrecta();
+//            }
             this.pasanPaquetes.get(tama - 1).setFechaLlegada(fechaSalida);
         }
     }
