@@ -40,13 +40,11 @@ public class Cliente implements Serializable {
     @NotBlank
     private String provincia;
     
-    @OneToMany
-    @JoinColumn(name="remitente_dni")
-    List<Paquete> PaqueteRemitente;
+    @OneToMany(mappedBy="Remitente")
+    List<Paquete> PaquetesRemitente;
     
-    @OneToMany
-    @JoinColumn(name="destinatario_dni")
-    List<Paquete> PaqueteDestinatario;
+    @OneToMany(mappedBy="Destinatario")
+    List<Paquete> PaquetesDestinatario;
 
     public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia) {
         this.dni = dni;

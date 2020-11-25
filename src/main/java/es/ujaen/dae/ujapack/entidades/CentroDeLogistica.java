@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -19,17 +20,15 @@ import javax.validation.constraints.NotBlank;
 @Entity
 public class CentroDeLogistica extends PuntoDeControl implements Serializable {
 
-    @NotBlank
+    @OneToMany
     Oficina listaOficinas;
     @NotBlank
     private ArrayList<Integer> conexiones;
-    @NotBlank
-    private HashMap<Integer, List<String>> ruta;
+   
 
     public CentroDeLogistica(int id, String nombre, String localizacion, ArrayList<String> provincia, ArrayList<Integer> conexiones) {
         super(id, nombre, localizacion, provincia);
         this.conexiones = conexiones;
-        this.ruta = new HashMap<Integer, List<String>>();
         listaOficinas = new Oficina();
     }
 
@@ -45,20 +44,6 @@ public class CentroDeLogistica extends PuntoDeControl implements Serializable {
      */
     public ArrayList<String> getProvincias() {
         return provincia;
-    }
-
-    /**
-     * @return the ruta
-     */
-    public HashMap<Integer, List<String>> getRuta() {
-        return ruta;
-    }
-
-    /**
-     * @param ruta the ruta to set
-     */
-    public void setRuta(HashMap<Integer, List<String>> ruta) {
-        this.ruta = ruta;
     }
 
 }

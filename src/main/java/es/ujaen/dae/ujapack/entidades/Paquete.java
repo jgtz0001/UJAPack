@@ -17,6 +17,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
 /**
@@ -33,32 +35,27 @@ public class Paquete implements Serializable {
     private int numPuntosControl;
     @NotBlank
     private Estado estado;
-    @NotBlank
+    @PositiveOrZero
     private float importe;
-    @NotBlank
+    @Positive
     private float peso;
-    @NotBlank
+    @Positive
     private float altura;
     @NotBlank
+    @OneToMany
     private ArrayList<PasoPorPuntoDeControl> pasanPaquetes;
     @NotBlank
+    @OneToMany
     private ArrayList<PuntoDeControl> ruta;
     @NotBlank
+    @ManyToOne
     private Cliente remitente;
     @NotBlank
+    @ManyToOne
     private Cliente destinatario;
 
-    @OneToMany
-    @JoinColumn(name = "pasanPaquetes")
-    List<PasoPorPuntoDeControl> Pasanpaquetes;
+  
 
-    @ManyToOne
-    @JoinColumn(name = "remitente_dni")
-    List<Paquete> PaqueteRemitente;
-
-    @ManyToOne
-    @JoinColumn(name = "destinatario_dni")
-    List<Paquete> PaqueteDestinatario;
 
     public enum Estado {
         EnTransito,
