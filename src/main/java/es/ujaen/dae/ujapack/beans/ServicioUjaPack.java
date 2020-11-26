@@ -27,8 +27,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import es.ujaen.dae.ujapack.excepciones.LocalizadorNoExiste;
 import es.ujaen.dae.ujapack.repositorios.RepositorioCliente;
+import es.ujaen.dae.ujapack.repositorios.RepositorioPuntoDeControl;
+import es.ujaen.dae.ujapack.repositorios.RepositorioCentroDeLogistica;
+import es.ujaen.dae.ujapack.repositorios.RepositorioPaquete;
+import java.util.Iterator;
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Validated
@@ -36,6 +43,15 @@ public class ServicioUjaPack {
 
     @Autowired
     RepositorioCliente RepositorioClientes;
+
+    @Autowired
+    RepositorioPuntoDeControl RepositorioPuntoDeControl;
+
+    @Autowired
+    RepositorioCentroDeLogistica RepositorioCentroDeLogistica;
+
+    @Autowired
+    RepositorioPaquete RepositorioPaquete;
 
     class Nodo {
 
@@ -78,8 +94,9 @@ public class ServicioUjaPack {
 
     }
 
+    @Transactional(readOnly = true)
     private boolean buscaPorDni(String dni) {
-        return clientes.containsKey(dni);
+        return RepositorioClientes.buscar(dni).isPresent();
     }
 
     /*
@@ -113,11 +130,11 @@ public class ServicioUjaPack {
      */
     public Paquete altaEnvio(float peso, float anchura, float altura, Cliente remitente, Cliente destinatario) {
         if (buscaPorDni(destinatario.getDni()) == false) {
-            clientes.put(Integer.parseInt(destinatario.getDni()), destinatario);
+            throw new DNINoValido();
         }
 
         Integer localizador = (int) getID();
-        while (paquetes.containsKey(localizador)) {
+        while (RepositorioPaquete.buscarP(localizador).isPresent()) {
             localizador = (int) getID();
         }
 
@@ -248,14 +265,14 @@ public class ServicioUjaPack {
 * @return devuelve el coste de enviar el paquete.
      */
     public float calcularImporte(int numPuntosControl, float peso, float altura, float anchura) {
-        float importe = (peso * altura * anchura * (numPuntosControl + 1) / 1000
-        );
-return importe;
+        float importe = (peso * altura * anchura * (numPuntosControl + 1) / 1000);
+        return importe;
     }
 
     /*
-* Función que se encarga de leer un Json y añadir los datos a las estructuras.
+* Función que se encarga de leer un Json y añadir los datos a la base de datos.
      */
+    @Transactional
     private void leerJson() throws IOException {
         String jsonStr = Files.readString(new File("redujapack.json").toPath());
         JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
@@ -278,10 +295,12 @@ return importe;
                 listdata2.add(conexiones.get(j).getAsInt());
             }
             PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, listdata);
-            puntosDeControl.put(id, punto);
+            RepositorioPuntoDeControl.guardar(punto);
+            //puntosDeControl.put(id, punto);
 
             CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
-            centros.put(id, centroNuevo);
+            RepositorioCentroDeLogistica.guardar(centroNuevo);
+            //centros.put(id, centroNuevo);
 
         }
     }

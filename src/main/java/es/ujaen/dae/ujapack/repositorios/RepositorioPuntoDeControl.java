@@ -22,10 +22,12 @@ public class RepositorioPuntoDeControl {
      @PersistenceContext
     EntityManager em;
     
+    @Transactional(readOnly = true)
     public Optional <PuntoDeControl> buscar(int id){
         return Optional.ofNullable(em.find(PuntoDeControl.class, id));
     }
     
+    @Transactional
     public void guardar(PuntoDeControl puntoDeControl){
         em.persist(puntoDeControl);
     }

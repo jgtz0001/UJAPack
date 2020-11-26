@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
 
 /**
  *
@@ -24,15 +23,16 @@ public class RepositorioPaquete {
      @PersistenceContext
     EntityManager em;
      
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    @Transactional(readOnly = true)
     public Paquete buscar(int localizador) {
         return em.find(Paquete.class, localizador);
     }
     
-//    public Optional <Paquete> buscar(int localizador){
-//        return Optional.ofNullable(em.find(Paquete.class, localizador));
-//    }
-   
+    @Transactional
+    public Optional <Paquete> buscarP(int localizador){
+        return Optional.ofNullable(em.find(Paquete.class, localizador));
+    }
+   @Transactional
     public void guardar(Paquete paquete){
         em.persist(paquete);
     }

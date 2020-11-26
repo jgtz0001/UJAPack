@@ -22,10 +22,12 @@ public class RepositorioCliente {
     @PersistenceContext
     EntityManager em;
     
+    @Transactional(readOnly = true)
     public Optional <Cliente> buscar(String dni){
         return Optional.ofNullable(em.find(Cliente.class, dni));
     }
     
+    @Transactional
     public void guardar(Cliente cliente){
         em.persist(cliente);
     }
