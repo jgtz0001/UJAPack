@@ -7,10 +7,9 @@ package es.ujaen.dae.ujapack.excepciones;
 
 /**
  *
- * @author jenar
+ * @author Pablo
  */
-public class IdIncorrecto extends RuntimeException{
+public class IdIncorrecto extends RuntimeException {
     public IdIncorrecto(){
-        
     }
 }

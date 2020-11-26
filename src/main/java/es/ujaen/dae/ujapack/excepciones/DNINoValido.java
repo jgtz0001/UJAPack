@@ -7,11 +7,10 @@ package es.ujaen.dae.ujapack.excepciones;
 
 /**
  *
- * @author jenar
+ * @author Pablo
  */
-public class DNINoValido extends RuntimeException{
-
-    public DNINoValido() {
-    }
+public class DNINoValido extends RuntimeException {
     
+    public DNINoValido(){
+    }
 }

@@ -20,33 +20,40 @@ import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import es.ujaen.dae.ujapack.excepciones.DNINoEncontrado;
 import es.ujaen.dae.ujapack.excepciones.DNINoValido;
 import es.ujaen.dae.ujapack.excepciones.IdIncorrecto;
-import es.ujaen.dae.ujapack.entidades.PasoPorPuntoDeControl;
-import es.ujaen.dae.ujapack.repositorios.RepositorioCliente;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Collections;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import es.ujaen.dae.ujapack.excepciones.LocalizadorNoExiste;
+import es.ujaen.dae.ujapack.repositorios.RepositorioCliente;
+import es.ujaen.dae.ujapack.repositorios.RepositorioPuntoDeControl;
+import es.ujaen.dae.ujapack.repositorios.RepositorioCentroDeLogistica;
+import es.ujaen.dae.ujapack.repositorios.RepositorioPaquete;
+import java.util.Iterator;
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Validated
 public class ServicioUjaPack {
-    
-@Autowired
-RepositorioCliente RepositorioClientes;
 
-    private final HashMap<Integer, PuntoDeControl> puntosDeControl;
-    private final HashMap<Integer, Paquete> paquetes;
-    private final HashMap<Integer, Cliente> clientes;
-    private static final long LIMIT = 10000000000L;
-    private static long last = 0;
-    private final HashMap<Integer, CentroDeLogistica> centros;
+    @Autowired
+    RepositorioCliente RepositorioClientes;
 
-    
-        class Nodo {
+    @Autowired
+    RepositorioPuntoDeControl RepositorioPuntoDeControl;
+
+    @Autowired
+    RepositorioCentroDeLogistica RepositorioCentroDeLogistica;
+
+    @Autowired
+    RepositorioPaquete RepositorioPaquete;
+
+    class Nodo {
 
         Integer id;
         private ArrayList<Integer> lista;
@@ -63,6 +70,14 @@ RepositorioCliente RepositorioClientes;
             return conexionesId;
         }
     }
+
+    private final HashMap<Integer, PuntoDeControl> puntosDeControl;
+    private final HashMap<Integer, Paquete> paquetes;
+    private final HashMap<Integer, Cliente> clientes;
+    private static final long LIMIT = 10000000000L;
+    private static long last = 0;
+    private final HashMap<Integer, CentroDeLogistica> centros;
+
     /*
 * Constructor de la clase.
      */
@@ -79,8 +94,9 @@ RepositorioCliente RepositorioClientes;
 
     }
 
+    @Transactional(readOnly = true)
     private boolean buscaPorDni(String dni) {
-        return clientes.containsKey(dni);
+        return RepositorioClientes.buscar(dni).isPresent();
     }
 
     /*
@@ -94,14 +110,15 @@ RepositorioCliente RepositorioClientes;
         }
         return last = id;
     }
-    public void altaCliente(Cliente cliente){
-        
-        if(RepositorioClientes.buscar(cliente.getDni()).isPresent()){
-             throw new IllegalArgumentException("El cliente ya existe");
+
+    public void altaCliente(Cliente cliente) {
+
+        if (RepositorioClientes.buscar(cliente.getDni()).isPresent()) {
+            throw new IllegalArgumentException("El cliente ya existe");
         }
-       RepositorioClientes.guardar(cliente);
+        RepositorioClientes.guardar(cliente);
     }
-    
+
     /*
 * alta Envio es una función que de manera interna, crea el paquete con todos los atributos de su clase.
 * @param peso Corresponde al peso del paquete.
@@ -113,11 +130,11 @@ RepositorioCliente RepositorioClientes;
      */
     public Paquete altaEnvio(float peso, float anchura, float altura, Cliente remitente, Cliente destinatario) {
         if (buscaPorDni(destinatario.getDni()) == false) {
-            clientes.put(Integer.parseInt(destinatario.getDni()), destinatario);
+            throw new DNINoValido();
         }
 
         Integer localizador = (int) getID();
-        while (paquetes.containsKey(localizador)) {
+        while (RepositorioPaquete.buscarP(localizador).isPresent()) {
             localizador = (int) getID();
         }
 
@@ -133,8 +150,8 @@ RepositorioCliente RepositorioClientes;
         costeEnvio = calcularImporte(ruta.size(), peso, altura, anchura);
 
         ruta = completaRuta(ruta, remitente.getProvincia(), destinatario.getProvincia());
- 
-       Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, ruta);
+
+        Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, ruta);
         paquetes.put(localizador, paquet);
         return paquet;
     }
@@ -153,7 +170,7 @@ RepositorioCliente RepositorioClientes;
         for (int i = 0; i < ruta.size(); i++) {
             rutaDefinitiva.add(ruta.get(i));
         }
-        if (!ruta.get(ruta.size()-1).getLocalizacion().equals(provinciaDest)) {
+        if (!ruta.get(ruta.size() - 1).getLocalizacion().equals(provinciaDest)) {
             rutaDefinitiva.add(puntoControlDest);
         }
         return rutaDefinitiva;
@@ -188,18 +205,34 @@ RepositorioCliente RepositorioClientes;
     }
 
     /*
-    * Avisa del estado y envia el paquete.
-    * @param localizador Identificador del paquete.
-    * @param fechaSalida Fecha de Salida del paquete.
-    * @param punto Punto de control al que llega el paquete.
-    * @return cadena de caracteres informando al cliente.
+* Avisa del estado y envia el paquete.
+* @param localizador Identificador del paquete.
+* @param fechaSalida Fecha de Salida del paquete.
+* @param punto Punto de control al que llega el paquete.
+* @return cadena de caracteres informando al cliente.
      */
-    public String avisaEstado(int localizador, LocalDateTime fechaSalida, PuntoDeControl punto) {
+    public String notificarSalida(int localizador, LocalDateTime fechaSalida, PuntoDeControl punto) {
         if (!paquetes.containsKey(localizador)) {
             throw new LocalizadorNoExiste();
         }
         paquetes.get(localizador).notificaSalida(fechaSalida, punto);
+
         return (fechaSalida + punto.getNombre());
+    }
+
+    /*
+* Avisa del estado y envia el paquete.
+* @param localizador Identificador del paquete.
+* @param fechaEntrada Fecha de Entrada del paquete.
+* @param punto Punto de control al que llega el paquete.
+* @return cadena de caracteres informando al cliente.
+     */
+    public String notificarEntrada(int localizador, LocalDateTime fechaEntrada, PuntoDeControl punto) {
+        if (!paquetes.containsKey(localizador)) {
+            throw new LocalizadorNoExiste();
+        }
+        paquetes.get(localizador).notificaEntrada(fechaEntrada, punto);
+        return (fechaEntrada + punto.getNombre());
     }
 
     /*
@@ -237,8 +270,9 @@ RepositorioCliente RepositorioClientes;
     }
 
     /*
-* Función que se encarga de leer un Json y añadir los datos a las estructuras.
+* Función que se encarga de leer un Json y añadir los datos a la base de datos.
      */
+    @Transactional
     private void leerJson() throws IOException {
         String jsonStr = Files.readString(new File("redujapack.json").toPath());
         JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
@@ -261,10 +295,12 @@ RepositorioCliente RepositorioClientes;
                 listdata2.add(conexiones.get(j).getAsInt());
             }
             PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, listdata);
-            puntosDeControl.put(id, punto);
+            RepositorioPuntoDeControl.guardar(punto);
+            //puntosDeControl.put(id, punto);
 
             CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
-            centros.put(id, centroNuevo);
+            RepositorioCentroDeLogistica.guardar(centroNuevo);
+            //centros.put(id, centroNuevo);
 
         }
     }

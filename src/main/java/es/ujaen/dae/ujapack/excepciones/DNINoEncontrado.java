@@ -7,11 +7,11 @@ package es.ujaen.dae.ujapack.excepciones;
 
 /**
  *
- * @author jenar
+ * @author Pablo
  */
-public class DNINoEncontrado extends RuntimeException{
-
-    public DNINoEncontrado() {
+public class DNINoEncontrado extends RuntimeException {
+    
+    public DNINoEncontrado(){
     }
     
 }

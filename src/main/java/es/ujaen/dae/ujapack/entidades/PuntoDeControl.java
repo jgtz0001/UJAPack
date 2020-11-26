@@ -7,25 +7,31 @@ package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 /**
  *
  * @author Pablo
  */
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class PuntoDeControl implements Serializable {
 
     @Id
     @Max(10)
     private int id;
-    @NotEmpty
+    @NotBlank
     String nombre;
-    @NotEmpty
+    @NotBlank
     String localizacion;
     @NotBlank
     ArrayList<String> provincia;

@@ -7,9 +7,15 @@ package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
 
 /**
  *
@@ -17,15 +23,44 @@ import javax.validation.constraints.NotBlank;
  */
 @Entity
 public class PasoPorPuntoDeControl implements Serializable {
-    
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    int id;
     @NotBlank
     public PuntoDeControl pasoControl;
-    @Id
-    @NotBlank
+    @PastOrPresent
     private LocalDateTime fechaLlegada;
-    @NotBlank
+    @PastOrPresent
     private LocalDateTime fechaSalida;
-    
+
+    @OneToOne
+    @JoinColumn(name = "paso_control")
+    List<PuntoDeControl> Pasocontrol;
+
+    public PasoPorPuntoDeControl(PuntoDeControl p, LocalDateTime fechaEntrada) {
+        fechaLlegada = fechaEntrada;
+        pasoControl = p;
+    }
+
+    /**
+     * @return the fechaLlegada
+     */
+    public LocalDateTime getFechaLlegada() {
+        return fechaLlegada;
+    }
+
+    /**
+     * @return the fechaSalida
+     */
+    public LocalDateTime getFechaSalida() {
+        return fechaSalida;
+    }
+
+    void salida() {
+        setFechaSalida(LocalDateTime.now());
+    }
+
     /**
      * @return the pasoControl
      */
@@ -52,25 +87,6 @@ public class PasoPorPuntoDeControl implements Serializable {
      */
     public void setFechaSalida(LocalDateTime fechaSalida) {
         this.fechaSalida = fechaSalida;
-    }
-
-   
-
-    public PasoPorPuntoDeControl(PuntoDeControl p) {
-        fechaLlegada = LocalDateTime.now();
-        pasoControl = p;
-    }
-
-    void salida() {
-        setFechaSalida(LocalDateTime.now());
-    }
-
-    public LocalDateTime getFechaLlegada() {
-        return fechaLlegada;
-    }
-
-    public LocalDateTime getFechaSalida() {
-        return fechaSalida;
     }
 
 }
