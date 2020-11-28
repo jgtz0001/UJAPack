@@ -41,7 +41,6 @@ public class Paquete implements Serializable {
     private float peso;
     @Positive
     private float altura;
-    @NotBlank
     @OneToMany
     private ArrayList<PasoPorPuntoDeControl> pasanPaquetes;
     @NotBlank

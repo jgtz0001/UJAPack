@@ -5,6 +5,7 @@
  */
 package es.ujaen.dae.ujapack.app;
 
+import es.ujaen.dae.ujapack.beans.LimpiadoBaseDeDatos;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Paquete;
 import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
@@ -32,6 +33,10 @@ public class UjapackIntegrationTest {
 
     @Autowired
     ServicioUjaPack serviPack;
+    
+    @Autowired
+    LimpiadoBaseDeDatos limpiadorBaseDatos;
+
 
 //    @Test
 //    public void creaEnvio() throws IOException {
@@ -130,5 +135,11 @@ public class UjapackIntegrationTest {
 //             serviPack.notificarSalida(paquet.getLocalizador(),fechaSalida, punto);
 //        });
 //    } 
+
+    
+    @BeforeEach
+    void limpiarBaseDatos() {
+        limpiadorBaseDatos.limpiar();
+    }
 
 }

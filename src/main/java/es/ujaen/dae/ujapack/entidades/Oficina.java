@@ -18,7 +18,7 @@ import javax.validation.constraints.NotBlank;
 @Entity
 public class Oficina extends PuntoDeControl implements Serializable {
 
-    @ManyToOne
+    @NotBlank
     CentroDeLogistica listaLogistica;
 
     Oficina(int id, String nombre, String localizacion, ArrayList<String> provincia, ArrayList<Integer> conexiones) {

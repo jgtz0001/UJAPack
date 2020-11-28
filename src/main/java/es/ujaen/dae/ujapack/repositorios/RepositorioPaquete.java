@@ -6,6 +6,7 @@
 package es.ujaen.dae.ujapack.repositorios;
 
 import es.ujaen.dae.ujapack.entidades.Paquete;
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,12 +30,12 @@ public class RepositorioPaquete {
     }
     
     @Transactional
-    public Optional <Paquete> buscarP(int localizador){
+    public Optional <Paquete> buscarPaquetes(int localizador){
         return Optional.ofNullable(em.find(Paquete.class, localizador));
     }
    @Transactional
     public void guardar(Paquete paquete){
         em.persist(paquete);
     }
-    
+  
 }

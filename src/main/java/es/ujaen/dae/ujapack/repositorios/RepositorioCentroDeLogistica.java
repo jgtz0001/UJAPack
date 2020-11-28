@@ -27,7 +27,7 @@ public class RepositorioCentroDeLogistica {
     EntityManager em;
 
     @Transactional(readOnly = true)
-    public CentroDeLogistica buscarPorId(String id) {
+    public CentroDeLogistica buscarPorId(Integer id) {
         return em.find(CentroDeLogistica.class, id);
     }
 
@@ -45,5 +45,5 @@ public class RepositorioCentroDeLogistica {
     public void guardar(CentroDeLogistica centroDeLogistica) {
         em.persist(centroDeLogistica);
     }
-
+    
 }
