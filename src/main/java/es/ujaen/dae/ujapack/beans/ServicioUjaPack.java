@@ -260,11 +260,11 @@ public class ServicioUjaPack {
                 listdata2.add(conexiones.get(j).getAsInt());
             }
             PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, listdata);
-            RepositorioPuntoDeControl.guardar(punto);
+            //RepositorioPuntoDeControl.guardar(punto);
             //puntosDeControl.put(id, punto);
 
             CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
-            RepositorioCentroDeLogistica.guardar(centroNuevo);
+            //RepositorioCentroDeLogistica.guardar(centroNuevo);
             //centros.put(id, centroNuevo);
 
         }
