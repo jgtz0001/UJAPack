@@ -47,10 +47,10 @@ public class Paquete implements Serializable {
     @NotBlank
     @OneToMany
     private List<PuntoDeControl> ruta;
-    @NotBlank
+    
     @ManyToOne
     private Cliente remitente;
-    @NotBlank
+   
     @ManyToOne
     private Cliente destinatario;
 

@@ -33,7 +33,6 @@ public class PuntoDeControl implements Serializable {
     String nombre;
     @NotBlank
     String localizacion;
-    @NotBlank
     ArrayList<String> provincia;
 
     public PuntoDeControl() {

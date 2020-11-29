@@ -9,7 +9,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
@@ -21,9 +23,10 @@ import javax.validation.constraints.NotBlank;
 @Entity
 public class CentroDeLogistica extends PuntoDeControl implements Serializable {
 
-    @NotBlank
+    @Id
+    int id;
+    @Column(length = 3000) 
     public  Oficina listaOficinas;
-    @NotBlank
     private ArrayList<Integer> conexiones;
    
 
@@ -43,7 +46,7 @@ public class CentroDeLogistica extends PuntoDeControl implements Serializable {
     /**
      * @return the conexiones
      */
-    public ArrayList<String> getProvincias() {
+    public List<String> getProvincias() {
         return provincia;
     }
 

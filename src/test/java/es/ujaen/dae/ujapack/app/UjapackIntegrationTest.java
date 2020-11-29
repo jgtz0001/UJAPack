@@ -41,11 +41,11 @@ public class UjapackIntegrationTest {
     @Test
     public void creaEnvio() throws IOException {
 
-        Cliente Remitente1 = new Cliente("12323234", "", "", "", "", "Jaén", "Jaén");
-        Cliente Destinatario0 = new Cliente("12334243", "", "", "", "", "Córdoba", "Córdoba");
-        Cliente Destinatario1 = new Cliente("12334244", "", "", "", "", "Madrid", "Madrid");
-        Cliente Destinatario2 = new Cliente("12334245", "", "", "", "", "Toledo", "Toledo");
-        Cliente Destinatario3 = new Cliente("12334246", "", "", "", "", "Santa Cruz de Tenerife", "Santa Cruz de Tenerife");
+        Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
+        Cliente Destinatario0 = new Cliente("12334243", "juan", "pepe","pp@gmail.com", "jaen", "Córdoba", "Córdoba");
+        Cliente Destinatario1 = new Cliente("12334244", "kiko", "ola", "ola@gmail.com", "jaen", "Madrid", "Madrid");
+        Cliente Destinatario2 = new Cliente("12334245", "pepe", "perez", "ppp@gmail.com", "jaen", "Toledo", "Toledo");
+        Cliente Destinatario3 = new Cliente("12334246", "pola", "tere", "hila@gmail.com", "jaen", "Santa Cruz de Tenerife", "Santa Cruz de Tenerife");
 
         Paquete e0 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
         Paquete e1 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario1);
@@ -62,8 +62,8 @@ public class UjapackIntegrationTest {
 
     @Test
     public void testAvisaEstado() throws IOException {
-        Cliente Remitente1 = new Cliente("12323234", "", "", "", "", "Jaén", "Jaén");
-        Cliente Destinatario0 = new Cliente("12334243", "", "", "", "", "Córdoba", "Córdoba");
+        Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
+        Cliente Destinatario0 =new Cliente("12334243", "juan", "pepe","pp@gmail.com", "jaen", "Córdoba", "Córdoba");
         
         Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
         
@@ -89,8 +89,8 @@ public class UjapackIntegrationTest {
 
     @Test
     public void testRutaIncorrectaPuntoFueraDeRuta() throws IOException {
-        Cliente Remitente1 = new Cliente("12323234", "", "", "", "", "Jaén", "Jaén");
-        Cliente Destinatario0 = new Cliente("12334243", "", "", "", "", "Córdoba", "Córdoba");
+        Cliente Remitente1 =new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
+        Cliente Destinatario0 = new Cliente("12334243", "juan", "pepe","pp@gmail.com", "jaen", "Córdoba", "Córdoba");
 
         Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
 
@@ -108,8 +108,8 @@ public class UjapackIntegrationTest {
 
     @Test
     public void testRutaIncorrectaPuntoDeRutaAtrasado() throws IOException {
-        Cliente Remitente1 = new Cliente("12323234", "", "", "", "", "Jaén", "Jaén");
-        Cliente Destinatario0 = new Cliente("12334243", "", "", "", "", "Córdoba", "Córdoba");
+        Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
+        Cliente Destinatario0 = new Cliente("12334243", "juan", "pepe","pp@gmail.com", "jaen", "Córdoba", "Córdoba");
 
         Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
 
@@ -123,8 +123,8 @@ public class UjapackIntegrationTest {
 
     @Test
     public void testRutaIncorrectaPuntoDeRutaAdelantado() throws IOException {
-        Cliente Remitente1 = new Cliente("12323234", "", "", "", "", "Jaén", "Jaén");
-        Cliente Destinatario0 = new Cliente("12334243", "", "", "", "", "Córdoba", "Córdoba");
+        Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
+        Cliente Destinatario0 = new Cliente("12334243", "juan", "pepe","pp@gmail.com", "jaen", "Córdoba", "Córdoba");
 
         Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
 

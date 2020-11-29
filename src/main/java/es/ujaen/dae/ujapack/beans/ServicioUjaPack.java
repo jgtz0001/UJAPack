@@ -75,13 +75,15 @@ public class ServicioUjaPack {
 * Constructor de la clase.
      */
     public ServicioUjaPack() {
-
-        try {
+    }
+    
+    @PostConstruct
+    public void  rellenarJson (){
+    try {
             leerJson();
         } catch (IOException ex) {
             System.out.println(ex.toString());
         }
-
     }
 
     @Transactional(readOnly = true)
@@ -260,10 +262,11 @@ public class ServicioUjaPack {
                 listdata2.add(conexiones.get(j).getAsInt());
             }
             PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, listdata);
+            repositorioPuntoDeControl.guardar(punto);
             //puntosDeControl.put(id, punto);
 
             CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
-            //RepositorioCentroDeLogistica.guardar(centroNuevo);
+            repositorioCentroDeLogistica.guardar(centroNuevo);
             //centros.put(id, centroNuevo);
 
         }
