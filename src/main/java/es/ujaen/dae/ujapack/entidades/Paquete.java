@@ -42,10 +42,11 @@ public class Paquete implements Serializable {
     @Positive
     private float altura;
     @OneToMany
-    private ArrayList<PasoPorPuntoDeControl> pasanPaquetes;
+    @JoinColumn(name = "pasanPaquetes")
+    private List<PasoPorPuntoDeControl> pasanPaquetes;
     @NotBlank
     @OneToMany
-    private ArrayList<PuntoDeControl> ruta;
+    private List<PuntoDeControl> ruta;
     @NotBlank
     @ManyToOne
     private Cliente remitente;
@@ -151,14 +152,14 @@ public class Paquete implements Serializable {
     /**
      * @return the pasanPaquetes
      */
-    public ArrayList<PasoPorPuntoDeControl> getPasanPaquetes() {
+    public List<PasoPorPuntoDeControl> getPasanPaquetes() {
         return pasanPaquetes;
     }
 
     /**
      * @param pasanPaquetes the pasanPaquetes to set
      */
-    public void setPasanPaquetes(ArrayList<PasoPorPuntoDeControl> pasanPaquetes) {
+    public void setPasanPaquetes(List<PasoPorPuntoDeControl> pasanPaquetes) {
         this.pasanPaquetes = pasanPaquetes;
     }
 
@@ -183,14 +184,14 @@ public class Paquete implements Serializable {
     /**
      * @return the ruta
      */
-    public ArrayList<PuntoDeControl> getRuta() {
+    public List<PuntoDeControl> getRuta() {
         return ruta;
     }
 
     /**
      * @param ruta the ruta to set
      */
-    public void setRuta(ArrayList<PuntoDeControl> ruta) {
+    public void setRuta(List<PuntoDeControl> ruta) {
         this.ruta = ruta;
 //this.numPuntosControl = ruta.size();
     }

@@ -12,19 +12,20 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 
 /**
  *
  * @author Pablo
  */
 @Repository
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
 public class RepositorioPaquete {
     
      @PersistenceContext
     EntityManager em;
      
-    @Transactional(readOnly = true)
+    @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
     public Paquete buscar(int localizador) {
         return em.find(Paquete.class, localizador);
     }

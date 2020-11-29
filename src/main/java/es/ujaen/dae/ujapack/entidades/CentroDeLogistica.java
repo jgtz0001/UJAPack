@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 
@@ -21,7 +22,7 @@ import javax.validation.constraints.NotBlank;
 public class CentroDeLogistica extends PuntoDeControl implements Serializable {
 
     @NotBlank
-    Oficina listaOficinas;
+    public  Oficina listaOficinas;
     @NotBlank
     private ArrayList<Integer> conexiones;
    

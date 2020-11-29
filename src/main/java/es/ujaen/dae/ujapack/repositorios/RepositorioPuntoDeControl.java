@@ -12,24 +12,25 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 
 /**
  *
  * @author Pablo
  */
 @Repository
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
 public class RepositorioPuntoDeControl {
 
     @PersistenceContext
     EntityManager em;
 
-    @Transactional(readOnly = true)
+    @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
     public Optional<PuntoDeControl> buscar(Integer id) {
         return Optional.ofNullable(em.find(PuntoDeControl.class, id));
     }
     
-     @Transactional(readOnly = true)
+     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
     public PuntoDeControl buscarPC(Integer id) {
         return em.find(PuntoDeControl.class, id);
     }

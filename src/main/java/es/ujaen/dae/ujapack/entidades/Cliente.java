@@ -40,10 +40,10 @@ public class Cliente implements Serializable {
     @NotBlank
     private String provincia;
     
-    @OneToMany(mappedBy="Remitente")
+    @OneToMany(mappedBy="remitente")
     List<Paquete> PaquetesRemitente;
     
-    @OneToMany(mappedBy="Destinatario")
+    @OneToMany(mappedBy="destinatario")
     List<Paquete> PaquetesDestinatario;
 
     public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia) {

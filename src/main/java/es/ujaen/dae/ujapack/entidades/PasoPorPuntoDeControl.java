@@ -28,15 +28,15 @@ public class PasoPorPuntoDeControl implements Serializable {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     int id;
     @NotBlank
+    @OneToOne
+    @JoinColumn(name = "paso_control")
     public PuntoDeControl pasoControl;
     @PastOrPresent
     private LocalDateTime fechaLlegada;
     @PastOrPresent
     private LocalDateTime fechaSalida;
 
-    @OneToOne
-    @JoinColumn(name = "paso_control")
-    List<PuntoDeControl> Pasocontrol;
+    
 
     public PasoPorPuntoDeControl(PuntoDeControl p, LocalDateTime fechaEntrada) {
         fechaLlegada = fechaEntrada;
