@@ -39,16 +39,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class ServicioUjaPack {
 
     @Autowired
-    RepositorioCliente RepositorioClientes;
+    RepositorioCliente repositorioClientes;
 
     @Autowired
-    RepositorioPuntoDeControl RepositorioPuntoDeControl;
+    RepositorioPuntoDeControl repositorioPuntoDeControl;
 
     @Autowired
-    RepositorioCentroDeLogistica RepositorioCentroDeLogistica;
+    RepositorioCentroDeLogistica repositorioCentroDeLogistica;
 
     @Autowired
-    RepositorioPaquete RepositorioPaquete;
+    RepositorioPaquete repositorioPaquete;
 
     class Nodo {
 
@@ -86,7 +86,7 @@ public class ServicioUjaPack {
 
     @Transactional(readOnly = true)
     private boolean buscaPorDni(String dni) {
-        return RepositorioClientes.buscar(dni).isPresent();
+        return repositorioClientes.buscar(dni).isPresent();
     }
 
     /*
@@ -103,10 +103,10 @@ public class ServicioUjaPack {
 
     public void altaCliente(Cliente cliente) {
 
-        if (RepositorioClientes.buscar(cliente.getDni()).isPresent()) {
+        if (repositorioClientes.buscar(cliente.getDni()).isPresent()) {
             throw new IllegalArgumentException("El cliente ya existe");
         }
-        RepositorioClientes.guardar(cliente);
+        repositorioClientes.guardar(cliente);
     }
 
     /*
@@ -119,12 +119,12 @@ public class ServicioUjaPack {
 + @return Devuelve el paquete.
      */
     public Paquete altaEnvio(float peso, float anchura, float altura, Cliente remitente, Cliente destinatario) {
-        if (buscaPorDni(destinatario.getDni()) == false) {
+        if (buscaPorDni(destinatario.getDni())) {
             throw new DNINoValido();
         }
 
         Integer localizador = (int) getID();
-        while (RepositorioPaquete.buscarPaquetes(localizador).isPresent()) {
+        while (repositorioPaquete.buscarPaquetes(localizador).isPresent()) {
             localizador = (int) getID();
         }
 
@@ -142,7 +142,7 @@ public class ServicioUjaPack {
         ruta = completaRuta(ruta, remitente.getProvincia(), destinatario.getProvincia(), idProvinciaRem, idProvinciaDest);
 
         Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, ruta);
-        RepositorioPaquete.guardar(paquet);
+        repositorioPaquete.guardar(paquet);
         return paquet;
     }
 
@@ -171,7 +171,7 @@ public class ServicioUjaPack {
 * @return devuelve el id del centro donde se encuentra la provincia.
      */
     private Integer obtenerIdProvincia(String provincia) {
-        return RepositorioPuntoDeControl.BuscaIdProvincia(provincia);
+        return repositorioPuntoDeControl.BuscaIdProvincia(provincia);
     }
 
     /*
@@ -180,7 +180,7 @@ public class ServicioUjaPack {
 * @return devuelve un string con el estado del paquete.
      */
     public String verEstado(int localizador) {
-        Paquete p = RepositorioPaquete.buscar(localizador);
+        Paquete p = repositorioPaquete.buscar(localizador);
         if (p == null) {
             throw new LocalizadorNoExiste();
         }
@@ -195,7 +195,7 @@ public class ServicioUjaPack {
 * @return cadena de caracteres informando al cliente.
      */
     public String notificarSalida(int localizador, LocalDateTime fechaSalida, PuntoDeControl punto) {
-        Paquete p = RepositorioPaquete.buscar(localizador);
+        Paquete p = repositorioPaquete.buscar(localizador);
         if (p == null) {
             throw new LocalizadorNoExiste();
         }
@@ -213,7 +213,7 @@ public class ServicioUjaPack {
      */
     //hay que actualizar 
     public String notificarEntrada(int localizador, LocalDateTime fechaEntrada, PuntoDeControl punto) {
-        Paquete p = RepositorioPaquete.buscar(localizador);
+        Paquete p = repositorioPaquete.buscar(localizador);
         if (p == null) {
             throw new LocalizadorNoExiste();
         }
@@ -260,12 +260,10 @@ public class ServicioUjaPack {
                 listdata2.add(conexiones.get(j).getAsInt());
             }
             PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, listdata);
-            RepositorioPuntoDeControl.guardar(punto);
-            //puntosDeControl.put(id, punto);
+            puntosDeControl.put(id, punto);
 
             CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
-            RepositorioCentroDeLogistica.guardar(centroNuevo);
-            //centros.put(id, centroNuevo);
+            centros.put(id, centroNuevo);
 
         }
     }
@@ -278,7 +276,7 @@ public class ServicioUjaPack {
 * @return devuelve un nodo con todos sus atributos completos.
      */
     private Nodo nodoConexiones(ArrayList<Integer> lista, Integer id, boolean[] visitados) {
-        CentroDeLogistica centro = RepositorioCentroDeLogistica.buscarPorId(id);
+        CentroDeLogistica centro = repositorioCentroDeLogistica.buscarPorId(id);
         if (centro == null) {
             throw new IdIncorrecto();
         }
@@ -298,7 +296,7 @@ public class ServicioUjaPack {
     private ArrayList<PuntoDeControl> rutaString(ArrayList<Integer> rutaEnIds) {
         ArrayList<PuntoDeControl> rutaStr = new ArrayList<PuntoDeControl>();
         for (int i = 0; i < rutaEnIds.size(); i++) {
-            rutaStr.add(RepositorioPuntoDeControl.buscarPC(rutaEnIds.get(i)));
+            rutaStr.add(repositorioPuntoDeControl.buscarPC(rutaEnIds.get(i)));
         }
         Collections.reverse(rutaStr);
         return rutaStr;
@@ -370,7 +368,7 @@ public class ServicioUjaPack {
     public ArrayList<PuntoDeControl> calcularRutaPaquete(String localidadRem, String localidadDes, Integer idProvinciaRem, Integer idProvinciaDest) {
         ArrayList<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
         if (idProvinciaRem != 0 && idProvinciaDest != 0) {
-            ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, RepositorioCentroDeLogistica.buscarPorId(idProvinciaRem).getConexiones());
+            ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, repositorioCentroDeLogistica.buscarPorId(idProvinciaRem).getConexiones());
         }
         return ruta;
     }
