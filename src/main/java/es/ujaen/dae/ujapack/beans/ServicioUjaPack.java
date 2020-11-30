@@ -172,7 +172,7 @@ public class ServicioUjaPack {
 * @param provinica Provinica de la que tenemos que encontrar el id.
 * @return devuelve el id del centro donde se encuentra la provincia.
      */
-    private Integer obtenerIdProvincia(String provincia) {
+    private int obtenerIdProvincia(String provincia) {
         return repositorioPuntoDeControl.BuscaIdProvincia(provincia);
     }
 
