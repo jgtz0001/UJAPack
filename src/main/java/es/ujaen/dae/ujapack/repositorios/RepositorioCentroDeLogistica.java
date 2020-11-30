@@ -28,7 +28,7 @@ public class RepositorioCentroDeLogistica {
     EntityManager em;
 
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-    public CentroDeLogistica buscarPorId(Integer id) {
+    public CentroDeLogistica buscarPorId(int id) {
         return em.find(CentroDeLogistica.class, id);
     }
 

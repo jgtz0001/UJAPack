@@ -26,12 +26,12 @@ public class RepositorioPuntoDeControl {
     EntityManager em;
 
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-    public Optional<PuntoDeControl> buscar(Integer id) {
+    public Optional<PuntoDeControl> buscar(int id) {
         return Optional.ofNullable(em.find(PuntoDeControl.class, id));
     }
     
      @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-    public PuntoDeControl buscarPC(Integer id) {
+    public PuntoDeControl buscarPC(int id) {
         return em.find(PuntoDeControl.class, id);
     }
 
