@@ -25,12 +25,8 @@ public class RepositorioPuntoDeControl {
     @PersistenceContext
     EntityManager em;
 
-    @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-    public Optional<PuntoDeControl> buscar(int id) {
-        return Optional.ofNullable(em.find(PuntoDeControl.class, id));
-    }
     
-     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
+    @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
     public PuntoDeControl buscarPC(int id) {
         return em.find(PuntoDeControl.class, id);
     }

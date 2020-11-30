@@ -39,13 +39,15 @@ public class LimpiadoBaseDeDatos {
     final String deleteFrom = "delete from ";
 
    
-    public void limpiar() {
+    /** Realizar borrado */
+    void limpiar() {
         transactionTemplate.executeWithoutResult(transactionStatus -> {
             for (String tabla : entidades) {
                 em.createQuery(deleteFrom + tabla).executeUpdate();
             }
         });
     }
+
 
 }
 

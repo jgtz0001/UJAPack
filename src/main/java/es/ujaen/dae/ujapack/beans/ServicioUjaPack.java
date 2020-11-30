@@ -267,6 +267,7 @@ public class ServicioUjaPack {
 
             CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
             repositorioCentroDeLogistica.guardar(centroNuevo);
+            
             //centros.put(id, centroNuevo);
 
         }

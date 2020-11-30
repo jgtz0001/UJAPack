@@ -32,16 +32,6 @@ public class RepositorioCentroDeLogistica {
         return em.find(CentroDeLogistica.class, id);
     }
 
-    @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-    public Optional<CentroDeLogistica> buscarProvincias(ArrayList provincias) {
-        return Optional.ofNullable(em.find(CentroDeLogistica.class, provincias));
-    }
-
-    @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-    public Optional<CentroDeLogistica> buscar(ArrayList conexiones) {
-        return Optional.ofNullable(em.find(CentroDeLogistica.class, conexiones));
-    }
-
     @Transactional
     public void guardar(CentroDeLogistica centroDeLogistica) {
         em.persist(centroDeLogistica);
