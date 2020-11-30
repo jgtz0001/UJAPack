@@ -41,7 +41,7 @@ public class RepositorioPuntoDeControl {
     }
    
     @Transactional        
-    public Integer BuscaIdProvincia (String provincia){
+    public int BuscaIdProvincia (String provincia){
     List <PuntoDeControl> puntodecontrol = em.createQuery
     ("select h from PuntoDeControl h where h.provincia = :provincia",
     PuntoDeControl.class).setParameter("provincia", provincia).getResultList();
