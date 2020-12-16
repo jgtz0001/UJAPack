@@ -12,14 +12,9 @@ import es.ujaen.dae.ujapack.entidades.PuntoDeControl;
 import es.ujaen.dae.ujapack.excepciones.PuntoDeControlEquivocado;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
