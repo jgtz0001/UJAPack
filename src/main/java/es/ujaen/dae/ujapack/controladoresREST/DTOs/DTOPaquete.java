@@ -5,6 +5,7 @@
  */
 package es.ujaen.dae.ujapack.controladoresREST.DTOs;
 
+import es.ujaen.dae.ujapack.entidades.Paquete;
 import es.ujaen.dae.ujapack.entidades.Paquete.Estado;
 
 
@@ -16,14 +17,16 @@ public class DTOPaquete {
     
     int localizador;
     int numPuntosControl;
-    Estado estado;
+    String estado;
     float importe;
     float peso;
     float altura;
     String remitente;
     String destinatario;
 
-    public DTOPaquete(int localizador, int numPuntosControl, Estado estado, float importe, float peso, float altura, String remitente, String destinatario) {
+    public DTOPaquete(int localizador, int numPuntosControl, String estado, 
+                        float importe, float peso, float altura, String remitente, 
+                        String destinatario) {
         this.localizador = localizador;
         this.numPuntosControl = numPuntosControl;
         this.estado = estado;
@@ -34,6 +37,20 @@ public class DTOPaquete {
         this.destinatario = destinatario;
     }
 
+    
+
+    public DTOPaquete(Paquete paquete){
+        this.localizador=paquete.getLocalizador();
+        this.numPuntosControl=paquete.getControl();
+        this.estado=paquete.getEstado();
+        this.importe=paquete.getImporte();
+        this.peso=paquete.getPeso();
+        this.altura=paquete.getAltura();
+        this.remitente=paquete.getRemitente().getDni();
+        this.destinatario=paquete.getDestinatario().getDni();
+        
+    }
+    
     public int getLocalizador() {
         return localizador;
     }
@@ -42,8 +59,8 @@ public class DTOPaquete {
         return numPuntosControl;
     }
 
-    public Estado getEstado() {
-        return estado;
+    public String getEstado() {
+        return estado.toString();
     }
 
     public float getImporte() {

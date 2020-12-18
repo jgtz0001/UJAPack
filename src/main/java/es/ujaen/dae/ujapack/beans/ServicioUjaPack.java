@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
+import es.ujaen.dae.ujapack.excepciones.ClienteNoRegistrado;
 import es.ujaen.dae.ujapack.excepciones.DNINoValido;
 import es.ujaen.dae.ujapack.excepciones.IdIncorrecto;
 import java.io.File;
@@ -27,7 +28,12 @@ import es.ujaen.dae.ujapack.repositorios.RepositorioCliente;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPuntoDeControl;
 import es.ujaen.dae.ujapack.repositorios.RepositorioCentroDeLogistica;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPaquete;
+import java.util.List;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -100,13 +106,48 @@ public class ServicioUjaPack {
         return last = id;
     }
 
-    public void altaCliente(Cliente cliente) {
+    public Cliente altaCliente(@NotNull @Valid Cliente cliente) {
 
         if (repositorioClientes.buscar(cliente.getDni()).isPresent()) {
             throw new IllegalArgumentException("El cliente ya existe");
         }
         repositorioClientes.guardar(cliente);
+        
+        return cliente;
     }
+    
+     /**
+     * Realiza un login de un cliente
+     * @param dni el DNI del cliente
+     * @param clave la clave de acceso
+     * @return el objeto de la clase Cliente asociado
+     */
+    @Transactional
+    public Optional<Cliente> loginCliente(@NotBlank String dni, @NotBlank String clave) {
+        Optional<Cliente> clienteLogin = repositorioClientes.buscar(dni)
+                .filter((cliente)->cliente.claveValida(clave));
+
+        // Asegurarnos de que se devuelve el cliente con los datos precargados
+        clienteLogin.ifPresent(c -> c.verPaquetes().size());
+        return clienteLogin;
+    }
+ /**
+     * Devolver las cuentas de un cliente dado
+     * No es una operación imprescindible puesto que el cliente ya
+     * tiene la lista de cuentas
+     * @param dni el DNI del cliente
+     * @return la lista de cuentas
+     */
+    @Transactional
+    public List<Paquete> verPaquetes(@NotBlank String dni) {
+        Cliente cliente = repositorioClientes.buscar(dni).orElseThrow(ClienteNoRegistrado::new);
+
+         // Precargar a memoria la relación lazy de cuentas del cliente antes de devolver      
+        cliente.verPaquetes().size();
+        return cliente.verPaquetes();
+    }
+    
+
 
     /*
 * alta Envio es una función que de manera interna, crea el paquete con todos los atributos de su clase.

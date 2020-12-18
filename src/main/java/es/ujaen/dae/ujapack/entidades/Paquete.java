@@ -202,5 +202,24 @@ public class Paquete implements Serializable {
         return localizador;
     }
 
+    
+    public float getImporte() {
+        return importe;
+    }
+
+    public float getPeso() {
+        return peso;
+    }
+
+    public float getAltura() {
+        return altura;
+    }
+
+    public Cliente getDestinatario() {
+        return destinatario;
+    }
+    
+    
+
 }
 
