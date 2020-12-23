@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package es.ujaen.dae.ujapack.app;
+package es.ujaen.dae.ujapack.beans;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -40,7 +40,7 @@ public class LimpiadoBaseDeDatos {
 
    
     /** Realizar borrado */
-    void limpiar() {
+    public void limpiar() {
         transactionTemplate.executeWithoutResult(transactionStatus -> {
             for (String tabla : entidades) {
                 em.createQuery(deleteFrom + tabla).executeUpdate();
