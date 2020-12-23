@@ -7,13 +7,12 @@ package es.ujaen.dae.ujapack.controladoresREST.DTOs;
 
 import es.ujaen.dae.ujapack.entidades.Cliente;
 
-
 /**
  *
  * @author Pablo
  */
 public class DTOCliente {
-   
+
     String dni;
     String nombre;
     String apellidos;
@@ -31,9 +30,9 @@ public class DTOCliente {
         this.direccion = direccion;
         this.localidad = localidad;
         this.provincia = provincia;
-        this.clave=clave;
+        this.clave = clave;
     }
-    
+
     public DTOCliente(Cliente cliente) {
         this.dni = cliente.getDni();
         this.nombre = cliente.getNombre();
@@ -42,7 +41,7 @@ public class DTOCliente {
         this.direccion = cliente.getDireccion();
         this.localidad = cliente.getLocalidad();
         this.provincia = cliente.getProvincia();
-        this.clave=cliente.getClave();
+        this.clave = "";
     }
 
     public String getDni() {
@@ -72,15 +71,13 @@ public class DTOCliente {
     public String getProvincia() {
         return provincia;
     }
-    
+
     public String getClave() {
         return clave;
     }
-    
-    public Cliente aCliente(){
-        return new Cliente(dni, nombre, apellidos, email, direccion, localidad, provincia,clave);
+
+    public Cliente aCliente() {
+        return new Cliente(dni, nombre, apellidos, email, direccion, localidad, provincia, clave);
     }
-    
-    
-    
+
 }

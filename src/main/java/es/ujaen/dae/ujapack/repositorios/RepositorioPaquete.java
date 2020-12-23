@@ -37,5 +37,9 @@ public class RepositorioPaquete {
     public void guardar(Paquete paquete){
         em.persist(paquete);
     }
+    
+    public void actualizarPaquete(Paquete paquete){ 
+        em.merge(paquete);
+    }
   
 }

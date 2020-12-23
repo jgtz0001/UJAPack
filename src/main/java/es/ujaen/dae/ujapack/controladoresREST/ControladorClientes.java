@@ -44,7 +44,12 @@ public class ControladorClientes {
         // return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    
+     /** Handler para excepciones de violación de restricciones */
+    @ExceptionHandler(ClienteNoRegistrado.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handlerClienteNoRegistrado(ClienteNoRegistrado e) {
+    }
+  
     @PostMapping("/clientes")
     ResponseEntity<DTOCliente> altaCliente(@RequestBody DTOCliente cliente){
         try{
@@ -56,14 +61,14 @@ public class ControladorClientes {
         }        
     }
     
-     /** Login de clientes (temporal hasta incluir autenticación mediante Spring Security */
-    @GetMapping("/clientes/{dni}")
-    ResponseEntity<DTOCliente> loginCliente(@PathVariable String dni, @RequestParam String clave) {
-        Optional<Cliente> cliente = serviPack.loginCliente(dni, clave);
-        return cliente
-                .map(c -> ResponseEntity.ok(new DTOCliente(c)))
-                .orElse(ResponseEntity.notFound().build());
-    }
+//     /** Login de clientes (temporal hasta incluir autenticación mediante Spring Security */
+//    @GetMapping("/clientes/{dni}")
+//    ResponseEntity<DTOCliente> loginCliente(@PathVariable String dni, @RequestParam String clave) {
+//        Optional<Cliente> cliente = serviPack.loginCliente(dni, clave);
+//        return cliente
+//                .map(c -> ResponseEntity.ok(new DTOCliente(c)))
+//                .orElse(ResponseEntity.notFound().build());
+//    }
 
 
 }

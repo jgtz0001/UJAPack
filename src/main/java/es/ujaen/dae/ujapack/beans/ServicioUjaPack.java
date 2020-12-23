@@ -79,10 +79,10 @@ public class ServicioUjaPack {
      */
     public ServicioUjaPack() {
     }
-    
+
     @PostConstruct
-    public void  rellenarJson (){
-    try {
+    public void rellenarJson() {
+        try {
             leerJson();
         } catch (IOException ex) {
             System.out.println(ex.toString());
@@ -112,42 +112,42 @@ public class ServicioUjaPack {
             throw new IllegalArgumentException("El cliente ya existe");
         }
         repositorioClientes.guardar(cliente);
-        
+
         return cliente;
     }
-    
-     /**
-     * Realiza un login de un cliente
-     * @param dni el DNI del cliente
-     * @param clave la clave de acceso
-     * @return el objeto de la clase Cliente asociado
-     */
-    @Transactional
-    public Optional<Cliente> loginCliente(@NotBlank String dni, @NotBlank String clave) {
-        Optional<Cliente> clienteLogin = repositorioClientes.buscar(dni)
-                .filter((cliente)->cliente.claveValida(clave));
 
-        // Asegurarnos de que se devuelve el cliente con los datos precargados
-        clienteLogin.ifPresent(c -> c.verPaquetes().size());
-        return clienteLogin;
-    }
- /**
-     * Devolver las cuentas de un cliente dado
-     * No es una operación imprescindible puesto que el cliente ya
-     * tiene la lista de cuentas
-     * @param dni el DNI del cliente
-     * @return la lista de cuentas
-     */
-    @Transactional
-    public List<Paquete> verPaquetes(@NotBlank String dni) {
-        Cliente cliente = repositorioClientes.buscar(dni).orElseThrow(ClienteNoRegistrado::new);
-
-         // Precargar a memoria la relación lazy de cuentas del cliente antes de devolver      
-        cliente.verPaquetes().size();
-        return cliente.verPaquetes();
-    }
-    
-
+//    /**
+//     * Realiza un login de un cliente
+//     *
+//     * @param dni el DNI del cliente
+//     * @param clave la clave de acceso
+//     * @return el objeto de la clase Cliente asociado
+//     */
+//    @Transactional
+//    public Optional<Cliente> loginCliente(@NotBlank String dni, @NotBlank String clave) {
+//        Optional<Cliente> clienteLogin = repositorioClientes.buscar(dni)
+//                .filter((cliente) -> cliente.claveValida(clave));
+//
+//        // Asegurarnos de que se devuelve el cliente con los datos precargados
+//        clienteLogin.ifPresent(c -> c.verPaquetes().size());
+//        return clienteLogin;
+//    }
+//
+//    /**
+//     * Devolver las cuentas de un cliente dado No es una operación
+//     * imprescindible puesto que el cliente ya tiene la lista de cuentas
+//     *
+//     * @param dni el DNI del cliente
+//     * @return la lista de cuentas //queremos devolver la lista de paquetes
+//     */
+//    @Transactional
+//    public List<Paquete> verPaquetes(@NotBlank String dni) {
+//        Cliente cliente = repositorioClientes.buscar(dni).orElseThrow(ClienteNoRegistrado::new);
+//
+//        // Precargar a memoria la relación lazy de cuentas del cliente antes de devolver      
+//        cliente.verPaquetes().size();
+//        return cliente.verPaquetes();
+//    }
 
     /*
 * alta Envio es una función que de manera interna, crea el paquete con todos los atributos de su clase.
@@ -240,6 +240,7 @@ public class ServicioUjaPack {
             throw new LocalizadorNoExiste();
         }
         p.notificaSalida(fechaSalida, punto);
+        repositorioPaquete.actualizarPaquete(p);
 
         return (fechaSalida + punto.getNombre());
     }
@@ -258,6 +259,7 @@ public class ServicioUjaPack {
             throw new LocalizadorNoExiste();
         }
         p.notificaEntrada(fechaEntrada, punto);
+        repositorioPaquete.actualizarPaquete(p);
         return (fechaEntrada + punto.getNombre());
     }
 
@@ -305,9 +307,8 @@ public class ServicioUjaPack {
 
             CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
             repositorioCentroDeLogistica.guardar(centroNuevo);
-            
-            //centros.put(id, centroNuevo);
 
+            //centros.put(id, centroNuevo);
         }
     }
 

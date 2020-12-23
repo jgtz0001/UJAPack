@@ -5,6 +5,7 @@
  */
 package es.ujaen.dae.ujapack.app;
 
+import es.ujaen.dae.ujapack.beans.LimpiadoBaseDeDatos;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Paquete;
 import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
