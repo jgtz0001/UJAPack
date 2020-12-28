@@ -34,12 +34,17 @@ public class RepositorioPuntoDeControl {
     public void guardar(PuntoDeControl puntoDeControl) {
         em.persist(puntoDeControl);
     }
-   
-    @Transactional        
-    public int BuscaIdProvincia (String provincia){
-    List <PuntoDeControl> puntodecontrol = em.createQuery
-    ("select h from PuntoDeControl h where h.provincia = :provincia",
-    PuntoDeControl.class).setParameter("provincia", provincia).getResultList();
-    return puntodecontrol.get(0).getId();
-  }
+ //List<PuntoDeControl> puntos = em.createQuery("select h from PuntoDeControl h where h.provincia = :provincia",    @Transactional
+    public int BuscaIdProvincia(String provincia) {
+        List<PuntoDeControl> puntos = em.createQuery("select h from PuntoDeControl h",
+                PuntoDeControl.class).setParameter("provincia", provincia).getResultList();
+        
+        for (PuntoDeControl punto : puntos) {
+            if (punto.getProvincia().contains(provincia)) {
+                return punto.getId();
+            }
+        }
+        return 0;
+    }
+    
 }

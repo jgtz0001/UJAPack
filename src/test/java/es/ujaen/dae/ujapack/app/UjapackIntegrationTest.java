@@ -32,7 +32,7 @@ public class UjapackIntegrationTest {
     @Autowired
     LimpiadoBaseDeDatos limpiadoBaseDeDatos;
 
-
+/*
     @Test
     public void creaEnvio() throws IOException {
 
@@ -114,11 +114,11 @@ public class UjapackIntegrationTest {
             serviPack.notificarSalida(paquet.getLocalizador(),fechaSalida, punto);
         });
     }
-
+*/
     @Test
     public void testRutaIncorrectaPuntoDeRutaAdelantado() throws IOException {
-        Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
-        Cliente Destinatario0 = new Cliente("12334243", "juan", "pepe","pp@gmail.com", "jaen", "Córdoba", "Córdoba");
+        Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Jaén", "Jaén", "Jaén");
+        Cliente Destinatario0 = new Cliente("12334243", "Juan", "Pepe","pp@gmail.com", "Jaén", "Córdoba", "Córdoba");
 
         Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
 
