@@ -199,6 +199,7 @@ public class ServicioUjaPack {
             throw new LocalizadorNoExiste();
         }
         p.notificaSalida(fechaSalida, punto);
+        repositorioPaquete.actualizarPaquete(p);
 
         return (fechaSalida + punto.getNombre());
     }
@@ -217,6 +218,7 @@ public class ServicioUjaPack {
             throw new LocalizadorNoExiste();
         }
         p.notificaEntrada(fechaEntrada, punto);
+        repositorioPaquete.actualizarPaquete(p);
         return (fechaEntrada + punto.getNombre());
     }
 

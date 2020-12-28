@@ -33,9 +33,14 @@ public class RepositorioPaquete {
     public Optional <Paquete> buscarPaquetes(int localizador){
         return Optional.ofNullable(em.find(Paquete.class, localizador));
     }
-   @Transactional
+   
     public void guardar(Paquete paquete){
         em.persist(paquete);
+    }
+    
+    @Transactional
+    public void actualizarPaquete(Paquete paquete) {
+        em.merge(paquete);
     }
   
 }
