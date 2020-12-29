@@ -65,6 +65,41 @@ public class ServicioUjaPack {
         }
     }
 
+    class CompletarPuntosDeControl {
+
+        private int idPadre;
+        private String NombrePadre;
+        private ArrayList<String> provincias;
+
+        public CompletarPuntosDeControl(int idPadre, ArrayList<String> provincias, String NombrePadre) {
+            this.idPadre = idPadre;
+            this.provincias = provincias;
+            this.NombrePadre = NombrePadre;
+        }
+
+        /**
+         * @return the idPadre
+         */
+        public int getIdPadre() {
+            return idPadre;
+        }
+
+        /**
+         * @return the provincias
+         */
+        public ArrayList<String> getProvincias() {
+            return provincias;
+        }
+
+        /**
+         * @return the NombrePadre
+         */
+        public String getNombrePadre() {
+            return NombrePadre;
+        }
+
+    }
+
     private static final long LIMIT = 10000000000L;
     private static long last = 0;
 
@@ -73,10 +108,10 @@ public class ServicioUjaPack {
      */
     public ServicioUjaPack() {
     }
-    
+
     @PostConstruct
-    public void  rellenarJson (){
-    try {
+    public void rellenarJson() {
+        try {
             leerJson();
         } catch (IOException ex) {
             System.out.println(ex.toString());
@@ -147,8 +182,10 @@ public class ServicioUjaPack {
 
     private ArrayList<PuntoDeControl> completaRuta(ArrayList<PuntoDeControl> ruta, String provinciaRem, String provinciaDest, int idProvinciaRem, int idProvinciaDest) {
 
-        PuntoDeControl puntoControlRem = new PuntoDeControl(idProvinciaRem, provinciaRem);
-        PuntoDeControl puntoControlDest = new PuntoDeControl(idProvinciaDest, provinciaDest);
+//        PuntoDeControl puntoControlRem = new PuntoDeControl(idProvinciaRem, provinciaRem);
+//        PuntoDeControl puntoControlDest = new PuntoDeControl(idProvinciaDest, provinciaDest);
+        PuntoDeControl puntoControlRem = repositorioPuntoDeControl.buscarPC(idProvinciaRem);
+        PuntoDeControl puntoControlDest = repositorioPuntoDeControl.buscarPC(idProvinciaDest);
 
         ArrayList<PuntoDeControl> rutaDefinitiva = new ArrayList<PuntoDeControl>();
         if (!ruta.get(0).getLocalizacion().equals(provinciaRem)) {
@@ -242,7 +279,7 @@ public class ServicioUjaPack {
     private void leerJson() throws IOException {
         String jsonStr = Files.readString(new File("redujapack.json").toPath());
         JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
-
+        ArrayList<CompletarPuntosDeControl> ARellenar = new ArrayList<CompletarPuntosDeControl>();
         for (int i = 1; i <= raiz.size(); i++) {
             JsonObject centro1 = raiz.getAsJsonObject(String.valueOf(i));
             int id = i;
@@ -257,19 +294,32 @@ public class ServicioUjaPack {
             for (int j = 0; j < provincias.size(); j++) {
                 listdata.add(provincias.get(j).getAsString());
             }
+
+            CompletarPuntosDeControl nuevoPuntoDeControl = new CompletarPuntosDeControl(id, listdata, localizacion);
+            ARellenar.add(nuevoPuntoDeControl);
+
             for (int j = 0; j < conexiones.size(); j++) {
                 listdata2.add(conexiones.get(j).getAsInt());
             }
-            PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, listdata);
+            PuntoDeControl punto = new PuntoDeControl(nombre, localizacion, listdata);
             repositorioPuntoDeControl.guardar(punto);
-            //puntosDeControl.put(id, punto);
 
-            CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
+            CentroDeLogistica centroNuevo = new CentroDeLogistica(nombre, localizacion, listdata, listdata2);
             repositorioCentroDeLogistica.guardar(centroNuevo);
-            
-            //centros.put(id, centroNuevo);
 
         }
+        int numero = 11;
+        for (int i = 0; i < ARellenar.size(); i++) {
+            ArrayList<String> provinciasAIncluir = ARellenar.get(i).getProvincias();
+            for (int j = 0; j < provinciasAIncluir.size(); j++) {
+//                System.out.println(provinciasAIncluir.get(j));
+                if (!provinciasAIncluir.get(j).equals(ARellenar.get(i).getNombrePadre())) {
+                    PuntoDeControl punto = new PuntoDeControl(("Calle " + provinciasAIncluir.get(j)), provinciasAIncluir.get(j), null);
+                    repositorioPuntoDeControl.guardar(punto);
+                }
+            }
+        }
+
     }
 
     /*

@@ -24,8 +24,7 @@ public class RepositorioPuntoDeControl {
     @PersistenceContext
     EntityManager em;
 
-    
-    @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public PuntoDeControl buscarPC(int id) {
         return em.find(PuntoDeControl.class, id);
     }
@@ -34,11 +33,12 @@ public class RepositorioPuntoDeControl {
     public void guardar(PuntoDeControl puntoDeControl) {
         em.persist(puntoDeControl);
     }
- //List<PuntoDeControl> puntos = em.createQuery("select h from PuntoDeControl h where h.provincia = :provincia",    @Transactional
+
+    //List<PuntoDeControl> puntos = em.createQuery("select h from PuntoDeControl h where h.provincia = :provincia",    @Transactional
     public int BuscaIdProvincia(String provincia) {
         List<PuntoDeControl> puntos = em.createQuery("select h from PuntoDeControl h",
                 PuntoDeControl.class).setParameter("provincia", provincia).getResultList();
-        
+
         for (PuntoDeControl punto : puntos) {
             if (punto.getProvincia().contains(provincia)) {
                 return punto.getId();
@@ -46,5 +46,5 @@ public class RepositorioPuntoDeControl {
         }
         return 0;
     }
-    
+
 }

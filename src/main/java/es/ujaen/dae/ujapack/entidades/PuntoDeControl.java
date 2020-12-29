@@ -8,6 +8,8 @@ package es.ujaen.dae.ujapack.entidades;
 import java.io.Serializable;
 import java.util.ArrayList;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -23,7 +25,7 @@ import javax.validation.constraints.NotBlank;
 public class PuntoDeControl implements Serializable {
 
     @Id
-    @Max(10)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @NotBlank
     String nombre;
@@ -41,12 +43,18 @@ public class PuntoDeControl implements Serializable {
         this.provincia = null;
     }
 
-    public PuntoDeControl(int id, String nombre, String localizacion, ArrayList<String> provincia) {
-        this.id = id;
+    public PuntoDeControl(String nombre, String localizacion, ArrayList<String> provincia) {
         this.nombre = nombre;
         this.localizacion = localizacion;
         this.provincia = provincia;
     }
+
+//    public PuntoDeControl(int id, String nombre, String localizacion, ArrayList<String> provincia) {
+//        this.id = id;
+//        this.nombre = nombre;
+//        this.localizacion = localizacion;
+//        this.provincia = provincia;
+//    }
 
     /**
      * @return the id

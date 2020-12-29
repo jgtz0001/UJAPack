@@ -20,14 +20,14 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Oficina extends PuntoDeControl implements Serializable {
 
-   @Id
-   @GeneratedValue(strategy=GenerationType.IDENTITY)
-   int id;
+//   @Id
+//   //@GeneratedValue(strategy=GenerationType.TABLE)
+//   int id;
     @ManyToOne
     CentroDeLogistica listaLogistica;
 
-    Oficina(int id, String nombre, String localizacion, ArrayList<String> provincia, ArrayList<Integer> conexiones) {
-        super(id, nombre, localizacion, provincia);
+    Oficina(String nombre, String localizacion, ArrayList<String> provincia, ArrayList<Integer> conexiones) {
+        super(nombre, localizacion, provincia);
     }
 
     Oficina() {

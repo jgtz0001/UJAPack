@@ -11,6 +11,7 @@ import es.ujaen.dae.ujapack.entidades.Paquete;
 import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
 import es.ujaen.dae.ujapack.entidades.PuntoDeControl;
 import es.ujaen.dae.ujapack.excepciones.PuntoDeControlEquivocado;
+import es.ujaen.dae.ujapack.repositorios.RepositorioPuntoDeControl;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Assertions;
@@ -28,11 +29,11 @@ public class UjapackIntegrationTest {
 
     @Autowired
     ServicioUjaPack serviPack;
-    
+
     @Autowired
     LimpiadoBaseDeDatos limpiadoBaseDeDatos;
 
-/*
+    /*
     @Test
     public void creaEnvio() throws IOException {
 
@@ -114,23 +115,23 @@ public class UjapackIntegrationTest {
             serviPack.notificarSalida(paquet.getLocalizador(),fechaSalida, punto);
         });
     }
-*/
-    @Test
-    public void testRutaIncorrectaPuntoDeRutaAdelantado() throws IOException {
-        Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Jaén", "Jaén", "Jaén");
-        Cliente Destinatario0 = new Cliente("12334243", "Juan", "Pepe","pp@gmail.com", "Jaén", "Córdoba", "Córdoba");
+     */
+//    @Test
+//    public void testRutaIncorrectaPuntoDeRutaAdelantado() throws IOException {
+//        Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Jaén", "Jaén", "Jaén");
+//        Cliente Destinatario0 = new Cliente("12334243", "Juan", "Pepe", "pp@gmail.com", "Jaén", "Córdoba", "Córdoba");
+//
+//        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
+//
+//        LocalDateTime fechaSalida = LocalDateTime.now();
+//        PuntoDeControl punto = new PuntoDeControl(0, "Córdoba", "Córdoba", null);
+//        //PuntoDeControl punto = repositorioPuntoDeControl.buscarPC(1);
+//
+//        Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
+//            serviPack.notificarSalida(paquet.getLocalizador(), fechaSalida, punto);
+//        });
+//    }
 
-        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
-
-        LocalDateTime fechaSalida = LocalDateTime.now();
-        PuntoDeControl punto = new PuntoDeControl(1, "Córdoba", "Córdoba", null);
-
-        Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
-             serviPack.notificarSalida(paquet.getLocalizador(),fechaSalida, punto);
-        });
-    } 
-
-    
     @BeforeEach
     void limpiadoBaseDeDatos() {
         limpiadoBaseDeDatos.limpiar();
