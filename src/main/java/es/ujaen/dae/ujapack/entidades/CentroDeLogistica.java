@@ -26,8 +26,8 @@ public class CentroDeLogistica extends PuntoDeControl implements Serializable {
     @OneToMany(mappedBy="listaLogistica")
     public List<Oficina> listaOficinas;
     
-    public CentroDeLogistica(int id, String nombre, String localizacion, ArrayList<String> provincia, ArrayList<Integer> conexiones) {
-        super(id, nombre, localizacion, provincia);
+    public CentroDeLogistica(String nombre, String localizacion, ArrayList<String> provincia, ArrayList<Integer> conexiones) {
+        super(nombre, localizacion, provincia);
         this.conexiones = conexiones;
     }
 

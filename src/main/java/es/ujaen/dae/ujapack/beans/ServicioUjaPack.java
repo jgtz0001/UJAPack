@@ -71,6 +71,41 @@ public class ServicioUjaPack {
         }
     }
 
+    class CompletarPuntosDeControl {
+
+        private int idPadre;
+        private String NombrePadre;
+        private ArrayList<String> provincias;
+
+        public CompletarPuntosDeControl(int idPadre, ArrayList<String> provincias, String NombrePadre) {
+            this.idPadre = idPadre;
+            this.provincias = provincias;
+            this.NombrePadre = NombrePadre;
+        }
+
+        /**
+         * @return the idPadre
+         */
+        public int getIdPadre() {
+            return idPadre;
+        }
+
+        /**
+         * @return the provincias
+         */
+        public ArrayList<String> getProvincias() {
+            return provincias;
+        }
+
+        /**
+         * @return the NombrePadre
+         */
+        public String getNombrePadre() {
+            return NombrePadre;
+        }
+
+    }
+
     private static final long LIMIT = 10000000000L;
     private static long last = 0;
 
@@ -116,38 +151,22 @@ public class ServicioUjaPack {
         return cliente;
     }
 
-//    /**
-//     * Realiza un login de un cliente
-//     *
-//     * @param dni el DNI del cliente
-//     * @param clave la clave de acceso
-//     * @return el objeto de la clase Cliente asociado
-//     */
-//    @Transactional
-//    public Optional<Cliente> loginCliente(@NotBlank String dni, @NotBlank String clave) {
-//        Optional<Cliente> clienteLogin = repositorioClientes.buscar(dni)
-//                .filter((cliente) -> cliente.claveValida(clave));
-//
-//        // Asegurarnos de que se devuelve el cliente con los datos precargados
-//        clienteLogin.ifPresent(c -> c.verPaquetes().size());
-//        return clienteLogin;
-//    }
-//
-//    /**
-//     * Devolver las cuentas de un cliente dado No es una operación
-//     * imprescindible puesto que el cliente ya tiene la lista de cuentas
-//     *
-//     * @param dni el DNI del cliente
-//     * @return la lista de cuentas //queremos devolver la lista de paquetes
-//     */
-//    @Transactional
-//    public List<Paquete> verPaquetes(@NotBlank String dni) {
-//        Cliente cliente = repositorioClientes.buscar(dni).orElseThrow(ClienteNoRegistrado::new);
-//
-//        // Precargar a memoria la relación lazy de cuentas del cliente antes de devolver      
-//        cliente.verPaquetes().size();
-//        return cliente.verPaquetes();
-//    }
+    /**
+     * Realiza un login de un cliente
+     *
+     * @param dni el DNI del cliente
+     * @param clave la clave de acceso
+     * @return el objeto de la clase Cliente asociado
+     */
+    @Transactional
+    public Optional<Cliente> loginCliente(@NotBlank String dni, @NotBlank String clave) {
+        Optional<Cliente> clienteLogin = repositorioClientes.buscar(dni)
+                .filter((cliente) -> cliente.claveValida(clave));
+
+        // Asegurarnos de que se devuelve el cliente con los datos precargados
+        clienteLogin.ifPresent(c -> c.verPaquetes().size());
+        return clienteLogin;
+    }
 
     /*
 * alta Envio es una función que de manera interna, crea el paquete con todos los atributos de su clase.
@@ -283,7 +302,7 @@ public class ServicioUjaPack {
     private void leerJson() throws IOException {
         String jsonStr = Files.readString(new File("redujapack.json").toPath());
         JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
-
+        ArrayList<CompletarPuntosDeControl> ARellenar = new ArrayList<CompletarPuntosDeControl>();
         for (int i = 1; i <= raiz.size(); i++) {
             JsonObject centro1 = raiz.getAsJsonObject(String.valueOf(i));
             int id = i;
@@ -298,18 +317,35 @@ public class ServicioUjaPack {
             for (int j = 0; j < provincias.size(); j++) {
                 listdata.add(provincias.get(j).getAsString());
             }
+
+            CompletarPuntosDeControl nuevoPuntoDeControl = new CompletarPuntosDeControl(id, listdata, localizacion);
+            ARellenar.add(nuevoPuntoDeControl);
+
             for (int j = 0; j < conexiones.size(); j++) {
                 listdata2.add(conexiones.get(j).getAsInt());
             }
-            PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, listdata);
+            PuntoDeControl punto = new PuntoDeControl(nombre, localizacion, listdata);
             repositorioPuntoDeControl.guardar(punto);
-            //puntosDeControl.put(id, punto);
 
-            CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
+            CentroDeLogistica centroNuevo = new CentroDeLogistica(nombre, localizacion, listdata, listdata2);
             repositorioCentroDeLogistica.guardar(centroNuevo);
 
-            //centros.put(id, centroNuevo);
         }
+        for (int i = 0; i < ARellenar.size(); i++) {
+            ArrayList<String> provinciasAIncluir = ARellenar.get(i).getProvincias();
+            for (int j = 0; j < provinciasAIncluir.size(); j++) {
+//                System.out.println(provinciasAIncluir.get(j));
+                if (!provinciasAIncluir.get(j).equals(ARellenar.get(i).getNombrePadre())) {
+                    PuntoDeControl punto = new PuntoDeControl(("Calle " + provinciasAIncluir.get(j)), provinciasAIncluir.get(j), null);
+                    repositorioPuntoDeControl.guardar(punto);
+                }
+            }
+        }
+
+        Cliente cli1 = new Cliente("77436077", "a", "s", "d@gmail.com", "f", "Sevilla", "Sevilla", "clavee");//localidad y luego provincia!!
+        Cliente cli2 = new Cliente("77436988", "a", "s", "e@gmail.com", "f", "Las Palmas", "Las Palmas", "clave");
+        repositorioClientes.guardar(cli1);
+        repositorioClientes.guardar(cli2);
     }
 
     /*
@@ -416,5 +452,36 @@ public class ServicioUjaPack {
         }
         return ruta;
     }
+
+    /**
+     * Realiza un login de un cliente
+     * @param dni el DNI del cliente
+     * @param clave la clave de acceso
+     * @return el objeto de la clase Cliente asociado
+     */
+    @Transactional
+    public Optional<Cliente> verCliente(@NotBlank String dni) {
+        Optional<Cliente> clienteLogin = repositorioClientes.buscar(dni);
+
+        // Asegurarnos de que se devuelve el cliente con los datos precargados
+        clienteLogin.ifPresent(c -> c.verPaquetes().size());
+        return clienteLogin;
+    }
+    
+        /**
+     * Devolver los paquetes de un cliente dado
+     * No es una operación imprescindible puesto que el cliente ya
+     * @param dni el DNI del cliente
+     * @return la lista de paquetes
+     */
+    @Transactional
+    public List<Paquete> verPaquetes(@NotBlank String dni) {
+        Cliente cliente = repositorioClientes.buscar(dni).orElseThrow(ClienteNoRegistrado::new);
+
+         // Precargar a memoria la relación lazy de cuentas del cliente antes de devolver      
+        cliente.verPaquetes().size();
+        return cliente.verPaquetes();
+    }
+
 
 }

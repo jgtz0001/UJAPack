@@ -114,13 +114,13 @@ public class Cliente implements Serializable {
         return this.clave.equals(CodificadorMd5.codificar(clave));        
     }
     
-//    /**
-//     * Devolver cuentas del usuario
-//     * @return la lista de cuentas
-//     */
-//    public List<Paquete> verPaquetes() {
-//        return Collections.unmodifiableList(paquetes);
-//    }
+    /**
+     * Devolver cuentas del usuario
+     * @return la lista de cuentas
+     */
+    public List<Paquete> verPaquetes() {
+        return Collections.unmodifiableList(PaquetesRemitente);
+    }
     
     
 

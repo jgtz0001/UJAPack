@@ -6,7 +6,6 @@
 package es.ujaen.dae.ujapack.controladoresREST.DTOs;
 
 import es.ujaen.dae.ujapack.entidades.Paquete;
-import es.ujaen.dae.ujapack.entidades.Paquete.Estado;
 
 
 /**

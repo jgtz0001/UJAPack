@@ -13,13 +13,28 @@ import es.ujaen.dae.ujapack.entidades.Cliente;
  */
 public class DTOCliente {
 
+     /** DNI del cliente */
     String dni;
+    
+    /** Nombre del cliente */
     String nombre;
+    
+    /** Apellidos del cliente */
     String apellidos;
+    
+    /** Email del cliente */
     String email;
+    
+    /** Direccion del cliente */
     String direccion;
+    
+    /** Localidad del cliente */
     String localidad;
+    
+    /** Provincia del cliente */
     String provincia;
+    
+    /** Clave del cliente */
     String clave;
 
     public DTOCliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia, String clave) {
@@ -41,7 +56,7 @@ public class DTOCliente {
         this.direccion = cliente.getDireccion();
         this.localidad = cliente.getLocalidad();
         this.provincia = cliente.getProvincia();
-        this.clave = "";
+        this.clave = "clave";
     }
 
     public String getDni() {

@@ -61,14 +61,14 @@ public class ControladorClientes {
         }        
     }
     
-//     /** Login de clientes (temporal hasta incluir autenticación mediante Spring Security */
-//    @GetMapping("/clientes/{dni}")
-//    ResponseEntity<DTOCliente> loginCliente(@PathVariable String dni, @RequestParam String clave) {
-//        Optional<Cliente> cliente = serviPack.loginCliente(dni, clave);
-//        return cliente
-//                .map(c -> ResponseEntity.ok(new DTOCliente(c)))
-//                .orElse(ResponseEntity.notFound().build());
-//    }
+     /** Login de clientes (temporal hasta incluir autenticación mediante Spring Security */
+    @GetMapping("/clientes/{dni}")
+    ResponseEntity<DTOCliente> loginCliente(@PathVariable String dni, @RequestParam String clave) {
+        Optional<Cliente> cliente = serviPack.verCliente(dni, clave);
+        return cliente
+                .map(c -> ResponseEntity.ok(new DTOCliente(c)))
+                .orElse(ResponseEntity.notFound().build());
+    }
 
 
 }
