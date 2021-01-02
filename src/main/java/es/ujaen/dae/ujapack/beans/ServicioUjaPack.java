@@ -120,7 +120,7 @@ public class ServicioUjaPack {
 
     @Transactional(readOnly = true)
     private boolean buscaPorDni(String dni) {
-        return repositorioClientes.buscar(dni).isPresent();
+        return true;
     }
 
     /*
@@ -136,10 +136,6 @@ public class ServicioUjaPack {
     }
 
     public void altaCliente(Cliente cliente) {
-
-        if (repositorioClientes.buscar(cliente.getDni()).isPresent()) {
-            throw new IllegalArgumentException("El cliente ya existe");
-        }
         repositorioClientes.guardar(cliente);
     }
 
@@ -153,14 +149,11 @@ public class ServicioUjaPack {
 + @return Devuelve el paquete.
      */
     public Paquete altaEnvio(float peso, float anchura, float altura, Cliente remitente, Cliente destinatario) {
-        if (buscaPorDni(destinatario.getDni())) {
-            throw new DNINoValido();
-        }
 
         int localizador = (int) getID();
-        while (repositorioPaquete.buscarPaquetes(localizador).isPresent()) {
-            localizador = (int) getID();
-        }
+//        while (repositorioPaquete.buscarPaquetes(localizador).isPresent()) {
+//            localizador = (int) getID();
+//        }
 
         int idProvinciaRem = obtenerIdProvincia(remitente.getProvincia());
         int idProvinciaDest = obtenerIdProvincia(destinatario.getProvincia());
@@ -173,8 +166,6 @@ public class ServicioUjaPack {
         ruta = calcularRutaPaquete(remitente.getLocalidad(), destinatario.getLocalidad(), idProvinciaRem, idProvinciaDest);
         costeEnvio = calcularImporte(ruta.size(), peso, altura, anchura);
 
-        ruta = completaRuta(ruta, remitente.getProvincia(), destinatario.getProvincia(), idProvinciaRem, idProvinciaDest);
-
         Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, ruta);
         repositorioPaquete.guardar(paquet);
         return paquet;
@@ -182,8 +173,6 @@ public class ServicioUjaPack {
 
     private ArrayList<PuntoDeControl> completaRuta(ArrayList<PuntoDeControl> ruta, String provinciaRem, String provinciaDest, int idProvinciaRem, int idProvinciaDest) {
 
-//        PuntoDeControl puntoControlRem = new PuntoDeControl(idProvinciaRem, provinciaRem);
-//        PuntoDeControl puntoControlDest = new PuntoDeControl(idProvinciaDest, provinciaDest);
         PuntoDeControl puntoControlRem = repositorioPuntoDeControl.buscarPC(idProvinciaRem);
         PuntoDeControl puntoControlDest = repositorioPuntoDeControl.buscarPC(idProvinciaDest);
 
@@ -308,7 +297,6 @@ public class ServicioUjaPack {
             repositorioCentroDeLogistica.guardar(centroNuevo);
 
         }
-        int numero = 11;
         for (int i = 0; i < ARellenar.size(); i++) {
             ArrayList<String> provinciasAIncluir = ARellenar.get(i).getProvincias();
             for (int j = 0; j < provinciasAIncluir.size(); j++) {
@@ -319,6 +307,11 @@ public class ServicioUjaPack {
                 }
             }
         }
+
+        Cliente cli1 = new Cliente("77436077", "a", "s", "d@gmail.com", "f", "Sevilla", "Sevilla");//localidad y luego provincia!!
+        Cliente cli2 = new Cliente("77436988", "a", "s", "e@gmail.com", "f", "Las Palmas", "Las Palmas");
+        repositorioClientes.guardar(cli1);
+        repositorioClientes.guardar(cli2);
 
     }
 

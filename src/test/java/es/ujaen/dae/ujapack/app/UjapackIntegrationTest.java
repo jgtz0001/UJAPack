@@ -14,6 +14,7 @@ import es.ujaen.dae.ujapack.excepciones.PuntoDeControlEquivocado;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPuntoDeControl;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,9 @@ public class UjapackIntegrationTest {
 
     @Autowired
     LimpiadoBaseDeDatos limpiadoBaseDeDatos;
+    
+    @Autowired
+    RepositorioPuntoDeControl repositorioPuntoDeControl;
 
     /*
     @Test
@@ -118,14 +122,14 @@ public class UjapackIntegrationTest {
      */
 //    @Test
 //    public void testRutaIncorrectaPuntoDeRutaAdelantado() throws IOException {
-//        Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Jaén", "Jaén", "Jaén");
+//        Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Sevilla", "Sevilla", "Jaén");
 //        Cliente Destinatario0 = new Cliente("12334243", "Juan", "Pepe", "pp@gmail.com", "Jaén", "Córdoba", "Córdoba");
 //
 //        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
-//
 //        LocalDateTime fechaSalida = LocalDateTime.now();
-//        PuntoDeControl punto = new PuntoDeControl(0, "Córdoba", "Córdoba", null);
-//        //PuntoDeControl punto = repositorioPuntoDeControl.buscarPC(1);
+//        ArrayList<String> prueba = new ArrayList<String>();
+//        PuntoDeControl punto = new PuntoDeControl("Calle Córdoba", "Sevilla", prueba);
+//        //PuntoDeControl punto = repositorioPuntoDeControl.buscarPC(23);
 //
 //        Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
 //            serviPack.notificarSalida(paquet.getLocalizador(), fechaSalida, punto);
