@@ -293,7 +293,7 @@ public class ServicioUjaPack {
             PuntoDeControl punto = new PuntoDeControl(nombre, localizacion, listdata);
             repositorioPuntoDeControl.guardar(punto);
 
-            CentroDeLogistica centroNuevo = new CentroDeLogistica(nombre, localizacion, listdata, listdata2);
+            CentroDeLogistica centroNuevo = new CentroDeLogistica(nombre, localizacion, listdata, listdata2, );
             repositorioCentroDeLogistica.guardar(centroNuevo);
 
         }
@@ -304,6 +304,8 @@ public class ServicioUjaPack {
                 if (!provinciasAIncluir.get(j).equals(ARellenar.get(i).getNombrePadre())) {
                     PuntoDeControl punto = new PuntoDeControl(("Calle " + provinciasAIncluir.get(j)), provinciasAIncluir.get(j), null);
                     repositorioPuntoDeControl.guardar(punto);
+                }else{
+                    
                 }
             }
         }

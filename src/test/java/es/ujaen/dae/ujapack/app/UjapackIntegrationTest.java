@@ -120,21 +120,21 @@ public class UjapackIntegrationTest {
         });
     }
      */
-//    @Test
-//    public void testRutaIncorrectaPuntoDeRutaAdelantado() throws IOException {
-//        Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Sevilla", "Sevilla", "Jaén");
-//        Cliente Destinatario0 = new Cliente("12334243", "Juan", "Pepe", "pp@gmail.com", "Jaén", "Córdoba", "Córdoba");
-//
-//        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
-//        LocalDateTime fechaSalida = LocalDateTime.now();
-//        ArrayList<String> prueba = new ArrayList<String>();
-//        PuntoDeControl punto = new PuntoDeControl("Calle Córdoba", "Sevilla", prueba);
-//        //PuntoDeControl punto = repositorioPuntoDeControl.buscarPC(23);
-//
-//        Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
-//            serviPack.notificarSalida(paquet.getLocalizador(), fechaSalida, punto);
-//        });
-//    }
+    @Test
+    public void testRutaIncorrectaPuntoDeRutaAdelantado() throws IOException {
+        Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Sevilla", "Sevilla", "Jaén");
+        Cliente Destinatario0 = new Cliente("12334243", "Juan", "Pepe", "pp@gmail.com", "Jaén", "Córdoba", "Córdoba");
+
+        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
+        LocalDateTime fechaSalida = LocalDateTime.now();
+        ArrayList<String> prueba = new ArrayList<String>();
+        PuntoDeControl punto = new PuntoDeControl("Calle Córdoba", "Sevilla", prueba);
+        //PuntoDeControl punto = repositorioPuntoDeControl.buscarPC(23);
+
+        Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
+            serviPack.notificarSalida(paquet.getLocalizador(), fechaSalida, punto);
+        });
+    }
 
     @BeforeEach
     void limpiadoBaseDeDatos() {
