@@ -78,10 +78,10 @@ public class ControladorClientesTest {
 //        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 //    }
 
-    @Test
-    public void testAltaCliente() {
-
-    }
+//    @Test
+//    public void testAltaCliente() {
+//
+//    }
 
     @BeforeEach
     void limpiadoBaseDeDatos() {

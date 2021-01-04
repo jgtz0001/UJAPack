@@ -63,7 +63,7 @@ public class Paquete implements Serializable {
         Extraviado;
     }
 
-    public Paquete(int localizador, float importe, float peso, float altura, ArrayList<PuntoDeControl> ruta) {
+    public Paquete(int localizador, float importe, float peso, float altura, List<PuntoDeControl> ruta) {
         this.localizador = localizador;
         this.numPuntosControl = ruta.size();
         this.estado = estado.EnTransito;

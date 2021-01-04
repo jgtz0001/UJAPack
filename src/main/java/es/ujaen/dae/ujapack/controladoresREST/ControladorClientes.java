@@ -63,7 +63,7 @@ public class ControladorClientes {
     
      /** Login de clientes (temporal hasta incluir autenticación mediante Spring Security */
     @GetMapping("/clientes/{dni}")
-    ResponseEntity<DTOCliente> loginCliente(@PathVariable String dni, @RequestParam String clave) {
+    ResponseEntity<DTOCliente> loginCliente(@PathVariable String dni) {
         Optional<Cliente> cliente = serviPack.verCliente(dni);
         return cliente
                 .map(c -> ResponseEntity.ok(new DTOCliente(c)))
