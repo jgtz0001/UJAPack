@@ -192,9 +192,6 @@ public class ServicioUjaPack {
         ArrayList<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
         float costeEnvio = 0;
 
-        if (idProvinciaDest == 0 || idProvinciaRem == 0) {
-            throw new IdIncorrecto();
-        }
         ruta = calcularRutaPaquete(remitente.getLocalidad(), destinatario.getLocalidad(), idProvinciaRem, idProvinciaDest);
         costeEnvio = calcularImporte(ruta.size(), peso, altura, anchura);
 
