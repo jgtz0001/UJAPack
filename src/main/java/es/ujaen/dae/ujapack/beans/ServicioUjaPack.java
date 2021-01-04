@@ -269,6 +269,7 @@ public class ServicioUjaPack {
         String jsonStr = Files.readString(new File("redujapack.json").toPath());
         JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
         ArrayList<CompletarPuntosDeControl> ARellenar = new ArrayList<CompletarPuntosDeControl>();
+        ArrayList<CentroDeLogistica> centrosBD = new ArrayList<CentroDeLogistica>();
         for (int i = 1; i <= raiz.size(); i++) {
             JsonObject centro1 = raiz.getAsJsonObject(String.valueOf(i));
             int id = i;
@@ -293,28 +294,23 @@ public class ServicioUjaPack {
             PuntoDeControl punto = new PuntoDeControl(nombre, localizacion, listdata);
             repositorioPuntoDeControl.guardar(punto);
 
-            CentroDeLogistica centroNuevo = new CentroDeLogistica(nombre, localizacion, listdata, listdata2, );
-            repositorioCentroDeLogistica.guardar(centroNuevo);
+            CentroDeLogistica centroNuevo = new CentroDeLogistica(nombre, localizacion, listdata, listdata2, id);
+            centrosBD.add(centroNuevo);
 
         }
+        for (int i=0; i<centrosBD.size(); i++){
+             repositorioCentroDeLogistica.guardar(centrosBD.get(i));
+        }
+       
         for (int i = 0; i < ARellenar.size(); i++) {
             ArrayList<String> provinciasAIncluir = ARellenar.get(i).getProvincias();
             for (int j = 0; j < provinciasAIncluir.size(); j++) {
-//                System.out.println(provinciasAIncluir.get(j));
                 if (!provinciasAIncluir.get(j).equals(ARellenar.get(i).getNombrePadre())) {
                     PuntoDeControl punto = new PuntoDeControl(("Calle " + provinciasAIncluir.get(j)), provinciasAIncluir.get(j), null);
                     repositorioPuntoDeControl.guardar(punto);
-                }else{
-                    
                 }
             }
         }
-
-        Cliente cli1 = new Cliente("77436077", "a", "s", "d@gmail.com", "f", "Sevilla", "Sevilla");//localidad y luego provincia!!
-        Cliente cli2 = new Cliente("77436988", "a", "s", "e@gmail.com", "f", "Las Palmas", "Las Palmas");
-        repositorioClientes.guardar(cli1);
-        repositorioClientes.guardar(cli2);
-
     }
 
     /*

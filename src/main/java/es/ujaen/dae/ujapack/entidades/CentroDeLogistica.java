@@ -20,7 +20,7 @@ import javax.validation.constraints.NotBlank;
 @Entity
 public class CentroDeLogistica extends PuntoDeControl implements Serializable {
 
-    @NotBlank
+    
     int idPuntoDeControl;
     
     @Column
