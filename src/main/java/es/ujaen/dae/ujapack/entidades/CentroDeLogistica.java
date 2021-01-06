@@ -31,7 +31,7 @@ public class CentroDeLogistica extends PuntoDeControl implements Serializable {
     @ManyToMany(mappedBy = "listaLogistica")
     public List<Oficina> listaOficinas;
     
-    
+    public CentroDeLogistica(){}
 
     public CentroDeLogistica(int id,String nombre, String localizacion, ArrayList<String> provincias, ArrayList<Integer> conexiones) {
         super(id,nombre, localizacion);

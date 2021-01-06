@@ -343,7 +343,7 @@ public class ServicioUjaPack {
     private ArrayList<PuntoDeControl> rutaString(ArrayList<Integer> rutaEnIds) {
         ArrayList<PuntoDeControl> rutaStr = new ArrayList<PuntoDeControl>();
         for (int i = 0; i < rutaEnIds.size(); i++) {
-            rutaStr.add(repositorioPuntoDeControl.buscarPC(rutaEnIds.get(i)));
+            rutaStr.add(repositorioPuntoDeControl.getPuntoDeControl(rutaEnIds.get(i)));
         }
         Collections.reverse(rutaStr);
         return rutaStr;
@@ -360,7 +360,10 @@ public class ServicioUjaPack {
         boolean[] conexionesVisitadas = new boolean[11];
         ArrayList<Nodo> arrayBusquedaNodos = new ArrayList<Nodo>();
         ArrayList<Integer> arrayBusquedaIds = new ArrayList<Integer>();
-
+         
+        int origenCentroLogistico = repositorioPuntoDeControl.BuscaIdProvinciaCL(origen);
+        int destinoCentroLogistico = repositorioPuntoDeControl.BuscaIdProvinciaCL(destino);
+        
         for (int i = 0; i < 10; i++) {
             visitados[i] = false;
             conexionesVisitadas[i] = false;
@@ -368,8 +371,8 @@ public class ServicioUjaPack {
 
         int contador = 0;
 
-        Nodo primero = new Nodo(origen, conexiones);
-        if (origen.equals(destino)) {
+        Nodo primero = new Nodo(origenCentroLogistico, conexiones);
+        if (origenCentroLogistico == destinoCentroLogistico) {
             return rutaString(primero.lista);
         }
         arrayBusquedaNodos.add(primero);
@@ -379,7 +382,7 @@ public class ServicioUjaPack {
             primero = arrayBusquedaNodos.get(contador);
             conexionesWhile = arrayBusquedaNodos.get(contador).conexionesId;
             for (int i = 0; i < conexionesWhile.size(); i++) {
-                if (!visitados[arrayBusquedaNodos.get(contador).id]) {
+                if (!visitados[contador]) {
                     ArrayList<Integer> auxiliarNo = arrayBusquedaNodos.get(contador).getConexionesId();
 
                     copiaPrimero = primero.lista;
@@ -392,7 +395,7 @@ public class ServicioUjaPack {
                             }
                             arrayBusquedaNodos.add(n);
                         }
-                        if (n.lista.contains(destino)) {
+                        if (n.lista.contains(destinoCentroLogistico)) {
                             return rutaString(n.lista);
                         }
                     }
@@ -420,7 +423,7 @@ public class ServicioUjaPack {
             conexion.add(2);
             conexion.add(3);
 
-            //ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, repositorioCentroDeLogistica.BuscaIdCL(jola));
+//            ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, repositorioCentroDeLogistica.BuscaIdCL(jola));
             ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, conexion);
 
         }
