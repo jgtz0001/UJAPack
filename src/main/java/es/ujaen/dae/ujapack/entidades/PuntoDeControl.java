@@ -30,7 +30,7 @@ public class PuntoDeControl implements Serializable {
     String nombre;
     @NotBlank
     String localizacion;
-    public int idCL;
+    private int idCL;
   
 
     public PuntoDeControl() {
@@ -39,7 +39,7 @@ public class PuntoDeControl implements Serializable {
     public PuntoDeControl(int id, String nombre,String localizacion, int idCL) {
         this.id = id;
         this.nombre = nombre;
-        this.localizacion = nombre;
+        this.localizacion = localizacion;
         this.idCL = idCL;
                 
         
@@ -77,5 +77,12 @@ public class PuntoDeControl implements Serializable {
      */
     public String getLocalizacion() {
         return localizacion;
+    }
+
+    /**
+     * @return the idCL
+     */
+    public int getIdCL() {
+        return idCL;
     }
 }

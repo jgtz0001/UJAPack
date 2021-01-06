@@ -36,12 +36,17 @@ public class RepositorioPuntoDeControl {
 
     @Transactional
     public int BuscaIdProvincia(String provincia) {
-//        List<PuntoDeControl> puntos = em.createQuery("select h from PuntoDeControl h WHERE h.localizacion = '" + provincia + "'",
-//                PuntoDeControl.class).getResultList();
-        List<PuntoDeControl> puntos = em.createQuery("select h from PuntoDeControl h",
+        List<PuntoDeControl> puntos = em.createQuery("select h from PuntoDeControl h WHERE h.localizacion = '" + provincia + "'",
                 PuntoDeControl.class).getResultList();
-
         return puntos.get(0).getId();
     }
+    
+      @Transactional
+    public int BuscaIdProvinciaCL(int id) {
+        List<PuntoDeControl> puntos = em.createQuery("select h from PuntoDeControl h WHERE h.id = '" + id + "'",
+                PuntoDeControl.class).getResultList();
+        return puntos.get(0).getIdCL();
+    }
+
 
 }

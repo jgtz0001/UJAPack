@@ -109,14 +109,14 @@ public class ServicioUjaPack {
     public ServicioUjaPack() {
     }
 
-    @PostConstruct
-    public void rellenarJson() {
-        try {
-            leerJson();
-        } catch (IOException ex) {
-            System.out.println(ex.toString());
-        }
-    }
+//    @PostConstruct
+//    public void rellenarJson() {
+//        try {
+//            leerJson();
+//        } catch (IOException ex) {
+//            System.out.println(ex.toString());
+//        }
+//    }
 
     @Transactional(readOnly = true)
     private boolean buscaPorDni(String dni) {
@@ -415,7 +415,8 @@ public class ServicioUjaPack {
     public ArrayList<PuntoDeControl> calcularRutaPaquete(String localidadRem, String localidadDes, int idProvinciaRem, int idProvinciaDest) {
         ArrayList<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
         if (idProvinciaRem != 0 && idProvinciaDest != 0) {
-            ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, repositorioCentroDeLogistica.buscarPorId(idProvinciaRem).getConexiones());
+            ArrayList<Integer> jola = repositorioCentroDeLogistica.BuscaIdCL(idProvinciaRem);
+            ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, repositorioCentroDeLogistica.BuscaIdCL(idProvinciaRem));
         }
         return ruta;
     }

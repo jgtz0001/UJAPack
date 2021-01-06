@@ -6,6 +6,9 @@
 package es.ujaen.dae.ujapack.repositorios;
 
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
+import es.ujaen.dae.ujapack.entidades.PuntoDeControl;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,4 +36,11 @@ public class RepositorioCentroDeLogistica {
         em.persist(centroDeLogistica);
     }
     
+    @Transactional
+    public ArrayList<Integer> BuscaIdCL(int id) {
+        List<CentroDeLogistica> puntos = em.createQuery("select h from CentroDeLogistica h WHERE h.id = '" + id + "'",
+                CentroDeLogistica.class).getResultList();
+        return puntos.get(0).getConexiones();
+    }
+
 }
