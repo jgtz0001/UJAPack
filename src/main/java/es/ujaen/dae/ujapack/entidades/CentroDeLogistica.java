@@ -22,10 +22,10 @@ import javax.validation.constraints.NotBlank;
 @Entity
 public class CentroDeLogistica extends PuntoDeControl implements Serializable {
     
-    @Column
+   
     private ArrayList<Integer> conexiones;
     
-    @Column
+    
     private ArrayList<String> provincias;
 
     @ManyToMany(mappedBy = "listaLogistica")

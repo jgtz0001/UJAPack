@@ -415,8 +415,14 @@ public class ServicioUjaPack {
     public ArrayList<PuntoDeControl> calcularRutaPaquete(String localidadRem, String localidadDes, int idProvinciaRem, int idProvinciaDest) {
         ArrayList<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
         if (idProvinciaRem != 0 && idProvinciaDest != 0) {
-            ArrayList<Integer> jola = repositorioCentroDeLogistica.BuscaIdCL(idProvinciaRem);
-            ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, repositorioCentroDeLogistica.BuscaIdCL(idProvinciaRem));
+            int jola = repositorioPuntoDeControl.BuscaIdProvinciaCL(idProvinciaRem);
+            ArrayList<Integer> conexion= new ArrayList<Integer> ();
+            conexion.add(2);
+            conexion.add(3);
+
+            //ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, repositorioCentroDeLogistica.BuscaIdCL(jola));
+            ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, conexion);
+
         }
         return ruta;
     }
