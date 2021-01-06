@@ -25,28 +25,30 @@ import javax.validation.constraints.NotBlank;
 public class PuntoDeControl implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @NotBlank
     String nombre;
     @NotBlank
     String localizacion;
-    ArrayList<String> provincia;
+    public int idCL;
+  
 
     public PuntoDeControl() {
     }
 
-    public PuntoDeControl(int id, String nombre) {
+    public PuntoDeControl(int id, String nombre,String localizacion, int idCL) {
         this.id = id;
         this.nombre = nombre;
         this.localizacion = nombre;
-        this.provincia = null;
+        this.idCL = idCL;
+                
+        
     }
 
-    public PuntoDeControl(String nombre, String localizacion, ArrayList<String> provincia) {
+    public PuntoDeControl(int id, String nombre, String localizacion) {
+        this.id = id;
         this.nombre = nombre;
         this.localizacion = localizacion;
-        this.provincia = provincia;
     }
 
 //    public PuntoDeControl(int id, String nombre, String localizacion, ArrayList<String> provincia) {
@@ -68,13 +70,6 @@ public class PuntoDeControl implements Serializable {
      */
     public String getNombre() {
         return nombre;
-    }
-
-    /**
-     * @return the provincia
-     */
-    public ArrayList<String> getProvincia() {
-        return provincia;
     }
 
     /**

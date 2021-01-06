@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 
@@ -19,20 +21,23 @@ import javax.validation.constraints.NotBlank;
  */
 @Entity
 public class CentroDeLogistica extends PuntoDeControl implements Serializable {
-
-    
-    int idPuntoDeControl;
     
     @Column
     private ArrayList<Integer> conexiones;
+    
+    @Column
+    private ArrayList<String> provincias;
 
-    @OneToMany(mappedBy = "listaLogistica")
+    @ManyToMany(mappedBy = "listaLogistica")
     public List<Oficina> listaOficinas;
+    
+    
 
-    public CentroDeLogistica(String nombre, String localizacion, ArrayList<String> provincia, ArrayList<Integer> conexiones, int idPuntoDeControl) {
-        super(nombre, localizacion, provincia);
+    public CentroDeLogistica(int id,String nombre, String localizacion, ArrayList<String> provincias, ArrayList<Integer> conexiones) {
+        super(id,nombre, localizacion);
         this.conexiones = conexiones;
-        this.idPuntoDeControl = idPuntoDeControl;
+        this.provincias = provincias;
+        
     }
 
     /**
@@ -45,12 +50,8 @@ public class CentroDeLogistica extends PuntoDeControl implements Serializable {
     /**
      * @return the conexiones
      */
-    public List<String> getProvincias() {
-        return provincia;
+    public ArrayList<String> getProvincias() {
+        return provincias;
     }
     
-    public int getIdPuntoDeControl() {
-        return idPuntoDeControl;
-    }
-
 }
