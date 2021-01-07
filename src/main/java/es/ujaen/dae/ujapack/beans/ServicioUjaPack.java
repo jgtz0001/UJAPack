@@ -171,21 +171,19 @@ public class ServicioUjaPack {
         return paquet;
     }
 
-    private List<PuntoDeControl> completaRuta(ArrayList<PuntoDeControl> ruta, String provinciaRem, String provinciaDest, int idProvinciaRem, int idProvinciaDest) {
+    private ArrayList<Integer> completaRuta(ArrayList<Integer> ruta, int idProvinciaRem, int idProvinciaDest) {
+        ArrayList<Integer> rutaDefinitiva =  new ArrayList<>();
 
-        PuntoDeControl puntoControlRem = repositorioPuntoDeControl.buscarPC(idProvinciaRem);
-        PuntoDeControl puntoControlDest = repositorioPuntoDeControl.buscarPC(idProvinciaDest);
-
-        List<PuntoDeControl> rutaDefinitiva = null;
-        if (!ruta.get(0).getLocalizacion().equals(provinciaRem)) {
-            rutaDefinitiva.add(puntoControlRem);
+        if (!ruta.contains(idProvinciaRem)) {
+            rutaDefinitiva.add(idProvinciaRem);
         }
 
         for (int i = 0; i < ruta.size(); i++) {
             rutaDefinitiva.add(ruta.get(i));
         }
-        if (!ruta.get(ruta.size() - 1).getLocalizacion().equals(provinciaDest)) {
-            rutaDefinitiva.add(puntoControlDest);
+
+        if (!ruta.contains(idProvinciaDest)) {
+            rutaDefinitiva.add(idProvinciaDest);
         }
         return rutaDefinitiva;
     }
@@ -291,23 +289,23 @@ public class ServicioUjaPack {
             for (int j = 0; j < conexiones.size(); j++) {
                 listdata2.add(conexiones.get(j).getAsInt());
             }
-            PuntoDeControl punto = new PuntoDeControl(id,nombre, localizacion,id);
+            PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, id);
             repositorioPuntoDeControl.guardar(punto);
 
-            CentroDeLogistica centroNuevo = new CentroDeLogistica(id,nombre, localizacion, listdata, listdata2);
+            CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
             centrosBD.add(centroNuevo);
 
         }
-        for (int i=0; i<centrosBD.size(); i++){
-             repositorioCentroDeLogistica.guardar(centrosBD.get(i));
+        for (int i = 0; i < centrosBD.size(); i++) {
+            repositorioCentroDeLogistica.guardar(centrosBD.get(i));
         }
-       
-        int id=11;
+
+        int id = 11;
         for (int i = 0; i < ARellenar.size(); i++) {
             ArrayList<String> provinciasAIncluir = ARellenar.get(i).getProvincias();
             for (int j = 0; j < provinciasAIncluir.size(); j++) {
                 if (!provinciasAIncluir.get(j).equals(ARellenar.get(i).getNombrePadre())) {
-                    PuntoDeControl punto = new PuntoDeControl(id,("Calle " + provinciasAIncluir.get(j)), provinciasAIncluir.get(j),ARellenar.get(i).idPadre);
+                    PuntoDeControl punto = new PuntoDeControl(id, ("Calle " + provinciasAIncluir.get(j)), provinciasAIncluir.get(j), ARellenar.get(i).idPadre);
                     repositorioPuntoDeControl.guardar(punto);
                     id++;
                 }
@@ -360,10 +358,11 @@ public class ServicioUjaPack {
         boolean[] conexionesVisitadas = new boolean[11];
         ArrayList<Nodo> arrayBusquedaNodos = new ArrayList<Nodo>();
         ArrayList<Integer> arrayBusquedaIds = new ArrayList<Integer>();
-         
+        ArrayList<Integer> rutaDefinitiva = new ArrayList<Integer>();
+
         int origenCentroLogistico = repositorioPuntoDeControl.BuscaIdProvinciaCL(origen);
         int destinoCentroLogistico = repositorioPuntoDeControl.BuscaIdProvinciaCL(destino);
-        
+
         for (int i = 0; i < 10; i++) {
             visitados[i] = false;
             conexionesVisitadas[i] = false;
@@ -373,7 +372,9 @@ public class ServicioUjaPack {
 
         Nodo primero = new Nodo(origenCentroLogistico, conexiones);
         if (origenCentroLogistico == destinoCentroLogistico) {
-            return rutaString(primero.lista);
+            rutaDefinitiva.add(origenCentroLogistico);
+            rutaDefinitiva = completaRuta(rutaDefinitiva, origen, destino);
+            return rutaString(rutaDefinitiva);
         }
         arrayBusquedaNodos.add(primero);
         ArrayList<Integer> conexionesWhile = new ArrayList<Integer>();
@@ -396,6 +397,8 @@ public class ServicioUjaPack {
                             arrayBusquedaNodos.add(n);
                         }
                         if (n.lista.contains(destinoCentroLogistico)) {
+                            //completar ruta
+                            completaRuta(n.lista, origen, destino);
                             return rutaString(n.lista);
                         }
                     }
@@ -419,7 +422,7 @@ public class ServicioUjaPack {
         ArrayList<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
         if (idProvinciaRem != 0 && idProvinciaDest != 0) {
             int jola = repositorioPuntoDeControl.BuscaIdProvinciaCL(idProvinciaRem);
-            ArrayList<Integer> conexion= new ArrayList<Integer> ();
+            ArrayList<Integer> conexion = new ArrayList<Integer>();
             conexion.add(2);
             conexion.add(3);
 

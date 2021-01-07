@@ -30,7 +30,6 @@ public class PasoPorPuntoDeControl implements Serializable {
     private int id;
 //    @NotBlank
     @ManyToOne
-//    @JoinColumn(name = "paso_control")
     public PuntoDeControl pasoControl;
     @PastOrPresent
     private LocalDateTime fechaLlegada;
