@@ -46,12 +46,14 @@ public class Paquete implements Serializable {
     @Positive
     private float altura;
 
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "pasanPaquetes")
     private List<PasoPorPuntoDeControl> pasanPaquetes;
 //    @OneToMany(mappedBy = "pasoControl", cascade = {CascadeType.ALL})
 //    private List<PasoPorPuntoDeControl> pasanPaquetes;
-    @OneToMany(mappedBy = "",fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<PuntoDeControl> ruta;
 
     @ManyToOne
