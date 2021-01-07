@@ -1,7 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
  */
 package es.ujaen.dae.ujapack.repositorios;
 
@@ -20,16 +20,17 @@ import org.springframework.transaction.annotation.Propagation;
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
 public class RepositorioCliente {
+
     @PersistenceContext
     EntityManager em;
-    
-    @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-    public Optional <Cliente> buscar(String dni){
+
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Optional<Cliente> buscar(String dni) {
         return Optional.ofNullable(em.find(Cliente.class, dni));
     }
-    
+
     @Transactional
-    public void guardar(Cliente cliente){
+    public void guardar(Cliente cliente) {
         em.persist(cliente);
     }
 }

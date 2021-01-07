@@ -6,7 +6,6 @@
 package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,30 +23,37 @@ import javax.validation.constraints.NotBlank;
 public class PuntoDeControl implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotBlank
     String nombre;
     @NotBlank
     String localizacion;
-    ArrayList<String> provincia;
+    private int idCL;
 
     public PuntoDeControl() {
     }
 
-    public PuntoDeControl(int id, String nombre) {
+    public PuntoDeControl(int id, String nombre, String localizacion, int idCL) {
         this.id = id;
         this.nombre = nombre;
-        this.localizacion = nombre;
-        this.provincia = null;
+        this.localizacion = localizacion;
+        this.idCL = idCL;
+
     }
 
-    public PuntoDeControl(String nombre, String localizacion, ArrayList<String> provincia) {
+    public PuntoDeControl(int id, String nombre, String localizacion) {
+        this.id = id;
         this.nombre = nombre;
         this.localizacion = localizacion;
-        this.provincia = provincia;
     }
 
+// public PuntoDeControl(int id, String nombre, String localizacion, ArrayList<String> provincia) {
+// this.id = id;
+// this.nombre = nombre;
+// this.localizacion = localizacion;
+// this.provincia = provincia;
+// }
     /**
      * @return the id
      */
@@ -63,16 +69,16 @@ public class PuntoDeControl implements Serializable {
     }
 
     /**
-     * @return the provincia
-     */
-    public ArrayList<String> getProvincia() {
-        return provincia;
-    }
-
-    /**
      * @return the localizacion
      */
     public String getLocalizacion() {
         return localizacion;
+    }
+
+    /**
+     * @return the idCL
+     */
+    public int getIdCL() {
+        return idCL;
     }
 }

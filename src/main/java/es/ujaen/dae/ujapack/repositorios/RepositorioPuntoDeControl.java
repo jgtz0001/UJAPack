@@ -1,7 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
  */
 package es.ujaen.dae.ujapack.repositorios;
 
@@ -24,8 +24,7 @@ public class RepositorioPuntoDeControl {
     @PersistenceContext
     EntityManager em;
 
-    
-    @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public PuntoDeControl buscarPC(int id) {
         return em.find(PuntoDeControl.class, id);
     }
@@ -34,12 +33,26 @@ public class RepositorioPuntoDeControl {
     public void guardar(PuntoDeControl puntoDeControl) {
         em.persist(puntoDeControl);
     }
-   
-    @Transactional        
-    public int BuscaIdProvincia (String provincia){
-    List <PuntoDeControl> puntodecontrol = em.createQuery
-    ("select h from PuntoDeControl h where h.provincia = :provincia",
-    PuntoDeControl.class).setParameter("provincia", provincia).getResultList();
-    return puntodecontrol.get(0).getId();
-  }
+
+    @Transactional
+    public int BuscaIdProvincia(String provincia) {
+        PuntoDeControl punto = em.createQuery("select h from PuntoDeControl h WHERE h.localizacion = '" + provincia + "'",
+                PuntoDeControl.class).getSingleResult();
+        return punto.getId();
+    }
+
+    @Transactional
+    public int BuscaIdProvinciaCL(int id) {
+        PuntoDeControl punto = em.createQuery("select h from PuntoDeControl h WHERE h.id = '" + id + "'",
+                PuntoDeControl.class).getSingleResult();
+        return punto.getIdCL();
+    }
+
+    @Transactional
+    public PuntoDeControl getPuntoDeControl(int id) {
+        PuntoDeControl punto = em.createQuery("select h from PuntoDeControl h WHERE h.id = '" + id + "'",
+                PuntoDeControl.class).getSingleResult();
+        return punto;
+    }
+
 }

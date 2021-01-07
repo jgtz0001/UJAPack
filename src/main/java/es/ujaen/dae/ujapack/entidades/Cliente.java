@@ -41,14 +41,14 @@ public class Cliente implements Serializable {
     private String provincia;
     @NotBlank
     private String clave;
-    
-    @OneToMany(mappedBy="remitente")
+
+    @OneToMany(mappedBy = "remitente")
     List<Paquete> PaquetesRemitente;
-    
-    @OneToMany(mappedBy="destinatario")
+
+    @OneToMany(mappedBy = "destinatario")
     List<Paquete> PaquetesDestinatario;
 
-    public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia, String clave) {
+    public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia) {
         this.dni = dni;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -56,7 +56,7 @@ public class Cliente implements Serializable {
         this.direccion = direccion;
         this.localidad = localidad;
         this.provincia = provincia;
-        this.clave=clave;
+        this.clave = clave;
     }
 
     public Cliente() {
@@ -103,26 +103,23 @@ public class Cliente implements Serializable {
     public String getClave() {
         return clave;
     }
-    
-    
+
     /**
      * Compara la clave con la del cliente, codificándola en Md5
+     *
      * @param clave
-     * @return 
+     * @return
      */
     public boolean claveValida(String clave) {
-        return this.clave.equals(CodificadorMd5.codificar(clave));        
+        return this.clave.equals(CodificadorMd5.codificar(clave));
     }
-    
+
     /**
      * Devolver cuentas del usuario
+     *
      * @return la lista de cuentas
      */
     public List<Paquete> verPaquetes() {
         return Collections.unmodifiableList(PaquetesRemitente);
     }
-    
-    
-
-
 }

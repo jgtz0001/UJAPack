@@ -16,7 +16,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import es.ujaen.dae.ujapack.excepciones.ClienteNoRegistrado;
-import es.ujaen.dae.ujapack.excepciones.DNINoEncontrado;
 import es.ujaen.dae.ujapack.excepciones.DNINoValido;
 import es.ujaen.dae.ujapack.excepciones.IdIncorrecto;
 import java.io.File;
@@ -180,9 +179,6 @@ public class ServicioUjaPack {
 + @return Devuelve el paquete.
      */
     public Paquete altaEnvio(float peso, float anchura, float altura, Cliente remitente, Cliente destinatario) {
-        if (buscaPorDni(destinatario.getDni())) {
-            throw new DNINoValido();
-        }
 
         int localizador = (int) getID();
         while (repositorioPaquete.buscarPaquetes(localizador).isPresent()) {
@@ -197,28 +193,24 @@ public class ServicioUjaPack {
         ruta = calcularRutaPaquete(remitente.getLocalidad(), destinatario.getLocalidad(), idProvinciaRem, idProvinciaDest);
         costeEnvio = calcularImporte(ruta.size(), peso, altura, anchura);
 
-        ruta = completaRuta(ruta, remitente.getProvincia(), destinatario.getProvincia(), idProvinciaRem, idProvinciaDest);
-
-        Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, ruta);
+        Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, ruta, remitente, destinatario);
         repositorioPaquete.guardar(paquet);
         return paquet;
     }
 
-    private ArrayList<PuntoDeControl> completaRuta(ArrayList<PuntoDeControl> ruta, String provinciaRem, String provinciaDest, int idProvinciaRem, int idProvinciaDest) {
+    private ArrayList<Integer> completaRuta(ArrayList<Integer> ruta, int idProvinciaRem, int idProvinciaDest) {
+        ArrayList<Integer> rutaDefinitiva = new ArrayList<>();
 
-        PuntoDeControl puntoControlRem = new PuntoDeControl(idProvinciaRem, provinciaRem);
-        PuntoDeControl puntoControlDest = new PuntoDeControl(idProvinciaDest, provinciaDest);
-
-        ArrayList<PuntoDeControl> rutaDefinitiva = new ArrayList<PuntoDeControl>();
-        if (!ruta.get(0).getLocalizacion().equals(provinciaRem)) {
-            rutaDefinitiva.add(puntoControlRem);
+        if (!ruta.contains(idProvinciaRem)) {
+            rutaDefinitiva.add(idProvinciaRem);
         }
 
         for (int i = 0; i < ruta.size(); i++) {
             rutaDefinitiva.add(ruta.get(i));
         }
-        if (!ruta.get(ruta.size() - 1).getLocalizacion().equals(provinciaDest)) {
-            rutaDefinitiva.add(puntoControlDest);
+
+        if (!ruta.contains(idProvinciaDest)) {
+            rutaDefinitiva.add(idProvinciaDest);
         }
         return rutaDefinitiva;
     }
@@ -270,7 +262,7 @@ public class ServicioUjaPack {
 * @param punto Punto de control al que llega el paquete.
 * @return cadena de caracteres informando al cliente.
      */
-    //hay que actualizar 
+//hay que actualizar
     public String notificarEntrada(int localizador, LocalDateTime fechaEntrada, PuntoDeControl punto) {
         Paquete p = repositorioPaquete.buscar(localizador);
         if (p == null) {
@@ -290,7 +282,8 @@ public class ServicioUjaPack {
 * @return devuelve el coste de enviar el paquete.
      */
     public float calcularImporte(int numPuntosControl, float peso, float altura, float anchura) {
-        float importe = (peso * altura * anchura * (numPuntosControl + 1) / 1000);
+        float importe = (peso * altura * anchura * (numPuntosControl + 1) / 1000
+        );
         return importe;
     }
 
@@ -302,6 +295,7 @@ public class ServicioUjaPack {
         String jsonStr = Files.readString(new File("redujapack.json").toPath());
         JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
         ArrayList<CompletarPuntosDeControl> ARellenar = new ArrayList<CompletarPuntosDeControl>();
+        ArrayList<CentroDeLogistica> centrosBD = new ArrayList<CentroDeLogistica>();
         for (int i = 1; i <= raiz.size(); i++) {
             JsonObject centro1 = raiz.getAsJsonObject(String.valueOf(i));
             int id = i;
@@ -323,28 +317,28 @@ public class ServicioUjaPack {
             for (int j = 0; j < conexiones.size(); j++) {
                 listdata2.add(conexiones.get(j).getAsInt());
             }
-            PuntoDeControl punto = new PuntoDeControl(nombre, localizacion, listdata);
+            PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, id);
             repositorioPuntoDeControl.guardar(punto);
 
-            CentroDeLogistica centroNuevo = new CentroDeLogistica(nombre, localizacion, listdata, listdata2);
-            repositorioCentroDeLogistica.guardar(centroNuevo);
+            CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
+            centrosBD.add(centroNuevo);
 
         }
+        for (int i = 0; i < centrosBD.size(); i++) {
+            repositorioCentroDeLogistica.guardar(centrosBD.get(i));
+        }
+
+        int id = 11;
         for (int i = 0; i < ARellenar.size(); i++) {
             ArrayList<String> provinciasAIncluir = ARellenar.get(i).getProvincias();
             for (int j = 0; j < provinciasAIncluir.size(); j++) {
-//                System.out.println(provinciasAIncluir.get(j));
                 if (!provinciasAIncluir.get(j).equals(ARellenar.get(i).getNombrePadre())) {
-                    PuntoDeControl punto = new PuntoDeControl(("Calle " + provinciasAIncluir.get(j)), provinciasAIncluir.get(j), null);
+                    PuntoDeControl punto = new PuntoDeControl(id, ("Calle " + provinciasAIncluir.get(j)), provinciasAIncluir.get(j), ARellenar.get(i).idPadre);
                     repositorioPuntoDeControl.guardar(punto);
+                    id++;
                 }
             }
         }
-
-        Cliente cli1 = new Cliente("77436077", "a", "s", "d@gmail.com", "f", "Sevilla", "Sevilla", "clavee");//localidad y luego provincia!!
-        Cliente cli2 = new Cliente("77436988", "a", "s", "e@gmail.com", "f", "Las Palmas", "Las Palmas", "clave");
-        repositorioClientes.guardar(cli1);
-        repositorioClientes.guardar(cli2);
     }
 
     /*
@@ -375,7 +369,7 @@ public class ServicioUjaPack {
     private ArrayList<PuntoDeControl> rutaString(ArrayList<Integer> rutaEnIds) {
         ArrayList<PuntoDeControl> rutaStr = new ArrayList<PuntoDeControl>();
         for (int i = 0; i < rutaEnIds.size(); i++) {
-            rutaStr.add(repositorioPuntoDeControl.buscarPC(rutaEnIds.get(i)));
+            rutaStr.add(repositorioPuntoDeControl.getPuntoDeControl(rutaEnIds.get(i)));
         }
         Collections.reverse(rutaStr);
         return rutaStr;
@@ -392,6 +386,10 @@ public class ServicioUjaPack {
         boolean[] conexionesVisitadas = new boolean[11];
         ArrayList<Nodo> arrayBusquedaNodos = new ArrayList<Nodo>();
         ArrayList<Integer> arrayBusquedaIds = new ArrayList<Integer>();
+        ArrayList<Integer> rutaDefinitiva = new ArrayList<Integer>();
+
+        int origenCentroLogistico = repositorioPuntoDeControl.BuscaIdProvinciaCL(origen);
+        int destinoCentroLogistico = repositorioPuntoDeControl.BuscaIdProvinciaCL(destino);
 
         for (int i = 0; i < 10; i++) {
             visitados[i] = false;
@@ -400,9 +398,11 @@ public class ServicioUjaPack {
 
         int contador = 0;
 
-        Nodo primero = new Nodo(origen, conexiones);
-        if (origen.equals(destino)) {
-            return rutaString(primero.lista);
+        Nodo primero = new Nodo(origenCentroLogistico, conexiones);
+        if (origenCentroLogistico == destinoCentroLogistico) {
+            rutaDefinitiva.add(origenCentroLogistico);
+            rutaDefinitiva = completaRuta(rutaDefinitiva, origen, destino);
+            return rutaString(rutaDefinitiva);
         }
         arrayBusquedaNodos.add(primero);
         ArrayList<Integer> conexionesWhile = new ArrayList<Integer>();
@@ -411,7 +411,7 @@ public class ServicioUjaPack {
             primero = arrayBusquedaNodos.get(contador);
             conexionesWhile = arrayBusquedaNodos.get(contador).conexionesId;
             for (int i = 0; i < conexionesWhile.size(); i++) {
-                if (!visitados[arrayBusquedaNodos.get(contador).id]) {
+                if (!visitados[contador]) {
                     ArrayList<Integer> auxiliarNo = arrayBusquedaNodos.get(contador).getConexionesId();
 
                     copiaPrimero = primero.lista;
@@ -424,7 +424,9 @@ public class ServicioUjaPack {
                             }
                             arrayBusquedaNodos.add(n);
                         }
-                        if (n.lista.contains(destino)) {
+                        if (n.lista.contains(destinoCentroLogistico)) {
+                            //completar ruta
+                            completaRuta(n.lista, origen, destino);
                             return rutaString(n.lista);
                         }
                     }
@@ -447,11 +449,18 @@ public class ServicioUjaPack {
     public ArrayList<PuntoDeControl> calcularRutaPaquete(String localidadRem, String localidadDes, int idProvinciaRem, int idProvinciaDest) {
         ArrayList<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
         if (idProvinciaRem != 0 && idProvinciaDest != 0) {
-            ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, repositorioCentroDeLogistica.buscarPorId(idProvinciaRem).getConexiones());
+            int jola = repositorioPuntoDeControl.BuscaIdProvinciaCL(idProvinciaRem);
+            ArrayList<Integer> conexion = new ArrayList<Integer>();
+            conexion.add(2);
+            conexion.add(3);
+
+// ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, repositorioCentroDeLogistica.BuscaIdCL(jola));
+            ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, conexion);
+
         }
         return ruta;
     }
-
+    
     /**
      * Realiza un login de un cliente
      *
@@ -462,12 +471,12 @@ public class ServicioUjaPack {
     @Transactional
     public Optional<Cliente> verCliente(@NotBlank String dni) {
         Optional<Cliente> clienteLogin = repositorioClientes.buscar(dni);
-
+    
         // Asegurarnos de que se devuelve el cliente con los datos precargados
         clienteLogin.ifPresent(c -> c.verPaquetes().size());
         return clienteLogin;
     }
-
+    
     /**
      * Devolver los paquetes de un cliente dado No es una operación
      * imprescindible puesto que el cliente ya
@@ -478,7 +487,7 @@ public class ServicioUjaPack {
     @Transactional
     public List<Paquete> verPaquetes(@NotBlank String dni) {
         Cliente cliente = repositorioClientes.buscar(dni).orElseThrow(ClienteNoRegistrado::new);
-
+    
         // Precargar a memoria la relación lazy de cuentas del cliente antes de devolver      
         cliente.verPaquetes().size();
         return cliente.verPaquetes();
@@ -493,7 +502,7 @@ public class ServicioUjaPack {
     public Cliente altaCliente(@NotNull @Valid Cliente cliente) {
         if (repositorioClientes.buscar(cliente.getDni()).isPresent()) {
             throw new DNINoValido();
-        }
+}
         repositorioClientes.guardar(cliente);
 
 //        // Crear y registrar paquete
@@ -502,7 +511,7 @@ public class ServicioUjaPack {
 
         return cliente;
     }
-
+//pasar atributos de paquete
      public Paquete altaPaquete(@NotNull @Valid Paquete paquete,@NotNull @Valid Cliente remitente,@NotNull @Valid Cliente destinatario) {
         if (repositorioPaquete.buscarPaquetes(paquete.getLocalizador()).isPresent()) {
             throw new LocalizadorNoValido();
