@@ -15,7 +15,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
-import es.ujaen.dae.ujapack.excepciones.DNINoValido;
 import es.ujaen.dae.ujapack.excepciones.IdIncorrecto;
 import java.io.File;
 import java.nio.file.Files;
@@ -27,6 +26,7 @@ import es.ujaen.dae.ujapack.repositorios.RepositorioCliente;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPuntoDeControl;
 import es.ujaen.dae.ujapack.repositorios.RepositorioCentroDeLogistica;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPaquete;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -109,14 +109,14 @@ public class ServicioUjaPack {
     public ServicioUjaPack() {
     }
 
-//    @PostConstruct
-//    public void rellenarJson() {
-//        try {
-//            leerJson();
-//        } catch (IOException ex) {
-//            System.out.println(ex.toString());
-//        }
-//    }
+    @PostConstruct
+    public void rellenarJson() {
+        try {
+            leerJson();
+        } catch (IOException ex) {
+            System.out.println(ex.toString());
+        }
+    }
 
     @Transactional(readOnly = true)
     private boolean buscaPorDni(String dni) {
@@ -151,9 +151,9 @@ public class ServicioUjaPack {
     public Paquete altaEnvio(float peso, float anchura, float altura, Cliente remitente, Cliente destinatario) {
 
         int localizador = (int) getID();
-//        while (repositorioPaquete.buscarPaquetes(localizador).isPresent()) {
-//            localizador = (int) getID();
-//        }
+        while (repositorioPaquete.buscarPaquetes(localizador).isPresent()) {
+            localizador = (int) getID();
+        }
 
         int idProvinciaRem = obtenerIdProvincia(remitente.getProvincia());
         int idProvinciaDest = obtenerIdProvincia(destinatario.getProvincia());
@@ -166,17 +166,17 @@ public class ServicioUjaPack {
         ruta = calcularRutaPaquete(remitente.getLocalidad(), destinatario.getLocalidad(), idProvinciaRem, idProvinciaDest);
         costeEnvio = calcularImporte(ruta.size(), peso, altura, anchura);
 
-        Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, ruta);
+        Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, ruta, remitente, destinatario);
         repositorioPaquete.guardar(paquet);
         return paquet;
     }
 
-    private ArrayList<PuntoDeControl> completaRuta(ArrayList<PuntoDeControl> ruta, String provinciaRem, String provinciaDest, int idProvinciaRem, int idProvinciaDest) {
+    private List<PuntoDeControl> completaRuta(ArrayList<PuntoDeControl> ruta, String provinciaRem, String provinciaDest, int idProvinciaRem, int idProvinciaDest) {
 
         PuntoDeControl puntoControlRem = repositorioPuntoDeControl.buscarPC(idProvinciaRem);
         PuntoDeControl puntoControlDest = repositorioPuntoDeControl.buscarPC(idProvinciaDest);
 
-        ArrayList<PuntoDeControl> rutaDefinitiva = new ArrayList<PuntoDeControl>();
+        List<PuntoDeControl> rutaDefinitiva = null;
         if (!ruta.get(0).getLocalizacion().equals(provinciaRem)) {
             rutaDefinitiva.add(puntoControlRem);
         }

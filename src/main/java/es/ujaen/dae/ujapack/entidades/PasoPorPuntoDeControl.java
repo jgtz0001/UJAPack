@@ -7,6 +7,7 @@ package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,17 +26,18 @@ public class PasoPorPuntoDeControl implements Serializable {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    int id;
-    @NotBlank
+    @Column(name = "id")
+    private int id;
+//    @NotBlank
     @ManyToOne
-    @JoinColumn(name = "paso_control")
+//    @JoinColumn(name = "paso_control")
     public PuntoDeControl pasoControl;
     @PastOrPresent
     private LocalDateTime fechaLlegada;
     @PastOrPresent
     private LocalDateTime fechaSalida;
 
-    
+    public PasoPorPuntoDeControl(){}
 
     public PasoPorPuntoDeControl(PuntoDeControl p, LocalDateTime fechaEntrada) {
         fechaLlegada = fechaEntrada;
@@ -86,6 +88,13 @@ public class PasoPorPuntoDeControl implements Serializable {
      */
     public void setFechaSalida(LocalDateTime fechaSalida) {
         this.fechaSalida = fechaSalida;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
     }
 
 }

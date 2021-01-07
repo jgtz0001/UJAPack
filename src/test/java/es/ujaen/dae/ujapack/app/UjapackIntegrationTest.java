@@ -33,7 +33,7 @@ public class UjapackIntegrationTest {
 
     @Autowired
     LimpiadoBaseDeDatos limpiadoBaseDeDatos;
-    
+
     @Autowired
     RepositorioPuntoDeControl repositorioPuntoDeControl;
 
@@ -60,7 +60,9 @@ public class UjapackIntegrationTest {
         Assertions.assertEquals(0.004000000189989805, serviPack.calcularImporte(3, 1, 1, 1));
         
     }
+    */
 
+    /*
     @Test
     public void testAvisaEstado() throws IOException {
         Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
@@ -85,8 +87,9 @@ public class UjapackIntegrationTest {
         
         Assertions.assertEquals("Entregado", paquet.getEstado());
      
-    }
+    }*/
 
+    /*
     @Test
     public void testRutaIncorrectaPuntoFueraDeRuta() throws IOException {
         Cliente Remitente1 =new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
@@ -96,48 +99,46 @@ public class UjapackIntegrationTest {
 
         LocalDateTime fechaSalida = LocalDateTime.now();
         
-        PuntoDeControl punto = new PuntoDeControl(5, "CL Cataluña", "Barcelona", null);
-
-        Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
-            serviPack.notificarSalida(paquet.getLocalizador(),fechaSalida, punto);
-        });
-    }
-    
-    
-
-    @Test
-    public void testRutaIncorrectaPuntoDeRutaAtrasado() throws IOException {
-        Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
-        Cliente Destinatario0 = new Cliente("12334243", "juan", "pepe","pp@gmail.com", "jaen", "Córdoba", "Córdoba");
-
-        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
-
-        LocalDateTime fechaSalida = LocalDateTime.now();
-        PuntoDeControl punto = new PuntoDeControl(1, "Jaén", "Jaén", null);
+        PuntoDeControl punto = new PuntoDeControl(5, "CL Cataluña", "Barcelona");
 
         Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
             serviPack.notificarSalida(paquet.getLocalizador(),fechaSalida, punto);
         });
     }
      */
+ /*
     @Test
-    public void testRutaIncorrectaPuntoDeRutaAdelantado() throws IOException {
+    public void testRutaIncorrectaPuntoDeRutaAtrasado() throws IOException {
         Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Jaén", "Jaén", "Jaén");
         Cliente Destinatario0 = new Cliente("12334243", "Juan", "Pepe", "pp@gmail.com", "Córdoba", "Córdoba", "Córdoba");
 
         Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
+
         LocalDateTime fechaSalida = LocalDateTime.now();
-        PuntoDeControl punto = new PuntoDeControl(13,"Calle Córdoba", "Calle Córdoba");
-        //PuntoDeControl punto = repositorioPuntoDeControl.buscarPC(23);
+        PuntoDeControl punto = new PuntoDeControl(16, "Calle Jaén", "Calle Jaén");
 
         Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
-            serviPack.notificarSalida(paquet.getLocalizador(), fechaSalida, punto);
+            serviPack.notificarSalida(paquet.getLocalizador(),fechaSalida, punto);
         });
     }
+     */
+    
+//    @Test
+//    public void testRutaIncorrectaPuntoDeRutaAdelantado() throws IOException {
+//        Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Jaén", "Jaén", "Jaén");
+//        Cliente Destinatario0 = new Cliente("12334243", "Juan", "Pepe", "pp@gmail.com", "Córdoba", "Córdoba", "Córdoba");
 //
+//        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
+//        LocalDateTime fechaSalida = LocalDateTime.now();
+//        PuntoDeControl punto = new PuntoDeControl(13,"Calle Córdoba", "Calle Córdoba");
+//        //PuntoDeControl punto = repositorioPuntoDeControl.buscarPC(23);
+//
+//        Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
+//            serviPack.notificarSalida(paquet.getLocalizador(), fechaSalida, punto);
+//        });
+//    }
 //    @BeforeEach
 //    void limpiadoBaseDeDatos() {
 //        limpiadoBaseDeDatos.limpiar();
 //    }
-
 }

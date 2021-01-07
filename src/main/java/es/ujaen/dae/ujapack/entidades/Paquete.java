@@ -10,15 +10,20 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  *
@@ -28,11 +33,11 @@ import javax.validation.constraints.Size;
 public class Paquete implements Serializable {
 
     @Id
-    @Size(min = 10, max = 10)
+    @Column(length = 10)
     private int localizador;
-    @NotBlank
+    @Positive
     private int numPuntosControl;
-    @NotBlank
+    @Enumerated(EnumType.ORDINAL)
     private Estado estado;
     @PositiveOrZero
     private float importe;
@@ -40,21 +45,20 @@ public class Paquete implements Serializable {
     private float peso;
     @Positive
     private float altura;
-    @OneToMany
-    @JoinColumn(name = "pasanPaquetes")
+    @OneToMany(mappedBy = "pasoControl", fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+    @Fetch(value = FetchMode.SUBSELECT)
+//    @JoinColumn(name = "pasanPaquetes")
     private List<PasoPorPuntoDeControl> pasanPaquetes;
-    @NotBlank
-    @OneToMany
+//    @NotBlank
+    @OneToMany(fetch=FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<PuntoDeControl> ruta;
-    
+
     @ManyToOne
     private Cliente remitente;
-   
+
     @ManyToOne
     private Cliente destinatario;
-
-  
-
 
     public enum Estado {
         EnTransito,
@@ -63,7 +67,11 @@ public class Paquete implements Serializable {
         Extraviado;
     }
 
-    public Paquete(int localizador, float importe, float peso, float altura, ArrayList<PuntoDeControl> ruta) {
+    public Paquete() {
+
+    }
+
+    public Paquete(int localizador, float importe, float peso, float altura, ArrayList<PuntoDeControl> ruta, Cliente remitente, Cliente destinatario) {
         this.localizador = localizador;
         this.numPuntosControl = ruta.size();
         this.estado = estado.EnTransito;
@@ -71,6 +79,8 @@ public class Paquete implements Serializable {
         this.peso = peso;
         this.altura = altura;
         this.ruta = ruta;
+//        this.remitente = remitente;
+//        this.destinatario = destinatario;
         this.pasanPaquetes = new ArrayList<PasoPorPuntoDeControl>();
 
         PasoPorPuntoDeControl primero = new PasoPorPuntoDeControl(ruta.get(0), LocalDateTime.now());
@@ -203,4 +213,3 @@ public class Paquete implements Serializable {
     }
 
 }
-
