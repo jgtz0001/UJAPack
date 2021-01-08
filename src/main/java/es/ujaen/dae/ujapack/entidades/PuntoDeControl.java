@@ -23,7 +23,7 @@ import javax.validation.constraints.NotBlank;
 public class PuntoDeControl implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotBlank
     String nombre;

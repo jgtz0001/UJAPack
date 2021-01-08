@@ -116,15 +116,14 @@ public class ServicioUjaPack {
     public ServicioUjaPack() {
     }
 
-    @PostConstruct
-    public void rellenarJson() {
-        try {
-            leerJson();
-        } catch (IOException ex) {
-            System.out.println(ex.toString());
-        }
-    }
-
+//    @PostConstruct
+//    public void rellenarJson() {
+//        try {
+//            leerJson();
+//        } catch (IOException ex) {
+//            System.out.println(ex.toString());
+//        }
+//    }
     @Transactional(readOnly = true)
     private boolean buscaPorDni(String dni) {
         return repositorioClientes.buscar(dni).isPresent();
@@ -151,7 +150,9 @@ public class ServicioUjaPack {
 //
 //        return cliente;
 //    }
-
+//        public void altaCliente(Cliente cliente) {
+//        repositorioClientes.guardar(cliente);
+//    }
     /**
      * Realiza un login de un cliente
      *
@@ -262,7 +263,7 @@ public class ServicioUjaPack {
 * @param punto Punto de control al que llega el paquete.
 * @return cadena de caracteres informando al cliente.
      */
-//hay que actualizar
+    //hay que actualizar 
     public String notificarEntrada(int localizador, LocalDateTime fechaEntrada, PuntoDeControl punto) {
         Paquete p = repositorioPaquete.buscar(localizador);
         if (p == null) {
@@ -282,8 +283,7 @@ public class ServicioUjaPack {
 * @return devuelve el coste de enviar el paquete.
      */
     public float calcularImporte(int numPuntosControl, float peso, float altura, float anchura) {
-        float importe = (peso * altura * anchura * (numPuntosControl + 1) / 1000
-        );
+        float importe = (peso * altura * anchura * (numPuntosControl + 1) / 1000);
         return importe;
     }
 
@@ -460,7 +460,7 @@ public class ServicioUjaPack {
         }
         return ruta;
     }
-    
+
     /**
      * Realiza un login de un cliente
      *
@@ -471,12 +471,12 @@ public class ServicioUjaPack {
     @Transactional
     public Optional<Cliente> verCliente(@NotBlank String dni) {
         Optional<Cliente> clienteLogin = repositorioClientes.buscar(dni);
-    
+
         // Asegurarnos de que se devuelve el cliente con los datos precargados
         clienteLogin.ifPresent(c -> c.verPaquetes().size());
         return clienteLogin;
     }
-    
+
     /**
      * Devolver los paquetes de un cliente dado No es una operación
      * imprescindible puesto que el cliente ya
@@ -487,7 +487,7 @@ public class ServicioUjaPack {
     @Transactional
     public List<Paquete> verPaquetes(@NotBlank String dni) {
         Cliente cliente = repositorioClientes.buscar(dni).orElseThrow(ClienteNoRegistrado::new);
-    
+
         // Precargar a memoria la relación lazy de cuentas del cliente antes de devolver      
         cliente.verPaquetes().size();
         return cliente.verPaquetes();
@@ -500,7 +500,7 @@ public class ServicioUjaPack {
      * @return el paquete asociado al cliente
      */
     public Cliente altaCliente(@NotNull @Valid Cliente cliente) {
-        if (repositorioClientes.buscar(cliente.getDni()).isPresent()) {
+        if (!repositorioClientes.buscar(cliente.getDni()).isPresent()) {
             throw new DNINoValido();
         }
         repositorioClientes.guardar(cliente);
@@ -508,15 +508,21 @@ public class ServicioUjaPack {
         return cliente;
     }
 
-     public Paquete altaPaquete(@NotNull @Valid Paquete paquete,@NotNull @Valid Cliente remitente,@NotNull @Valid Cliente destinatario) {
-        if (repositorioPaquete.buscarPaquetes(paquete.getLocalizador()).isPresent()) {
+    public Paquete altaPaquete(@NotNull @Valid Paquete paquete, @NotNull @Valid Cliente remitente, @NotNull @Valid Cliente destinatario) {
+        if (!repositorioPaquete.buscarPaquetes(paquete.getLocalizador()).isPresent()) {
             throw new LocalizadorNoValido();
         }
 
         // Crear y registrar paquete
-        Paquete paquet = altaEnvio(1,1,1,remitente,destinatario);
+        Paquete paquet = altaEnvio(1, 1, 1, remitente, destinatario);
         repositorioPaquete.guardar(paquete);
 
         return paquete;
+    }
+
+    public Paquete buscarPaquete(int localizador) {
+        if(!repositorioPaquete.buscarPaquetes(localizador).isPresent())
+            throw new LocalizadorNoExiste();
+        return repositorioPaquete.buscar(localizador);
     }
 }
