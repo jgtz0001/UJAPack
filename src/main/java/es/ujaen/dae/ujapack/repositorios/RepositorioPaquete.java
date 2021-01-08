@@ -29,7 +29,7 @@ public class RepositorioPaquete {
         return em.find(Paquete.class, localizador);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Optional<Paquete> buscarPaquetes(int localizador) {
         return Optional.ofNullable(em.find(Paquete.class, localizador));
     }

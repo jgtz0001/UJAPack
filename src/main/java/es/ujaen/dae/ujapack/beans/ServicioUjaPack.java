@@ -508,7 +508,7 @@ public class ServicioUjaPack {
         return cliente;
     }
 
-    public Paquete altaPaquete(@NotNull @Valid Paquete paquete, @NotNull @Valid Cliente remitente, @NotNull @Valid Cliente destinatario) {
+    public Paquete altaPaquete(@NotNull Paquete paquete, @NotNull @Valid Cliente remitente, @NotNull @Valid Cliente destinatario) {
         if (!repositorioPaquete.buscarPaquetes(paquete.getLocalizador()).isPresent()) {
             throw new LocalizadorNoValido();
         }
