@@ -502,16 +502,12 @@ public class ServicioUjaPack {
     public Cliente altaCliente(@NotNull @Valid Cliente cliente) {
         if (repositorioClientes.buscar(cliente.getDni()).isPresent()) {
             throw new DNINoValido();
-}
+        }
         repositorioClientes.guardar(cliente);
-
-//        // Crear y registrar paquete
-//        Paquete paquete = altaEnvio(1, 1, 1, cliente, cliente2);
-//        repositorioPaquete.guardar(paquete);
 
         return cliente;
     }
-//pasar atributos de paquete
+
      public Paquete altaPaquete(@NotNull @Valid Paquete paquete,@NotNull @Valid Cliente remitente,@NotNull @Valid Cliente destinatario) {
         if (repositorioPaquete.buscarPaquetes(paquete.getLocalizador()).isPresent()) {
             throw new LocalizadorNoValido();

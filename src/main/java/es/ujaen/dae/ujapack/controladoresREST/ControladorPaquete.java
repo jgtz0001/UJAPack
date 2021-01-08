@@ -51,12 +51,12 @@ public class ControladorPaquete {
   
     
 //pasar atributos de paquete
-    @PostMapping("/paquete")
+    @PostMapping("/paquete/{localizador}")
     ResponseEntity<DTOPaquete> altaPaquete(@RequestBody DTOPaquete paquete,@RequestBody DTOCliente remitente, @RequestBody DTOCliente destinatario){
         try{
-            //Paquete paq = serviPack.altaPaquete(paquete.aPaquete(),remitente,destinatario);
-            Paquete paq = serviPack.altaEnvio(0, 0, 0, remitente, destinatario);
-            return ResponseEntity.status(HttpStatus.CREATED).body(new DTOPaquete(paq), new DTOCliente(rem), new DTOCliente(des));
+            Paquete paq = serviPack.altaPaquete(paquete.aPaquete(),remitente.aCliente(),destinatario.aCliente());
+            //Paquete paq = serviPack.altaEnvio(0, 0, 0, remitente, destinatario);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new DTOPaquete(paq));
         }
         catch(PaqueteNoRegistrado e){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();

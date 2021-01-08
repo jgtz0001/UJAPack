@@ -73,7 +73,14 @@ public class Paquete implements Serializable {
     public Paquete() {
 
     }
-
+    
+    public Paquete(int localizador, float importe, float peso, float altura) {
+        this.localizador = localizador;
+        this.importe = importe;
+        this.peso = peso;
+        this.altura = altura;
+    }
+    
     public Paquete(int localizador, float importe, float peso, float altura, ArrayList<PuntoDeControl> ruta, Cliente remitente, Cliente destinatario) {
         this.localizador = localizador;
         this.numPuntosControl = ruta.size();
@@ -82,8 +89,8 @@ public class Paquete implements Serializable {
         this.peso = peso;
         this.altura = altura;
         this.ruta = ruta;
-    // this.remitente = remitente;
-    // this.destinatario = destinatario;
+        //this.remitente = remitente;
+        //this.destinatario = destinatario;
         this.pasanPaquetes = new ArrayList<PasoPorPuntoDeControl>();
 
         PasoPorPuntoDeControl primero = new PasoPorPuntoDeControl(ruta.get(0), LocalDateTime.now());

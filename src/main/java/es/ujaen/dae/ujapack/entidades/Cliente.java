@@ -48,7 +48,7 @@ public class Cliente implements Serializable {
     @OneToMany(mappedBy = "destinatario")
     List<Paquete> PaquetesDestinatario;
 
-    public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia) {
+    public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia, String clave) {
         this.dni = dni;
         this.nombre = nombre;
         this.apellidos = apellidos;
