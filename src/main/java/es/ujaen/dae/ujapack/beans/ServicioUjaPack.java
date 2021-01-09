@@ -153,7 +153,7 @@ public class ServicioUjaPack {
                 .filter((cliente) -> cliente.claveValida(clave));
 
         // Asegurarnos de que se devuelve el cliente con los datos precargados
-        clienteLogin.ifPresent(c -> c.verPaquetes().size());
+        clienteLogin.ifPresent(c -> c.verDatos().size());
         return clienteLogin;
     }
 
@@ -460,7 +460,7 @@ public class ServicioUjaPack {
         Optional<Cliente> clienteLogin = repositorioClientes.buscar(dni);
 
         // Asegurarnos de que se devuelve el cliente con los datos precargados
-        clienteLogin.ifPresent(c -> c.verPaquetes().size());
+        clienteLogin.ifPresent(c -> c.verDatos().size());
         return clienteLogin;
     }
     
