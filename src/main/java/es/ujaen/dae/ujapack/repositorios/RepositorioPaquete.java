@@ -6,6 +6,7 @@
 package es.ujaen.dae.ujapack.repositorios;
 
 import es.ujaen.dae.ujapack.entidades.Paquete;
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,6 +29,19 @@ public class RepositorioPaquete {
     public Paquete buscar(int localizador) {
         return em.find(Paquete.class, localizador);
     }
+
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Optional<Paquete> buscarPaqueteN(int localizador) {
+        return Optional.ofNullable(em.find(Paquete.class, localizador));
+    }
+    
+    
+//       @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+//    public Paquete buscarPaqueteN(int localizador) {
+//        List<Paquete> paquete = em.createQuery("select h from Paquete h WHERE h.localizador = '" + localizador + "'",
+//                Paquete.class).getResultList();
+//        return paquete.get(0);
+//    }
 
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Optional<Paquete> buscarPaquetes(int localizador) {

@@ -15,7 +15,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
-import es.ujaen.dae.ujapack.excepciones.ClienteNoRegistrado;
 import es.ujaen.dae.ujapack.excepciones.DNINoValido;
 import es.ujaen.dae.ujapack.excepciones.IdIncorrecto;
 import java.io.File;
@@ -29,7 +28,6 @@ import es.ujaen.dae.ujapack.repositorios.RepositorioCliente;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPuntoDeControl;
 import es.ujaen.dae.ujapack.repositorios.RepositorioCentroDeLogistica;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPaquete;
-import java.util.List;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
@@ -116,14 +114,15 @@ public class ServicioUjaPack {
     public ServicioUjaPack() {
     }
 
-//    @PostConstruct
-//    public void rellenarJson() {
-//        try {
-//            leerJson();
-//        } catch (IOException ex) {
-//            System.out.println(ex.toString());
-//        }
-//    }
+    @PostConstruct
+    public void rellenarJson() {
+        try {
+            leerJson();
+        } catch (IOException ex) {
+            System.out.println(ex.toString());
+        }
+    }
+
     @Transactional(readOnly = true)
     private boolean buscaPorDni(String dni) {
         return repositorioClientes.buscar(dni).isPresent();
@@ -141,18 +140,6 @@ public class ServicioUjaPack {
         return last = id;
     }
 
-//    public Cliente altaCliente(@NotNull @Valid Cliente cliente) {
-//
-//        if (repositorioClientes.buscar(cliente.getDni()).isPresent()) {
-//            throw new IllegalArgumentException("El cliente ya existe");
-//        }
-//        repositorioClientes.guardar(cliente);
-//
-//        return cliente;
-//    }
-//        public void altaCliente(Cliente cliente) {
-//        repositorioClientes.guardar(cliente);
-//    }
     /**
      * Realiza un login de un cliente
      *
@@ -476,21 +463,13 @@ public class ServicioUjaPack {
         clienteLogin.ifPresent(c -> c.verPaquetes().size());
         return clienteLogin;
     }
+    
+        @Transactional
+    public Optional<Paquete> verPaquetes(@NotBlank Integer localizador) {
+        Optional<Paquete> paquete = repositorioPaquete.buscarPaquetes(localizador);//.orElseThrow(LocalizadorNoValido::new);
 
-    /**
-     * Devolver los paquetes de un cliente dado No es una operación
-     * imprescindible puesto que el cliente ya
-     *
-     * @param dni el DNI del cliente
-     * @return la lista de paquetes
-     */
-    @Transactional
-    public List<Paquete> verPaquetes(@NotBlank String dni) {
-        Cliente cliente = repositorioClientes.buscar(dni).orElseThrow(ClienteNoRegistrado::new);
-
-        // Precargar a memoria la relación lazy de cuentas del cliente antes de devolver      
-        cliente.verPaquetes().size();
-        return cliente.verPaquetes();
+//        paquete.ifPresent(p -> p.);
+        return paquete;
     }
 
     /**
@@ -521,8 +500,9 @@ public class ServicioUjaPack {
     }
 
     public Paquete buscarPaquete(int localizador) {
-        if(!repositorioPaquete.buscarPaquetes(localizador).isPresent())
+        if (!repositorioPaquete.buscarPaquetes(localizador).isPresent()) {
             throw new LocalizadorNoExiste();
+        }
         return repositorioPaquete.buscar(localizador);
     }
 }

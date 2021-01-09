@@ -115,11 +115,11 @@ public class Cliente implements Serializable {
     }
 
     /**
-     * Devolver cuentas del usuario
+     * Devolver paquetes del usuario
      *
      * @return la lista de cuentas
      */
-    public List<Paquete> verPaquetes() {
+    public List<Paquete> verDatos() {
         return Collections.unmodifiableList(PaquetesRemitente);
     }
 }

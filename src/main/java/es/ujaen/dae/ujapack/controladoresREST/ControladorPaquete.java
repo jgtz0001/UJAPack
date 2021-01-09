@@ -65,12 +65,29 @@ public class ControladorPaquete {
         }
     }
 
+//    @GetMapping("/paquetes/{localizador}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public DTOPaquete verPaquete(@PathVariable int localizador) {
+//        return new DTOPaquete(serviPack.buscarPaquete(localizador));
+//    }
+    
     @GetMapping("/paquetes/{localizador}")
     @ResponseStatus(HttpStatus.OK)
-    public DTOPaquete verPaquete(@PathVariable int localizador) {
-        return new DTOPaquete(serviPack.buscarPaquete(localizador));
+    ResponseEntity<DTOPaquete> verPaquete(@PathVariable int localizador) {
+        Optional<Paquete> paquete = serviPack.verPaquetes(localizador);
+        return paquete
+                .map(p -> ResponseEntity.ok(new DTOPaquete(p)))
+                .orElse(ResponseEntity.notFound().build());
+        //return new DTOPaquete(serviPack.buscarPaquete(localizador));
     }
     
-
+//        @GetMapping("/clientes/{dni}")
+//    ResponseEntity<DTOCliente> verCliente(@PathVariable String dni) {
+//        Optional<Cliente> cliente = serviPack.verCliente(dni);
+//        return cliente
+//                .map(c -> ResponseEntity.ok(new DTOCliente(c)))
+//                .orElse(ResponseEntity.notFound().build());
+//    }
+    
 
 }
