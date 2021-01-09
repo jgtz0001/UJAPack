@@ -56,7 +56,7 @@ public class DTOCliente {
         this.direccion = cliente.getDireccion();
         this.localidad = cliente.getLocalidad();
         this.provincia = cliente.getProvincia();
-        this.clave = "clave";
+        this.clave = clave;
     }
 
     public String getDni() {

@@ -6,6 +6,7 @@
 package es.ujaen.dae.ujapack.entidades;
 
 import es.ujaen.dae.ujapack.util.CodificadorMd5;
+import es.ujaen.dae.ujapack.util.CodificadorPassword;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -39,7 +41,7 @@ public class Cliente implements Serializable {
     private String localidad;
     @NotBlank
     private String provincia;
-    @NotBlank
+    @NotNull
     private String clave;
 
     @OneToMany(mappedBy = "remitente")
@@ -56,7 +58,7 @@ public class Cliente implements Serializable {
         this.direccion = direccion;
         this.localidad = localidad;
         this.provincia = provincia;
-        this.clave = clave;
+        this.clave = (clave != null ? CodificadorPassword.codificar(clave) : null);
     }
 
     public Cliente() {
@@ -111,7 +113,7 @@ public class Cliente implements Serializable {
      * @return
      */
     public boolean claveValida(String clave) {
-        return this.clave.equals(CodificadorMd5.codificar(clave));
+        return CodificadorPassword.igual(clave, this.clave);
     }
 
     /**
