@@ -46,10 +46,12 @@ public class ControladorClientes {
 
      /** Handler para excepciones de violación de restricciones */
     @ExceptionHandler(ClienteNoRegistrado.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handlerClienteNoRegistrado(ClienteNoRegistrado e) {
     }
-  
+
+            
+    /** Creación de clientes */
     @PostMapping("/clientes")
     ResponseEntity<DTOCliente> altaCliente(@RequestBody DTOCliente cliente){
         try{
