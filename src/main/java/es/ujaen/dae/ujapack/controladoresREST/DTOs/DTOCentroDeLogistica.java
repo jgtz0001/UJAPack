@@ -6,9 +6,8 @@
 package es.ujaen.dae.ujapack.controladoresREST.DTOs;
 
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
-import java.util.ArrayList;
-import java.util.List;
-import sun.awt.image.ImageWatched.Link;
+
+
 
 /**
  *

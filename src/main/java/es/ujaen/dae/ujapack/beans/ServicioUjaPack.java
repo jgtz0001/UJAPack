@@ -70,40 +70,41 @@ public class ServicioUjaPack {
         }
     }
 
-    class CompletarPuntosDeControl {
+//    class CompletarPuntosDeControl {
+//
+//        private int idPadre;
+//        private String NombrePadre;
+//        private ArrayList<String> provincias;
+//
+//        public CompletarPuntosDeControl(int idPadre, ArrayList<String> provincias, String NombrePadre) {
+//            this.idPadre = idPadre;
+//            this.provincias = provincias;
+//            this.NombrePadre = NombrePadre;
+//        }
 
-        private int idPadre;
-        private String NombrePadre;
-        private ArrayList<String> provincias;
+//        /**
+//         * @return the idPadre
+//         */
+//        public int getIdPadre() {
+//            return idPadre;
+//        }
+//
+//        /**
+//         * @return the provincias
+//         */
+//        public ArrayList<String> getProvincias() {
+//            return provincias;
+//        }
+//
+//        /**
+//         * @return the NombrePadre
+//         */
+//        public String getNombrePadre() {
+//            return NombrePadre;
+//        }
+//}
 
-        public CompletarPuntosDeControl(int idPadre, ArrayList<String> provincias, String NombrePadre) {
-            this.idPadre = idPadre;
-            this.provincias = provincias;
-            this.NombrePadre = NombrePadre;
-        }
-
-        /**
-         * @return the idPadre
-         */
-        public int getIdPadre() {
-            return idPadre;
-        }
-
-        /**
-         * @return the provincias
-         */
-        public ArrayList<String> getProvincias() {
-            return provincias;
-        }
-
-        /**
-         * @return the NombrePadre
-         */
-        public String getNombrePadre() {
-            return NombrePadre;
-        }
-
-    }
+    
 
     private static final long LIMIT = 10000000000L;
     private static long last = 0;
@@ -114,14 +115,7 @@ public class ServicioUjaPack {
     public ServicioUjaPack() {
     }
 
-    @PostConstruct
-    public void rellenarJson() {
-        try {
-            leerJson();
-        } catch (IOException ex) {
-            System.out.println(ex.toString());
-        }
-    }
+
 
     @Transactional(readOnly = true)
     private boolean buscaPorDni(String dni) {
@@ -274,59 +268,59 @@ public class ServicioUjaPack {
         return importe;
     }
 
-    /*
-* Función que se encarga de leer un Json y añadir los datos a la base de datos.
-     */
-    @Transactional
-    private void leerJson() throws IOException {
-        String jsonStr = Files.readString(new File("redujapack.json").toPath());
-        JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
-        ArrayList<CompletarPuntosDeControl> ARellenar = new ArrayList<CompletarPuntosDeControl>();
-        ArrayList<CentroDeLogistica> centrosBD = new ArrayList<CentroDeLogistica>();
-        for (int i = 1; i <= raiz.size(); i++) {
-            JsonObject centro1 = raiz.getAsJsonObject(String.valueOf(i));
-            int id = i;
-            String nombre = centro1.get("nombre").getAsString();
-            String localizacion = centro1.get("localización").getAsString();
-
-            JsonArray provincias = centro1.getAsJsonArray("provincias");
-            JsonArray conexiones = centro1.getAsJsonArray("conexiones");
-
-            ArrayList<String> listdata = new ArrayList<String>();
-            ArrayList listdata2 = new ArrayList();
-            for (int j = 0; j < provincias.size(); j++) {
-                listdata.add(provincias.get(j).getAsString());
-            }
-
-            CompletarPuntosDeControl nuevoPuntoDeControl = new CompletarPuntosDeControl(id, listdata, localizacion);
-            ARellenar.add(nuevoPuntoDeControl);
-
-            for (int j = 0; j < conexiones.size(); j++) {
-                listdata2.add(conexiones.get(j).getAsInt());
-            }
-            PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, id);
-            repositorioPuntoDeControl.guardar(punto);
-
-            CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
-            centrosBD.add(centroNuevo);
-
-        }
-        for (int i = 0; i < centrosBD.size(); i++) {
-            repositorioCentroDeLogistica.guardar(centrosBD.get(i));
-        }
-
-        int id = 11;
-        for (int i = 0; i < ARellenar.size(); i++) {
-            ArrayList<String> provinciasAIncluir = ARellenar.get(i).getProvincias();
-            for (int j = 0; j < provinciasAIncluir.size(); j++) {
-                if (!provinciasAIncluir.get(j).equals(ARellenar.get(i).getNombrePadre())) {
-                    PuntoDeControl punto = new PuntoDeControl(id, ("Calle " + provinciasAIncluir.get(j)), provinciasAIncluir.get(j), ARellenar.get(i).idPadre);
-                    repositorioPuntoDeControl.guardar(punto);
-                    id++;
-                }
-            }
-        }
-    }
+//    /*
+//* Función que se encarga de leer un Json y añadir los datos a la base de datos.
+//     */
+//    @Transactional
+//    private void leerJson() throws IOException {
+//        String jsonStr = Files.readString(new File("redujapack.json").toPath());
+//        JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
+//        ArrayList<CompletarPuntosDeControl> ARellenar = new ArrayList<CompletarPuntosDeControl>();
+//        ArrayList<CentroDeLogistica> centrosBD = new ArrayList<CentroDeLogistica>();
+//        for (int i = 1; i <= raiz.size(); i++) {
+//            JsonObject centro1 = raiz.getAsJsonObject(String.valueOf(i));
+//            int id = i;
+//            String nombre = centro1.get("nombre").getAsString();
+//            String localizacion = centro1.get("localización").getAsString();
+//
+//            JsonArray provincias = centro1.getAsJsonArray("provincias");
+//            JsonArray conexiones = centro1.getAsJsonArray("conexiones");
+//
+//            ArrayList<String> listdata = new ArrayList<String>();
+//            ArrayList listdata2 = new ArrayList();
+//            for (int j = 0; j < provincias.size(); j++) {
+//                listdata.add(provincias.get(j).getAsString());
+//            }
+//
+//            CompletarPuntosDeControl nuevoPuntoDeControl = new CompletarPuntosDeControl(id, listdata, localizacion);
+//            ARellenar.add(nuevoPuntoDeControl);
+//
+//            for (int j = 0; j < conexiones.size(); j++) {
+//                listdata2.add(conexiones.get(j).getAsInt());
+//            }
+//            PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, id);
+//            repositorioPuntoDeControl.guardar(punto);
+//
+//            CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
+//            centrosBD.add(centroNuevo);
+//
+//        }
+//        for (int i = 0; i < centrosBD.size(); i++) {
+//            repositorioCentroDeLogistica.guardar(centrosBD.get(i));
+//        }
+//
+//        int id = 11;
+//        for (int i = 0; i < ARellenar.size(); i++) {
+//            ArrayList<String> provinciasAIncluir = ARellenar.get(i).getProvincias();
+//            for (int j = 0; j < provinciasAIncluir.size(); j++) {
+//                if (!provinciasAIncluir.get(j).equals(ARellenar.get(i).getNombrePadre())) {
+//                    PuntoDeControl punto = new PuntoDeControl(id, ("Calle " + provinciasAIncluir.get(j)), provinciasAIncluir.get(j), ARellenar.get(i).idPadre);
+//                    repositorioPuntoDeControl.guardar(punto);
+//                    id++;
+//                }
+//            }
+//        }
+//    }
 
     /*
 * Crea los nodos con las conexiones que se le pasan (id).
