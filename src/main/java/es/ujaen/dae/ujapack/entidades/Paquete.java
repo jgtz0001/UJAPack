@@ -58,10 +58,10 @@ public class Paquete implements Serializable {
     @Fetch(value = FetchMode.SUBSELECT)
     private List<PuntoDeControl> ruta;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     private Cliente remitente;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     private Cliente destinatario;
 
     public enum Estado {
@@ -90,8 +90,8 @@ public class Paquete implements Serializable {
         this.peso = peso;
         this.altura = altura;
         this.ruta = ruta;
-        //this.remitente = remitente;
-        //this.destinatario = destinatario;
+        this.remitente = remitente;
+        this.destinatario = destinatario;
         this.pasanPaquetes = new ArrayList<PasoPorPuntoDeControl>();
 
         PasoPorPuntoDeControl primero = new PasoPorPuntoDeControl(ruta.get(0), LocalDateTime.now());

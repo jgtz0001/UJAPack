@@ -6,6 +6,8 @@
 package es.ujaen.dae.ujapack.controladoresREST.DTOs;
 
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
+import java.util.List;
+import org.springframework.hateoas.Link;
 
 
 
@@ -20,6 +22,13 @@ public class DTOCentroDeLogistica {
     String nombre;
 
     String localizacion;
+    
+   
+    private List<Link> conexiones;
+
+    private List<Link> provincias;
+
+    public List<Link> listaOficinas;
 
     public DTOCentroDeLogistica(int id, String nombre, String localizacion) {
         this.id = id;
