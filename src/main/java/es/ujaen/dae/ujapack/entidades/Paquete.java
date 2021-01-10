@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -81,7 +82,7 @@ public class Paquete implements Serializable {
         this.altura = altura;
     }
     
-    public Paquete(int localizador, float importe, float peso, float altura, ArrayList<PuntoDeControl> ruta, Cliente remitente, Cliente destinatario) {
+    public Paquete(int localizador, float importe, float peso, float altura, List<PuntoDeControl> ruta, Cliente remitente, Cliente destinatario) {
         this.localizador = localizador;
         this.numPuntosControl = ruta.size();
         this.estado = estado.EnTransito;

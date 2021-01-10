@@ -48,12 +48,6 @@ public class PuntoDeControl implements Serializable {
         this.localizacion = localizacion;
     }
 
-// public PuntoDeControl(int id, String nombre, String localizacion, ArrayList<String> provincia) {
-// this.id = id;
-// this.nombre = nombre;
-// this.localizacion = localizacion;
-// this.provincia = provincia;
-// }
     /**
      * @return the id
      */

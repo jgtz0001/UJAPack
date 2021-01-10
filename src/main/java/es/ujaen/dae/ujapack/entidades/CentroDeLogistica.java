@@ -6,14 +6,13 @@
 package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.validation.constraints.NotBlank;
 
 /**
  *
@@ -22,9 +21,11 @@ import javax.validation.constraints.NotBlank;
 @Entity
 public class CentroDeLogistica extends PuntoDeControl implements Serializable {
 
-    private ArrayList<Integer> conexiones;
+    @ElementCollection(targetClass=Integer.class)
+    private List<Integer> conexiones;
 
-    private ArrayList<String> provincias;
+    @ElementCollection(targetClass=String.class)
+    private List<String> provincias;
 
     @ManyToMany(mappedBy = "listaLogistica")
     public List<Oficina> listaOficinas;
@@ -32,7 +33,7 @@ public class CentroDeLogistica extends PuntoDeControl implements Serializable {
     public CentroDeLogistica() {
     }
 
-    public CentroDeLogistica(int id, String nombre, String localizacion, ArrayList<String> provincias, ArrayList<Integer> conexiones) {
+    public CentroDeLogistica(int id, String nombre, String localizacion, List<String> provincias, List<Integer> conexiones) {
         super(id, nombre, localizacion);
         this.conexiones = conexiones;
         this.provincias = provincias;
@@ -42,14 +43,14 @@ public class CentroDeLogistica extends PuntoDeControl implements Serializable {
     /**
      * @return the conexiones
      */
-    public ArrayList<Integer> getConexiones() {
+    public List<Integer> getConexiones() {
         return conexiones;
     }
 
     /**
      * @return the conexiones
      */
-    public ArrayList<String> getProvincias() {
+    public List<String> getProvincias() {
         return provincias;
     }
 

@@ -36,7 +36,7 @@ public class RepositorioCentroDeLogistica {
     }
 
     @Transactional
-    public ArrayList<Integer> BuscaIdCL(int id) {
+    public List<Integer> BuscaIdCL(int id) {
         List<CentroDeLogistica> puntos = em.createQuery("select h from CentroDeLogistica h WHERE h.id = '" + id + "'",
                 CentroDeLogistica.class).getResultList();
         return puntos.get(0).getConexiones();

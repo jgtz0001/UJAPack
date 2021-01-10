@@ -10,7 +10,7 @@ import es.ujaen.dae.ujapack.entidades.Paquete;
 import es.ujaen.dae.ujapack.entidades.PuntoDeControl;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -28,6 +28,7 @@ import es.ujaen.dae.ujapack.repositorios.RepositorioCliente;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPuntoDeControl;
 import es.ujaen.dae.ujapack.repositorios.RepositorioCentroDeLogistica;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPaquete;
+import java.util.ArrayList;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 import javax.validation.Valid;
@@ -55,17 +56,17 @@ public class ServicioUjaPack {
     class Nodo {
 
         int id;
-        private ArrayList<Integer> lista;
-        ArrayList<Integer> conexionesId;
+        private List<Integer> lista;
+        List<Integer> conexionesId;
 
-        Nodo(int _id, ArrayList<Integer> conexiones) {
+        Nodo(int _id, List<Integer> conexiones) {
             this.id = _id;
             lista = new ArrayList<Integer>();
             lista.add(_id);
             conexionesId = conexiones;
         }
 
-        public ArrayList<Integer> getConexionesId() {
+        public List<Integer> getConexionesId() {
             return conexionesId;
         }
     }
@@ -131,7 +132,7 @@ public class ServicioUjaPack {
 
         int idProvinciaRem = obtenerIdProvincia(remitente.getProvincia());
         int idProvinciaDest = obtenerIdProvincia(destinatario.getProvincia());
-        ArrayList<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
+        List<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
         float costeEnvio = 0;
 
         ruta = calcularRutaPaquete(remitente.getLocalidad(), destinatario.getLocalidad(), idProvinciaRem, idProvinciaDest);
@@ -142,8 +143,8 @@ public class ServicioUjaPack {
         return paquet;
     }
 
-    private ArrayList<Integer> completaRuta(ArrayList<Integer> ruta, int idProvinciaRem, int idProvinciaDest) {
-        ArrayList<Integer> rutaDefinitiva = new ArrayList<>();
+    private List<Integer> completaRuta(List<Integer> ruta, int idProvinciaRem, int idProvinciaDest) {
+        List<Integer> rutaDefinitiva = new ArrayList<Integer>();
 
         if (!ruta.contains(idProvinciaRem)) {
             rutaDefinitiva.add(idProvinciaRem);
@@ -237,7 +238,7 @@ public class ServicioUjaPack {
 * @param visitados Vector estático booleano que contiene los ya visitados para no meter repetidos.
 * @return devuelve un nodo con todos sus atributos completos.
      */
-    private Nodo nodoConexiones(ArrayList<Integer> lista, int id, boolean[] visitados) {
+    private Nodo nodoConexiones(List<Integer> lista, int id, boolean[] visitados) {
         CentroDeLogistica centro = repositorioCentroDeLogistica.buscarPorId(id);
         if (centro == null) {
             throw new IdIncorrecto();
@@ -252,11 +253,11 @@ public class ServicioUjaPack {
 
     /*
 * Cambia el array de enteros a su respectivo nombre del centro logístico.
-* @param rutaEnIds ArrayList que contiene la ruta en ids.
+* @param rutaEnIds List que contiene la ruta en ids.
 * @return devuelve la ruta de los centros por los que pasa.
      */
-    private ArrayList<PuntoDeControl> rutaString(ArrayList<Integer> rutaEnIds) {
-        ArrayList<PuntoDeControl> rutaStr = new ArrayList<PuntoDeControl>();
+    private List<PuntoDeControl> rutaString(List<Integer> rutaEnIds) {
+        List<PuntoDeControl> rutaStr = new ArrayList<PuntoDeControl>();
         for (int i = 0; i < rutaEnIds.size(); i++) {
             rutaStr.add(repositorioPuntoDeControl.getPuntoDeControl(rutaEnIds.get(i)));
         }
@@ -268,14 +269,14 @@ public class ServicioUjaPack {
 * Algoritmo que encuentra la ruta mas corta recorriendo un grafo establecido por las conexiones de cada centro logístico.
 * @param origen Identificador del ponto de control de donde saldría el paquete.
 * @param destino Identificador del punto de control a donde llegaría el paquete
-* @param conexiones ArrayList que tiene las conexiones del punto de control.
+* @param conexiones List que tiene las conexiones del punto de control.
      */
-    private ArrayList<PuntoDeControl> busquedaAnchura(Integer origen, int destino, ArrayList<Integer> conexiones) {
+    private List<PuntoDeControl> busquedaAnchura(Integer origen, int destino, List<Integer> conexiones) {
         boolean[] visitados = new boolean[11];
         boolean[] conexionesVisitadas = new boolean[11];
-        ArrayList<Nodo> arrayBusquedaNodos = new ArrayList<Nodo>();
-        ArrayList<Integer> arrayBusquedaIds = new ArrayList<Integer>();
-        ArrayList<Integer> rutaDefinitiva = new ArrayList<Integer>();
+        List<Nodo> arrayBusquedaNodos = new ArrayList<Nodo>();
+        List<Integer> arrayBusquedaIds = new ArrayList<Integer>();
+        List<Integer> rutaDefinitiva = new ArrayList<Integer>();
 
         int origenCentroLogistico = repositorioPuntoDeControl.BuscaIdProvinciaCL(origen);
         int destinoCentroLogistico = repositorioPuntoDeControl.BuscaIdProvinciaCL(destino);
@@ -294,14 +295,14 @@ public class ServicioUjaPack {
             return rutaString(rutaDefinitiva);
         }
         arrayBusquedaNodos.add(primero);
-        ArrayList<Integer> conexionesWhile = new ArrayList<Integer>();
-        ArrayList<Integer> copiaPrimero = new ArrayList<Integer>();
+        List<Integer> conexionesWhile = new ArrayList<Integer>();
+        List<Integer> copiaPrimero = new ArrayList<Integer>();
         while (contador != 10) { //!arrayBusqueda.contains(destino)
             primero = arrayBusquedaNodos.get(contador);
             conexionesWhile = arrayBusquedaNodos.get(contador).conexionesId;
             for (int i = 0; i < conexionesWhile.size(); i++) {
                 if (!visitados[contador]) {
-                    ArrayList<Integer> auxiliarNo = arrayBusquedaNodos.get(contador).getConexionesId();
+                    List<Integer> auxiliarNo = arrayBusquedaNodos.get(contador).getConexionesId();
 
                     copiaPrimero = primero.lista;
                     Nodo n = nodoConexiones(copiaPrimero, auxiliarNo.get(i), conexionesVisitadas);
@@ -335,11 +336,11 @@ public class ServicioUjaPack {
 * @param idProvinciaRem Identificador de la provincia donde se encuentra el remitente.
 * @param idProvinciaDest Identificador de la provincia del destinatario.
      */
-    public ArrayList<PuntoDeControl> calcularRutaPaquete(String localidadRem, String localidadDes, int idProvinciaRem, int idProvinciaDest) {
-        ArrayList<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
+    public List<PuntoDeControl> calcularRutaPaquete(String localidadRem, String localidadDes, int idProvinciaRem, int idProvinciaDest) {
+        List<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
         if (idProvinciaRem != 0 && idProvinciaDest != 0) {
             int jola = repositorioPuntoDeControl.BuscaIdProvinciaCL(idProvinciaRem);
-            ArrayList<Integer> conexion = new ArrayList<Integer>();
+            List<Integer> conexion = new ArrayList<Integer>();
             conexion.add(2);
             conexion.add(3);
 

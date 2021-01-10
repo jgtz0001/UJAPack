@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,8 +70,8 @@ public class ServicioJson {
     private void leerJson() throws IOException {
         String jsonStr = Files.readString(new File("redujapack.json").toPath());
         JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
-        ArrayList<CompletarPuntosDeControl> ARellenar = new ArrayList<CompletarPuntosDeControl>();
-        ArrayList<CentroDeLogistica> centrosBD = new ArrayList<CentroDeLogistica>();
+        List<CompletarPuntosDeControl> ARellenar = new ArrayList<CompletarPuntosDeControl>();
+        List<CentroDeLogistica> centrosBD = new ArrayList<CentroDeLogistica>();
         for (int i = 1; i <= raiz.size(); i++) {
             JsonObject centro1 = raiz.getAsJsonObject(String.valueOf(i));
             int id = i;
@@ -79,8 +81,8 @@ public class ServicioJson {
             JsonArray provincias = centro1.getAsJsonArray("provincias");
             JsonArray conexiones = centro1.getAsJsonArray("conexiones");
 
-            ArrayList<String> listdata = new ArrayList<String>();
-            ArrayList listdata2 = new ArrayList();
+            List<String> listdata = new ArrayList<String>();;
+            List<Integer> listdata2 = new ArrayList<Integer>();;
             for (int j = 0; j < provincias.size(); j++) {
                 listdata.add(provincias.get(j).getAsString());
             }
@@ -107,7 +109,7 @@ public class ServicioJson {
 
         int id = 11;
         for (int i = 0; i < ARellenar.size(); i++) {
-            ArrayList<String> provinciasAIncluir = ARellenar.get(i).getProvincias();
+            List<String> provinciasAIncluir = ARellenar.get(i).getProvincias();
             for (int j = 0; j < provinciasAIncluir.size(); j++) {
                 if (!provinciasAIncluir.get(j).equals(ARellenar.get(i).getNombrePadre())) {
                     Oficina OF = new Oficina (id,("Calle " + provinciasAIncluir.get(j)), provinciasAIncluir.get(j));
@@ -123,9 +125,9 @@ public class ServicioJson {
 
         private int idPadre;
         private String NombrePadre;
-        private ArrayList<String> provincias;
+        private List<String> provincias;
 
-        public CompletarPuntosDeControl(int idPadre, ArrayList<String> provincias, String NombrePadre) {
+        public CompletarPuntosDeControl(int idPadre, List<String> provincias, String NombrePadre) {
             this.idPadre = idPadre;
             this.provincias = provincias;
             this.NombrePadre = NombrePadre;
@@ -141,7 +143,7 @@ public class ServicioJson {
         /**
          * @return the provincias
          */
-        public ArrayList<String> getProvincias() {
+        public List<String> getProvincias() {
             return provincias;
         }
 
