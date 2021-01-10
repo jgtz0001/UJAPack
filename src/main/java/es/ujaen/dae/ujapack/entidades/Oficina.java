@@ -22,11 +22,13 @@ public class Oficina extends PuntoDeControl implements Serializable {
     @ManyToMany
     List<CentroDeLogistica> listaLogistica;
 
-    Oficina(int id, String nombre, String localizacion, ArrayList<Integer> conexiones) {
+   public  Oficina(int id, String nombre, String localizacion) {
         super(id, nombre, localizacion);
+        this.nombre = nombre;
+        this.localizacion = localizacion;
     }
 
-    Oficina() {
+    public Oficina() {
     }
-
-}
+  }
+  

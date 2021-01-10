@@ -9,9 +9,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
+import es.ujaen.dae.ujapack.entidades.Oficina;
 import es.ujaen.dae.ujapack.entidades.PuntoDeControl;
 import es.ujaen.dae.ujapack.repositorios.RepositorioCentroDeLogistica;
 import es.ujaen.dae.ujapack.repositorios.RepositorioCliente;
+import es.ujaen.dae.ujapack.repositorios.RepositorioOficina;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPaquete;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPuntoDeControl;
 import java.io.File;
@@ -43,6 +45,9 @@ public class ServicioJson {
 
     @Autowired
     RepositorioPaquete repositorioPaquete;
+    
+     @Autowired
+    RepositorioOficina repositorioOficina;
     
     
     public ServicioJson (){
@@ -88,6 +93,9 @@ public class ServicioJson {
             }
             PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, id);
             repositorioPuntoDeControl.guardar(punto);
+            
+            Oficina OF = new Oficina (id,nombre,localizacion);
+            repositorioOficina.guardar(OF);
 
             CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
             centrosBD.add(centroNuevo);
@@ -102,8 +110,10 @@ public class ServicioJson {
             ArrayList<String> provinciasAIncluir = ARellenar.get(i).getProvincias();
             for (int j = 0; j < provinciasAIncluir.size(); j++) {
                 if (!provinciasAIncluir.get(j).equals(ARellenar.get(i).getNombrePadre())) {
+                    Oficina OF = new Oficina (id,("Calle " + provinciasAIncluir.get(j)), provinciasAIncluir.get(j));
                     PuntoDeControl punto = new PuntoDeControl(id, ("Calle " + provinciasAIncluir.get(j)), provinciasAIncluir.get(j), ARellenar.get(i).getIdPadre());
                     repositorioPuntoDeControl.guardar(punto);
+                    repositorioOficina.guardar(OF);
                     id++;
                 }
             }
