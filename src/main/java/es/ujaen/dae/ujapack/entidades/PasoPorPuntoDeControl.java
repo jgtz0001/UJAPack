@@ -7,8 +7,10 @@ package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,7 +31,7 @@ public class PasoPorPuntoDeControl implements Serializable {
     @Column(name = "id")
     private int id;
 // @NotBlank
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     //@JoinColumn(name = "paso_control")
     public PuntoDeControl pasoControl;
     @PastOrPresent

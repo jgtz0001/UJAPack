@@ -27,7 +27,10 @@ public class LimpiadoBaseDeDatos {
     /**
      * Lista de entidades a borrar.
      */
-    final String[] entidades = {
+    final String[] tablas = {
+        "centro_de_logistica_conexiones",
+        "centro_de_logistica_provincia",
+        "centro_de_logistica",
         "CentroDeLogistica",
         "Cliente",
         "Oficina",
@@ -42,7 +45,7 @@ public class LimpiadoBaseDeDatos {
     /** Realizar borrado */
     public void limpiar() {
         transactionTemplate.executeWithoutResult(transactionStatus -> {
-            for (String tabla : entidades) {
+            for (String tabla : tablas) {
                 em.createQuery(deleteFrom + tabla).executeUpdate();
             }
         });
