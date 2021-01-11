@@ -87,5 +87,9 @@ public class DTOPaquete {
     public Paquete aPaquete() {
         return new Paquete(localizador, importe, peso, altura);
     }
+    
+    public Paquete bPaquete() {
+        return new Paquete(localizador, importe, peso, altura,ruta);
+    }
 
 }

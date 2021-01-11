@@ -5,7 +5,6 @@
  */
 package es.ujaen.dae.ujapack.seguridad;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -34,11 +33,9 @@ public class ServicioSeguridadUjaPack extends WebSecurityConfigurerAdapter{
         httpSecurity.httpBasic();
         
         httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/").permitAll();
-//        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/paquetes/").hasRole("ADMIN");
-//        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/paquetes/**").hasRole("ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/paquetes/").hasRole("ADMIN");
         httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/clientes/").hasRole("ADMIN");
-        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/clientes/**").hasRole("ADMIN");
-        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/paquetes/**").hasRole("ADMIN");
-        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/puntoscontrol/**").hasAnyRole("USUARIO", "ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/clientes/**").hasAnyRole("USUARIO","ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/paquetes/**").hasAnyRole("USUARIO","ADMIN");
     }
 }

@@ -28,9 +28,6 @@ public class LimpiadoBaseDeDatos {
      * Lista de entidades a borrar.
      */
     final String[] tablas = {
-        "centro_de_logistica_conexiones",
-        "centro_de_logistica_provincia",
-        "centro_de_logistica",
         "CentroDeLogistica",
         "Cliente",
         "Oficina",

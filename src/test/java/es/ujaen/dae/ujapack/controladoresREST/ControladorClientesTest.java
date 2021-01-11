@@ -64,8 +64,7 @@ public class ControladorClientesTest {
 //                "jenarogmail.com",
 //                "Calle La Calle 13",
 //                "Jamilena",
-//                "Jaén",                
-//                "clave");
+//                "Jaén");
 //
 //        ResponseEntity<DTOCliente> respuesta = restTemplate.postForEntity(
 //                "/clientes",
@@ -81,8 +80,8 @@ public class ControladorClientesTest {
 //
 //    }
 
-    @BeforeEach
-    void limpiadoBaseDeDatos() {
-        limpiadoBaseDeDatos.limpiar();
-    }
+//    @BeforeEach
+//    void limpiadoBaseDeDatos() {
+//        limpiadoBaseDeDatos.limpiar();
+//    }
 }

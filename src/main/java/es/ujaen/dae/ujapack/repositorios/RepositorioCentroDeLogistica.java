@@ -30,7 +30,6 @@ public class RepositorioCentroDeLogistica {
         return em.find(CentroDeLogistica.class, id);
     }
 
-    @Transactional
     public void guardar(CentroDeLogistica centroDeLogistica) {
         em.persist(centroDeLogistica);
     }
@@ -42,7 +41,6 @@ public class RepositorioCentroDeLogistica {
         List<Integer> h = new ArrayList();
         h = puntos.get(0).getConexiones();
         return h;
-//        return puntos.get(0).getConexiones();
     }
 
 }

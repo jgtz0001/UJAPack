@@ -6,6 +6,7 @@
 package es.ujaen.dae.ujapack.repositorios;
 
 import es.ujaen.dae.ujapack.entidades.Paquete;
+import es.ujaen.dae.ujapack.entidades.PuntoDeControl;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
@@ -25,7 +26,7 @@ public class RepositorioPaquete {
     @PersistenceContext
     EntityManager em;
 
-    @Transactional//(propagation = Propagation.SUPPORTS, readOnly = true)
+    @Transactional
     public Paquete buscar(int localizador) {
         return em.find(Paquete.class, localizador);
     }
@@ -33,6 +34,13 @@ public class RepositorioPaquete {
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Optional<Paquete> buscarPaquetes(int localizador) {
         return Optional.ofNullable(em.find(Paquete.class, localizador));
+    }
+    
+    
+    public List<PuntoDeControl> buscarRutaPaquetes(int localizador) {
+        Paquete paquete = em.createQuery("select h from Paquete h WHERE h.ruta = '" + localizador + "'",
+            Paquete.class).getSingleResult();
+        return paquete.getRuta();
     }
 
     public void guardar(Paquete paquete) {
@@ -43,5 +51,7 @@ public class RepositorioPaquete {
     public void actualizarPaquete(Paquete paquete) {
         em.merge(paquete);
     }
+    
+    
 
 }

@@ -28,7 +28,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Validated
@@ -73,7 +72,6 @@ public class ServicioUjaPack {
     public ServicioUjaPack() {
     }
 
-    
     private boolean buscaPorDni(String dni) {
         return repositorioClientes.buscar(dni).isPresent();
     }
@@ -186,7 +184,6 @@ public class ServicioUjaPack {
 * @param punto Punto de control al que llega el paquete.
 * @return cadena de caracteres informando al cliente.
      */
-    //hay que actualizar 
     public String notificarEntrada(int localizador, LocalDateTime fechaEntrada, PuntoDeControl punto) {
         Paquete p = repositorioPaquete.buscar(localizador);
         if (p == null) {
@@ -276,7 +273,7 @@ public class ServicioUjaPack {
         arrayBusquedaNodos.add(primero);
         List<Integer> conexionesWhile = new ArrayList<Integer>();
         List<Integer> copiaPrimero = new ArrayList<Integer>();
-        while (contador != 10) { //!arrayBusqueda.contains(destino)
+        while (contador != 10) {
             primero = arrayBusquedaNodos.get(contador);
             conexionesWhile = arrayBusquedaNodos.get(contador).conexionesId;
             for (int i = 0; i < conexionesWhile.size(); i++) {
@@ -294,7 +291,6 @@ public class ServicioUjaPack {
                             arrayBusquedaNodos.add(n);
                         }
                         if (n.lista.contains(destinoCentroLogistico)) {
-                            //completar ruta
                             completaRuta(n.lista, origen, destino);
                             return rutaString(n.lista);
                         }
@@ -309,10 +305,10 @@ public class ServicioUjaPack {
 
     public List<PuntoDeControl> calcularRutaPaquete(String localidadRem, String localidadDes, int idProvinciaRem, int idProvinciaDest) {
         List<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
-        int n=repositorioPuntoDeControl.BuscaIdProvinciaCL(idProvinciaRem);
+        int n = repositorioPuntoDeControl.BuscaIdProvinciaCL(idProvinciaRem);
         CentroDeLogistica c = repositorioCentroDeLogistica.buscarPorId(n);
         List<Integer> conexiones = new ArrayList<Integer>();
-        
+
         if (idProvinciaRem != 0 && idProvinciaDest != 0) {
             conexiones = repositorioCentroDeLogistica.BuscaIdCL(n);
             ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, conexiones);
@@ -323,38 +319,30 @@ public class ServicioUjaPack {
     public Optional<Cliente> verCliente(@NotBlank String dni) {
         Optional<Cliente> clienteLogin = repositorioClientes.buscar(dni);
 
-        // Asegurarnos de que se devuelve el cliente con los datos precargados
         clienteLogin.ifPresent(c -> c.verDatos().size());
         return clienteLogin;
     }
 
-    public Paquete verPaquetes(@NotBlank Integer localizador) {
-        Paquete paquete = repositorioPaquete.buscarPaquetes(localizador).orElseThrow(LocalizadorNoValido::new);
-
-        return paquete;
+    public Optional<Paquete> verPaquetes(@NotBlank Integer localizador) {
+        return repositorioPaquete.buscarPaquetes(localizador);
     }
 
     /**
      * Dar de alta cliente y crear una cuenta asociada
      *
      * @param cliente el cliente a dar de alta
-     * @return el paquete asociado al cliente
      */
-    public Cliente altaCliente(@NotNull @Valid Cliente cliente) {
+    public void altaCliente(@NotNull @Valid Cliente cliente) {
         if (repositorioClientes.buscar(cliente.getDni()).isPresent()) {
             throw new DNINoValido();
         }
         repositorioClientes.guardar(cliente);
-
-        return cliente;
     }
 
     public Paquete altaPaquete(@NotNull Paquete paquete, @NotNull @Valid Cliente remitente, @NotNull @Valid Cliente destinatario) {
         if (!repositorioPaquete.buscarPaquetes(paquete.getLocalizador()).isPresent()) {
             throw new LocalizadorNoValido();
         }
-
-        // Crear y registrar paquete
         Paquete paquet = altaEnvio(1, 1, 1, remitente, destinatario);
         repositorioPaquete.guardar(paquete);
 
@@ -367,4 +355,13 @@ public class ServicioUjaPack {
         }
         return repositorioPaquete.buscar(localizador);
     }
+
+    public List<PuntoDeControl> buscarRutaPaquete(int localizador) {
+        List<PuntoDeControl> l = repositorioPaquete.buscarRutaPaquetes(localizador);
+        if (l == null) {
+            throw new LocalizadorNoExiste();
+        }
+        return l;
+    }
+
 }

@@ -13,7 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -97,14 +96,11 @@ public class Cliente implements Serializable {
         return direccion;
     }
 
-    
-
-    
 
     /**
      * Devolver paquetes del usuario
      *
-     * @return la lista de cuentas
+     * @return la lista de paquetes
      */
     public List<Paquete> verDatos() {
         return Collections.unmodifiableList(PaquetesRemitente);
