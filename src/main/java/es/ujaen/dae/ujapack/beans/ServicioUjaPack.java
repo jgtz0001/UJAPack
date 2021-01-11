@@ -320,7 +320,6 @@ public class ServicioUjaPack {
         return ruta;
     }
 
-    @Transactional
     public Optional<Cliente> verCliente(@NotBlank String dni) {
         Optional<Cliente> clienteLogin = repositorioClientes.buscar(dni);
 
@@ -329,11 +328,9 @@ public class ServicioUjaPack {
         return clienteLogin;
     }
 
-    @Transactional
-    public Optional<Paquete> verPaquetes(@NotBlank Integer localizador) {
-        Optional<Paquete> paquete = repositorioPaquete.buscarPaquetes(localizador);//.orElseThrow(LocalizadorNoValido::new);
+    public Paquete verPaquetes(@NotBlank Integer localizador) {
+        Paquete paquete = repositorioPaquete.buscarPaquetes(localizador).orElseThrow(LocalizadorNoValido::new);
 
-//        paquete.ifPresent(p -> p.);
         return paquete;
     }
 

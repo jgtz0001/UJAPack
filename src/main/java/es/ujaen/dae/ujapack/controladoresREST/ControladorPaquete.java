@@ -12,6 +12,7 @@ import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPaquete;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Paquete;
 import es.ujaen.dae.ujapack.excepciones.ClienteNoRegistrado;
+import es.ujaen.dae.ujapack.excepciones.LocalizadorNoValido;
 import es.ujaen.dae.ujapack.excepciones.PaqueteNoRegistrado;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
@@ -52,6 +53,11 @@ public class ControladorPaquete {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handlerPaqueteNoRegistrado(PaqueteNoRegistrado e) {
     }
+    
+        @ExceptionHandler(ClienteNoRegistrado.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handlerPaqueteNoRegistrado(LocalizadorNoValido e) {
+    }
 
 //pasar atributos de paquete
     @PostMapping("/paquetes")
@@ -73,22 +79,12 @@ public class ControladorPaquete {
     
     @GetMapping("/paquetes/{localizador}")
     @ResponseStatus(HttpStatus.OK)
-    ResponseEntity<DTOPaquete> verPaquete(@PathVariable int localizador) {
-        Optional<Paquete> paquete = serviPack.verPaquetes(localizador);
-        return paquete
-                .map(p -> ResponseEntity.ok(new DTOPaquete(p)))
-                .orElse(ResponseEntity.notFound().build());
-        //return new DTOPaquete(serviPack.buscarPaquete(localizador));
+    public DTOPaquete verPaquete(@PathVariable String localizador) {
+        try{
+            return new DTOPaquete(serviPack.verPaquetes(Integer.parseInt(localizador)));
+        }catch(LocalizadorNoValido exception){
+            throw new LocalizadorNoValido();
+        }
     }
     
-//        @GetMapping("/clientes/{dni}")
-//    ResponseEntity<DTOCliente> verCliente(@PathVariable String dni) {
-//        Optional<Cliente> cliente = serviPack.verCliente(dni);
-//        return cliente
-//                .map(c -> ResponseEntity.ok(new DTOCliente(c)))
-//                .orElse(ResponseEntity.notFound().build());
-//    }
-    
-    
-
 }

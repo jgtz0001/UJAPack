@@ -31,19 +31,6 @@ public class RepositorioPaquete {
     }
 
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Optional<Paquete> buscarPaqueteN(int localizador) {
-        return Optional.ofNullable(em.find(Paquete.class, localizador));
-    }
-    
-    
-//       @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-//    public Paquete buscarPaqueteN(int localizador) {
-//        List<Paquete> paquete = em.createQuery("select h from Paquete h WHERE h.localizador = '" + localizador + "'",
-//                Paquete.class).getResultList();
-//        return paquete.get(0);
-//    }
-
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Optional<Paquete> buscarPaquetes(int localizador) {
         return Optional.ofNullable(em.find(Paquete.class, localizador));
     }
