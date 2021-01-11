@@ -50,16 +50,14 @@ public class Paquete implements Serializable {
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "pasanPaquetes")
     private List<PasoPorPuntoDeControl> pasanPaquetes;
-//    @OneToMany(mappedBy = "pasoControl", cascade = {CascadeType.ALL})
-//    private List<PasoPorPuntoDeControl> pasanPaquetes;
     @OneToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<PuntoDeControl> ruta;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     private Cliente remitente;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     private Cliente destinatario;
 
     public enum Estado {
@@ -73,7 +71,14 @@ public class Paquete implements Serializable {
 
     }
 
-    public Paquete(int localizador, float importe, float peso, float altura, ArrayList<PuntoDeControl> ruta, Cliente remitente, Cliente destinatario) {
+    public Paquete(int localizador, float importe, float peso, float altura) {
+        this.localizador = localizador;
+        this.importe = importe;
+        this.peso = peso;
+        this.altura = altura;
+    }
+
+    public Paquete(int localizador, float importe, float peso, float altura, List<PuntoDeControl> ruta, Cliente remitente, Cliente destinatario) {
         this.localizador = localizador;
         this.numPuntosControl = ruta.size();
         this.estado = estado.EnTransito;
@@ -81,8 +86,8 @@ public class Paquete implements Serializable {
         this.peso = peso;
         this.altura = altura;
         this.ruta = ruta;
-//        this.remitente = remitente;
-//        this.destinatario = destinatario;
+        this.remitente = remitente;
+        this.destinatario = destinatario;
         this.pasanPaquetes = new ArrayList<PasoPorPuntoDeControl>();
 
         PasoPorPuntoDeControl primero = new PasoPorPuntoDeControl(ruta.get(0), LocalDateTime.now());
@@ -99,12 +104,12 @@ public class Paquete implements Serializable {
             }
         }
         if (!esta) {
-            throw new PuntoDeControlEquivocado(); // El punto de control no correspondería con la ruta.
+            throw new PuntoDeControlEquivocado(); 
         }
 
         if (!tama.equals(numPuntosControl)) {
             if (!ruta.get(pasanPaquetes.size()).localizacion.equals(punto.localizacion)) {
-                throw new PuntoDeControlEquivocado(); // El punto de control no correspondería con la ruta.
+                throw new PuntoDeControlEquivocado(); 
             }
         }
 
@@ -112,7 +117,7 @@ public class Paquete implements Serializable {
 
     void controlaExcepcionesEntrada(PuntoDeControl punto) {
         for (int i = 0; i < pasanPaquetes.size(); i++) {
-            if (pasanPaquetes.get(i).pasoControl.localizacion.equals(punto.localizacion))//Aquí encontraria un punto de control repetido, por lo que no valdría.
+            if (pasanPaquetes.get(i).pasoControl.localizacion.equals(punto.localizacion))
             {
                 throw new PuntoDeControlEquivocado();
             }
@@ -125,11 +130,11 @@ public class Paquete implements Serializable {
             }
         }
         if (!esta) {
-            throw new PuntoDeControlEquivocado(); // El punto de control no correspondería con la ruta.
+            throw new PuntoDeControlEquivocado(); 
         }
 
         if (!ruta.get(pasanPaquetes.size()).localizacion.equals(punto.localizacion)) {
-            throw new PuntoDeControlEquivocado(); // El punto de control proporcionado esta adelantado con la ruta.
+            throw new PuntoDeControlEquivocado(); 
         }
     }
 
@@ -141,7 +146,7 @@ public class Paquete implements Serializable {
     }
 
     public void notificaSalida(LocalDateTime fechaSalida, PuntoDeControl punto) {
-        controlaExcepcionesSalida(punto); // Con esto te aseguras de que el punto de control es el correcto.
+        controlaExcepcionesSalida(punto); 
         Integer tama = pasanPaquetes.size();
 
         if (tama.equals(numPuntosControl)) {
@@ -153,9 +158,6 @@ public class Paquete implements Serializable {
             if (tama.equals(numPuntosControl - 1)) {
                 estado = estado.EnReparto;
             }
-// if (this.pasanPaquetes.get(tama - 1).getFechaLlegada().isAfter(fechaSalida)) {
-// throw new FechaIncorrecta();
-// }
             this.pasanPaquetes.get(tama - 1).setFechaLlegada(fechaSalida);
         }
     }
@@ -204,7 +206,6 @@ public class Paquete implements Serializable {
      */
     public void setRuta(List<PuntoDeControl> ruta) {
         this.ruta = ruta;
-//this.numPuntosControl = ruta.size();
     }
 
     /**
@@ -212,6 +213,22 @@ public class Paquete implements Serializable {
      */
     public int getLocalizador() {
         return localizador;
+    }
+
+    public float getImporte() {
+        return importe;
+    }
+
+    public float getPeso() {
+        return peso;
+    }
+
+    public float getAltura() {
+        return altura;
+    }
+
+    public Cliente getDestinatario() {
+        return destinatario;
     }
 
 }

@@ -27,18 +27,16 @@ public class PuntoDeControl implements Serializable {
     @NotBlank
     String localizacion;
     private int idCL;
-  
 
     public PuntoDeControl() {
     }
 
-    public PuntoDeControl(int id, String nombre,String localizacion, int idCL) {
+    public PuntoDeControl(int id, String nombre, String localizacion, int idCL) {
         this.id = id;
         this.nombre = nombre;
         this.localizacion = localizacion;
         this.idCL = idCL;
-                
-        
+
     }
 
     public PuntoDeControl(int id, String nombre, String localizacion) {
@@ -46,13 +44,6 @@ public class PuntoDeControl implements Serializable {
         this.nombre = nombre;
         this.localizacion = localizacion;
     }
-
-//    public PuntoDeControl(int id, String nombre, String localizacion, ArrayList<String> provincia) {
-//        this.id = id;
-//        this.nombre = nombre;
-//        this.localizacion = localizacion;
-//        this.provincia = provincia;
-//    }
 
     /**
      * @return the id

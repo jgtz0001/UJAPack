@@ -21,7 +21,7 @@ import javax.validation.constraints.Size;
 @Entity
 public class Cliente implements Serializable {
 
-    @Id
+     @Id
     @Size(min = 8, max = 8)
     private String dni;
     @NotBlank
@@ -37,12 +37,13 @@ public class Cliente implements Serializable {
     private String localidad;
     @NotBlank
     private String provincia;
-    
-    @OneToMany(mappedBy="remitente")
+
+    @OneToMany(mappedBy = "remitente")
     List<Paquete> PaquetesRemitente;
-    
-    @OneToMany(mappedBy="destinatario")
+
+    @OneToMany(mappedBy = "destinatario")
     List<Paquete> PaquetesDestinatario;
+
 
     public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia) {
         this.dni = dni;

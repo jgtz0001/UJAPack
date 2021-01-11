@@ -9,12 +9,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 
 /**
@@ -25,18 +24,19 @@ import javax.validation.constraints.PastOrPresent;
 public class PasoPorPuntoDeControl implements Serializable {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-//    @NotBlank
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.EAGER)
     public PuntoDeControl pasoControl;
     @PastOrPresent
     private LocalDateTime fechaLlegada;
     @PastOrPresent
     private LocalDateTime fechaSalida;
 
-    public PasoPorPuntoDeControl(){}
+    public PasoPorPuntoDeControl() {
+    }
 
     public PasoPorPuntoDeControl(PuntoDeControl p, LocalDateTime fechaEntrada) {
         fechaLlegada = fechaEntrada;
