@@ -6,16 +6,12 @@
 package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -23,34 +19,33 @@ import javax.validation.constraints.NotBlank;
  * @author Pablo
  */
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class PuntoDeControl implements Serializable {
 
     @Id
-    @Max(10)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotBlank
     String nombre;
     @NotBlank
     String localizacion;
-    @NotBlank
-    ArrayList<String> provincia;
+    private int idCL;
 
     public PuntoDeControl() {
     }
 
-    public PuntoDeControl(int id, String nombre) {
-        this.id = id;
-        this.nombre = nombre;
-        this.localizacion = nombre;
-        this.provincia = null;
-    }
-
-    public PuntoDeControl(int id, String nombre, String localizacion, ArrayList<String> provincia) {
+    public PuntoDeControl(int id, String nombre, String localizacion, int idCL) {
         this.id = id;
         this.nombre = nombre;
         this.localizacion = localizacion;
-        this.provincia = provincia;
+        this.idCL = idCL;
+
+    }
+
+    public PuntoDeControl(int id, String nombre, String localizacion) {
+        this.id = id;
+        this.nombre = nombre;
+        this.localizacion = localizacion;
     }
 
     /**
@@ -68,16 +63,16 @@ public class PuntoDeControl implements Serializable {
     }
 
     /**
-     * @return the provincia
-     */
-    public ArrayList<String> getProvincia() {
-        return provincia;
-    }
-
-    /**
      * @return the localizacion
      */
     public String getLocalizacion() {
         return localizacion;
+    }
+
+    /**
+     * @return the idCL
+     */
+    public int getIdCL() {
+        return idCL;
     }
 }

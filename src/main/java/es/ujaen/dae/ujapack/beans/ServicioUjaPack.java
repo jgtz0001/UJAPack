@@ -8,32 +8,25 @@ package es.ujaen.dae.ujapack.beans;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Paquete;
 import es.ujaen.dae.ujapack.entidades.PuntoDeControl;
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import java.util.List;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
-import es.ujaen.dae.ujapack.excepciones.DNINoEncontrado;
 import es.ujaen.dae.ujapack.excepciones.DNINoValido;
 import es.ujaen.dae.ujapack.excepciones.IdIncorrecto;
-import java.io.File;
-import java.nio.file.Files;
 import java.util.Collections;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import es.ujaen.dae.ujapack.excepciones.LocalizadorNoExiste;
+import es.ujaen.dae.ujapack.excepciones.LocalizadorNoValido;
 import es.ujaen.dae.ujapack.repositorios.RepositorioCliente;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPuntoDeControl;
 import es.ujaen.dae.ujapack.repositorios.RepositorioCentroDeLogistica;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPaquete;
-import java.util.Iterator;
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
+import java.util.ArrayList;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,61 +35,47 @@ import org.springframework.transaction.annotation.Transactional;
 public class ServicioUjaPack {
 
     @Autowired
-    RepositorioCliente RepositorioClientes;
+    RepositorioCliente repositorioClientes;
 
     @Autowired
-    RepositorioPuntoDeControl RepositorioPuntoDeControl;
+    RepositorioPuntoDeControl repositorioPuntoDeControl;
 
     @Autowired
-    RepositorioCentroDeLogistica RepositorioCentroDeLogistica;
+    RepositorioCentroDeLogistica repositorioCentroDeLogistica;
 
     @Autowired
-    RepositorioPaquete RepositorioPaquete;
+    RepositorioPaquete repositorioPaquete;
 
     class Nodo {
 
-        Integer id;
-        private ArrayList<Integer> lista;
-        ArrayList<Integer> conexionesId;
+        int id;
+        private List<Integer> lista;
+        List<Integer> conexionesId;
 
-        Nodo(Integer _id, ArrayList<Integer> conexiones) {
+        Nodo(int _id, List<Integer> conexiones) {
             this.id = _id;
             lista = new ArrayList<Integer>();
             lista.add(_id);
             conexionesId = conexiones;
         }
 
-        public ArrayList<Integer> getConexionesId() {
+        public List<Integer> getConexionesId() {
             return conexionesId;
         }
     }
 
-    private final HashMap<Integer, PuntoDeControl> puntosDeControl;
-    private final HashMap<Integer, Paquete> paquetes;
-    private final HashMap<Integer, Cliente> clientes;
     private static final long LIMIT = 10000000000L;
     private static long last = 0;
-    private final HashMap<Integer, CentroDeLogistica> centros;
 
     /*
 * Constructor de la clase.
      */
     public ServicioUjaPack() {
-        puntosDeControl = new HashMap<Integer, PuntoDeControl>();
-        paquetes = new HashMap<Integer, Paquete>();
-        clientes = new HashMap<Integer, Cliente>();
-        centros = new HashMap<Integer, CentroDeLogistica>();
-        try {
-            leerJson();
-        } catch (IOException ex) {
-            System.out.println(ex.toString());
-        }
-
     }
 
-    @Transactional(readOnly = true)
+    
     private boolean buscaPorDni(String dni) {
-        return RepositorioClientes.buscar(dni).isPresent();
+        return repositorioClientes.buscar(dni).isPresent();
     }
 
     /*
@@ -104,19 +83,14 @@ public class ServicioUjaPack {
 * @return el id localizador.
      */
     public static long getID() {
-        long id = System.currentTimeMillis() % LIMIT;
-        if (id <= last) {
-            id = (last + 1) % LIMIT;
-        }
-        return last = id;
-    }
+        int localizador = 0;
+        Long min = 1000000000L;
+        Long max = 9999999999L;
 
-    public void altaCliente(Cliente cliente) {
-
-        if (RepositorioClientes.buscar(cliente.getDni()).isPresent()) {
-            throw new IllegalArgumentException("El cliente ya existe");
-        }
-        RepositorioClientes.guardar(cliente);
+        do {
+            localizador = (int) Math.floor(Math.random() * (max - min + 1) + min);
+        } while (Integer.toString(localizador).length() != 10);
+        return localizador;
     }
 
     /*
@@ -129,49 +103,38 @@ public class ServicioUjaPack {
 + @return Devuelve el paquete.
      */
     public Paquete altaEnvio(float peso, float anchura, float altura, Cliente remitente, Cliente destinatario) {
-        if (buscaPorDni(destinatario.getDni()) == false) {
-            throw new DNINoValido();
-        }
 
-        Integer localizador = (int) getID();
-        while (RepositorioPaquete.buscarP(localizador).isPresent()) {
+        int localizador = (int) getID();
+        while (repositorioPaquete.buscarPaquetes(localizador).isPresent()) {
             localizador = (int) getID();
         }
 
-        Integer idProvinciaRem = obtenerId(remitente.getProvincia());
-        Integer idProvinciaDest = obtenerId(destinatario.getProvincia());
-        ArrayList<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
+        int idProvinciaRem = obtenerIdProvincia(remitente.getProvincia());
+        int idProvinciaDest = obtenerIdProvincia(destinatario.getProvincia());
+        List<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
         float costeEnvio = 0;
 
-        if (idProvinciaDest == 0 || idProvinciaRem == 0) {
-            throw new IdIncorrecto();
-        }
         ruta = calcularRutaPaquete(remitente.getLocalidad(), destinatario.getLocalidad(), idProvinciaRem, idProvinciaDest);
         costeEnvio = calcularImporte(ruta.size(), peso, altura, anchura);
 
-        ruta = completaRuta(ruta, remitente.getProvincia(), destinatario.getProvincia());
-
-        Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, ruta);
-        paquetes.put(localizador, paquet);
+        Paquete paquet = new Paquete(localizador, costeEnvio, peso, anchura, ruta, remitente, destinatario);
+        repositorioPaquete.guardar(paquet);
         return paquet;
     }
 
-    private ArrayList<PuntoDeControl> completaRuta(ArrayList<PuntoDeControl> ruta, String provinciaRem, String provinciaDest) {
-        Integer idRem = obtenerId(provinciaRem);
-        Integer idDest = obtenerId(provinciaDest);
-        PuntoDeControl puntoControlRem = new PuntoDeControl(idRem, provinciaRem);
-        PuntoDeControl puntoControlDest = new PuntoDeControl(idDest, provinciaDest);
+    private List<Integer> completaRuta(List<Integer> ruta, int idProvinciaRem, int idProvinciaDest) {
+        List<Integer> rutaDefinitiva = new ArrayList<Integer>();
 
-        ArrayList<PuntoDeControl> rutaDefinitiva = new ArrayList<PuntoDeControl>();
-        if (!ruta.get(0).getLocalizacion().equals(provinciaRem)) {
-            rutaDefinitiva.add(puntoControlRem);
+        if (!ruta.contains(idProvinciaRem)) {
+            rutaDefinitiva.add(idProvinciaRem);
         }
 
         for (int i = 0; i < ruta.size(); i++) {
             rutaDefinitiva.add(ruta.get(i));
         }
-        if (!ruta.get(ruta.size() - 1).getLocalizacion().equals(provinciaDest)) {
-            rutaDefinitiva.add(puntoControlDest);
+
+        if (!ruta.contains(idProvinciaDest)) {
+            rutaDefinitiva.add(idProvinciaDest);
         }
         return rutaDefinitiva;
     }
@@ -181,15 +144,8 @@ public class ServicioUjaPack {
 * @param provinica Provinica de la que tenemos que encontrar el id.
 * @return devuelve el id del centro donde se encuentra la provincia.
      */
-    private Integer obtenerId(String provincia) {
-        for (HashMap.Entry<Integer, CentroDeLogistica> entry : centros.entrySet()) {
-            Integer id = entry.getKey();
-            CentroDeLogistica value = entry.getValue();
-            if (value.getProvincia().contains(provincia)) {
-                return id;
-            }
-        }
-        return null;
+    private int obtenerIdProvincia(String provincia) {
+        return repositorioPuntoDeControl.BuscaIdProvincia(provincia);
     }
 
     /*
@@ -198,10 +154,11 @@ public class ServicioUjaPack {
 * @return devuelve un string con el estado del paquete.
      */
     public String verEstado(int localizador) {
-        if (!paquetes.containsKey(localizador)) {
+        Paquete p = repositorioPaquete.buscar(localizador);
+        if (p == null) {
             throw new LocalizadorNoExiste();
         }
-        return paquetes.get(localizador).getEstado().toString();
+        return p.getEstado();
     }
 
     /*
@@ -212,10 +169,12 @@ public class ServicioUjaPack {
 * @return cadena de caracteres informando al cliente.
      */
     public String notificarSalida(int localizador, LocalDateTime fechaSalida, PuntoDeControl punto) {
-        if (!paquetes.containsKey(localizador)) {
+        Paquete p = repositorioPaquete.buscar(localizador);
+        if (p == null) {
             throw new LocalizadorNoExiste();
         }
-        paquetes.get(localizador).notificaSalida(fechaSalida, punto);
+        p.notificaSalida(fechaSalida, punto);
+        repositorioPaquete.actualizarPaquete(p);
 
         return (fechaSalida + punto.getNombre());
     }
@@ -227,33 +186,15 @@ public class ServicioUjaPack {
 * @param punto Punto de control al que llega el paquete.
 * @return cadena de caracteres informando al cliente.
      */
+    //hay que actualizar 
     public String notificarEntrada(int localizador, LocalDateTime fechaEntrada, PuntoDeControl punto) {
-        if (!paquetes.containsKey(localizador)) {
+        Paquete p = repositorioPaquete.buscar(localizador);
+        if (p == null) {
             throw new LocalizadorNoExiste();
         }
-        paquetes.get(localizador).notificaEntrada(fechaEntrada, punto);
+        p.notificaEntrada(fechaEntrada, punto);
+        repositorioPaquete.actualizarPaquete(p);
         return (fechaEntrada + punto.getNombre());
-    }
-
-    /*
-* Funcion que devuelve todos los paquetes que ha enviado un cliente.
-* @param dni DNI del cliente.
-* @return devuelve la lista de paquetes que ha enviado el cliente.
-     */
-    private ArrayList<Paquete> listaPaquetes(String dni) {
-        ArrayList<Paquete> lista = new ArrayList();
-        if (dni.length() != 8) {
-            throw new DNINoValido();
-        }
-        if (clientes.containsKey(dni)) {
-            throw new DNINoEncontrado();
-        }
-        for (Paquete value : paquetes.values()) {
-            if (value.getRemitente().getDni().equals(dni)) {
-                lista.add(value);
-            }
-        }
-        return lista;
     }
 
     /*
@@ -270,72 +211,34 @@ public class ServicioUjaPack {
     }
 
     /*
-* Función que se encarga de leer un Json y añadir los datos a la base de datos.
-     */
-    @Transactional
-    private void leerJson() throws IOException {
-        String jsonStr = Files.readString(new File("redujapack.json").toPath());
-        JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
-
-        for (int i = 1; i <= raiz.size(); i++) {
-            JsonObject centro1 = raiz.getAsJsonObject(String.valueOf(i));
-            int id = i;
-            String nombre = centro1.get("nombre").getAsString();
-            String localizacion = centro1.get("localización").getAsString();
-
-            JsonArray provincias = centro1.getAsJsonArray("provincias");
-            JsonArray conexiones = centro1.getAsJsonArray("conexiones");
-
-            ArrayList<String> listdata = new ArrayList<String>();
-            ArrayList listdata2 = new ArrayList();
-            for (int j = 0; j < provincias.size(); j++) {
-                listdata.add(provincias.get(j).getAsString());
-            }
-            for (int j = 0; j < conexiones.size(); j++) {
-                listdata2.add(conexiones.get(j).getAsInt());
-            }
-            PuntoDeControl punto = new PuntoDeControl(id, nombre, localizacion, listdata);
-            RepositorioPuntoDeControl.guardar(punto);
-            //puntosDeControl.put(id, punto);
-
-            CentroDeLogistica centroNuevo = new CentroDeLogistica(id, nombre, localizacion, listdata, listdata2);
-            RepositorioCentroDeLogistica.guardar(centroNuevo);
-            //centros.put(id, centroNuevo);
-
-        }
-    }
-
-    /*
 * Crea los nodos con las conexiones que se le pasan (id).
 * @param lista Lista que contiene los ids por los que pasa el paquete antes de llegar a ese nodo.
 * @param id Id el cual se va a añadir al nodo si no esta visitado.
 * @param visitados Vector estático booleano que contiene los ya visitados para no meter repetidos.
 * @return devuelve un nodo con todos sus atributos completos.
      */
-    private Nodo nodoConexiones(ArrayList<Integer> lista, Integer id, boolean[] visitados) {
-        for (HashMap.Entry<Integer, CentroDeLogistica> entry : centros.entrySet()) {
-            Integer idMap = entry.getKey();
-            if (idMap.equals(id)) {
-                CentroDeLogistica value = entry.getValue();
-                Nodo n = new Nodo(id, value.getConexiones());
-                for (int j = 0; j < lista.size(); j++) {
-                    n.lista.add(lista.get(j));
-                }
-                return n;
-            }
+    private Nodo nodoConexiones(List<Integer> lista, int id, boolean[] visitados) {
+        CentroDeLogistica centro = repositorioCentroDeLogistica.buscarPorId(id);
+        if (centro == null) {
+            throw new IdIncorrecto();
         }
-        return null;
+        Nodo n = new Nodo(id, centro.getConexiones());
+        for (int j = 0; j < lista.size(); j++) {
+            n.lista.add(lista.get(j));
+        }
+        return n;
+
     }
 
     /*
 * Cambia el array de enteros a su respectivo nombre del centro logístico.
-* @param rutaEnIds ArrayList que contiene la ruta en ids.
+* @param rutaEnIds List que contiene la ruta en ids.
 * @return devuelve la ruta de los centros por los que pasa.
      */
-    private ArrayList<PuntoDeControl> rutaString(ArrayList<Integer> rutaEnIds) {
-        ArrayList<PuntoDeControl> rutaStr = new ArrayList<PuntoDeControl>();
+    private List<PuntoDeControl> rutaString(List<Integer> rutaEnIds) {
+        List<PuntoDeControl> rutaStr = new ArrayList<PuntoDeControl>();
         for (int i = 0; i < rutaEnIds.size(); i++) {
-            rutaStr.add(puntosDeControl.get(rutaEnIds.get(i)));
+            rutaStr.add(repositorioPuntoDeControl.getPuntoDeControl(rutaEnIds.get(i)));
         }
         Collections.reverse(rutaStr);
         return rutaStr;
@@ -345,34 +248,40 @@ public class ServicioUjaPack {
 * Algoritmo que encuentra la ruta mas corta recorriendo un grafo establecido por las conexiones de cada centro logístico.
 * @param origen Identificador del ponto de control de donde saldría el paquete.
 * @param destino Identificador del punto de control a donde llegaría el paquete
-* @param conexiones ArrayList que tiene las conexiones del punto de control.
+* @param conexiones List que tiene las conexiones del punto de control.
      */
-    private ArrayList<PuntoDeControl> busquedaAnchura(Integer origen, Integer destino, ArrayList<Integer> conexiones) {
+    private List<PuntoDeControl> busquedaAnchura(Integer origen, int destino, List<Integer> conexiones) {
         boolean[] visitados = new boolean[11];
         boolean[] conexionesVisitadas = new boolean[11];
-        ArrayList<Nodo> arrayBusquedaNodos = new ArrayList<Nodo>();
-        ArrayList<Integer> arrayBusquedaIds = new ArrayList<Integer>();
+        List<Nodo> arrayBusquedaNodos = new ArrayList<Nodo>();
+        List<Integer> arrayBusquedaIds = new ArrayList<Integer>();
+        List<Integer> rutaDefinitiva = new ArrayList<Integer>();
+
+        int origenCentroLogistico = repositorioPuntoDeControl.BuscaIdProvinciaCL(origen);
+        int destinoCentroLogistico = repositorioPuntoDeControl.BuscaIdProvinciaCL(destino);
 
         for (int i = 0; i < 10; i++) {
             visitados[i] = false;
             conexionesVisitadas[i] = false;
         }
 
-        Integer contador = 0;
+        int contador = 0;
 
-        Nodo primero = new Nodo(origen, conexiones);
-        if (origen.equals(destino)) {
-            return rutaString(primero.lista);
+        Nodo primero = new Nodo(origenCentroLogistico, conexiones);
+        if (origenCentroLogistico == destinoCentroLogistico) {
+            rutaDefinitiva.add(origenCentroLogistico);
+            rutaDefinitiva = completaRuta(rutaDefinitiva, origen, destino);
+            return rutaString(rutaDefinitiva);
         }
         arrayBusquedaNodos.add(primero);
-        ArrayList<Integer> conexionesWhile = new ArrayList<Integer>();
-        ArrayList<Integer> copiaPrimero = new ArrayList<Integer>();
+        List<Integer> conexionesWhile = new ArrayList<Integer>();
+        List<Integer> copiaPrimero = new ArrayList<Integer>();
         while (contador != 10) { //!arrayBusqueda.contains(destino)
             primero = arrayBusquedaNodos.get(contador);
             conexionesWhile = arrayBusquedaNodos.get(contador).conexionesId;
             for (int i = 0; i < conexionesWhile.size(); i++) {
-                if (!visitados[arrayBusquedaNodos.get(contador).id]) {
-                    ArrayList<Integer> auxiliarNo = arrayBusquedaNodos.get(contador).getConexionesId();
+                if (!visitados[contador]) {
+                    List<Integer> auxiliarNo = arrayBusquedaNodos.get(contador).getConexionesId();
 
                     copiaPrimero = primero.lista;
                     Nodo n = nodoConexiones(copiaPrimero, auxiliarNo.get(i), conexionesVisitadas);
@@ -384,7 +293,9 @@ public class ServicioUjaPack {
                             }
                             arrayBusquedaNodos.add(n);
                         }
-                        if (n.lista.contains(destino)) {
+                        if (n.lista.contains(destinoCentroLogistico)) {
+                            //completar ruta
+                            completaRuta(n.lista, origen, destino);
                             return rutaString(n.lista);
                         }
                     }
@@ -396,34 +307,64 @@ public class ServicioUjaPack {
         return null;
     }
 
-
-    /*
-* Calcula la ruta del paquete.
-* @param localidadRem Localidad del remitente.
-* @param localidadDes Localidad del destinatario.
-* @param idProvinciaRem Identificador de la provincia donde se encuentra el remitente.
-* @param idProvinciaDest Identificador de la provincia del destinatario.
-     */
-    public ArrayList<PuntoDeControl> calcularRutaPaquete(String localidadRem, String localidadDes, Integer idProvinciaRem, Integer idProvinciaDest) {
-        ArrayList<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
+    public List<PuntoDeControl> calcularRutaPaquete(String localidadRem, String localidadDes, int idProvinciaRem, int idProvinciaDest) {
+        List<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
+        int n=repositorioPuntoDeControl.BuscaIdProvinciaCL(idProvinciaRem);
+        CentroDeLogistica c = repositorioCentroDeLogistica.buscarPorId(n);
+        List<Integer> conexiones = new ArrayList<Integer>();
+        
         if (idProvinciaRem != 0 && idProvinciaDest != 0) {
-            ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, centros.get(idProvinciaRem).getConexiones());
+            conexiones = repositorioCentroDeLogistica.BuscaIdCL(n);
+            ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, conexiones);
         }
         return ruta;
     }
 
-    /**
-     * @return the puntosDeControl
-     */
-    public HashMap<Integer, PuntoDeControl> getPuntosDeControl() {
-        return puntosDeControl;
+    public Optional<Cliente> verCliente(@NotBlank String dni) {
+        Optional<Cliente> clienteLogin = repositorioClientes.buscar(dni);
+
+        // Asegurarnos de que se devuelve el cliente con los datos precargados
+        clienteLogin.ifPresent(c -> c.verDatos().size());
+        return clienteLogin;
+    }
+
+    public Paquete verPaquetes(@NotBlank Integer localizador) {
+        Paquete paquete = repositorioPaquete.buscarPaquetes(localizador).orElseThrow(LocalizadorNoValido::new);
+
+        return paquete;
     }
 
     /**
-     * @return the clientes
+     * Dar de alta cliente y crear una cuenta asociada
+     *
+     * @param cliente el cliente a dar de alta
+     * @return el paquete asociado al cliente
      */
-    public HashMap<Integer, Cliente> getClientes() {
-        return clientes;
+    public Cliente altaCliente(@NotNull @Valid Cliente cliente) {
+        if (repositorioClientes.buscar(cliente.getDni()).isPresent()) {
+            throw new DNINoValido();
+        }
+        repositorioClientes.guardar(cliente);
+
+        return cliente;
     }
 
+    public Paquete altaPaquete(@NotNull Paquete paquete, @NotNull @Valid Cliente remitente, @NotNull @Valid Cliente destinatario) {
+        if (!repositorioPaquete.buscarPaquetes(paquete.getLocalizador()).isPresent()) {
+            throw new LocalizadorNoValido();
+        }
+
+        // Crear y registrar paquete
+        Paquete paquet = altaEnvio(1, 1, 1, remitente, destinatario);
+        repositorioPaquete.guardar(paquete);
+
+        return paquete;
+    }
+
+    public Paquete buscarPaquete(int localizador) {
+        if (!repositorioPaquete.buscarPaquetes(localizador).isPresent()) {
+            throw new LocalizadorNoExiste();
+        }
+        return repositorioPaquete.buscar(localizador);
+    }
 }

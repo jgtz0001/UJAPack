@@ -9,14 +9,22 @@ import es.ujaen.dae.ujapack.excepciones.PuntoDeControlEquivocado;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  *
@@ -26,11 +34,11 @@ import javax.validation.constraints.Size;
 public class Paquete implements Serializable {
 
     @Id
-    @Size(min = 10, max = 10)
+    @Column(length = 10)
     private int localizador;
-    @NotBlank
+    @Positive
     private int numPuntosControl;
-    @NotBlank
+    @Enumerated(EnumType.ORDINAL)
     private Estado estado;
     @PositiveOrZero
     private float importe;
@@ -38,21 +46,22 @@ public class Paquete implements Serializable {
     private float peso;
     @Positive
     private float altura;
-    @NotBlank
-    @OneToMany
-    private ArrayList<PasoPorPuntoDeControl> pasanPaquetes;
-    @NotBlank
-    @OneToMany
-    private ArrayList<PuntoDeControl> ruta;
-    @NotBlank
-    @ManyToOne
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "pasanPaquetes")
+    private List<PasoPorPuntoDeControl> pasanPaquetes;
+// @OneToMany(mappedBy = "pasoControl", cascade = {CascadeType.ALL})
+// private List<PasoPorPuntoDeControl> pasanPaquetes;
+    @OneToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<PuntoDeControl> ruta;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
     private Cliente remitente;
-    @NotBlank
-    @ManyToOne
+
+    @ManyToOne(cascade = {CascadeType.ALL})
     private Cliente destinatario;
-
-  
-
 
     public enum Estado {
         EnTransito,
@@ -61,7 +70,18 @@ public class Paquete implements Serializable {
         Extraviado;
     }
 
-    public Paquete(int localizador, float importe, float peso, float altura, ArrayList<PuntoDeControl> ruta) {
+    public Paquete() {
+
+    }
+    
+    public Paquete(int localizador, float importe, float peso, float altura) {
+        this.localizador = localizador;
+        this.importe = importe;
+        this.peso = peso;
+        this.altura = altura;
+    }
+    
+    public Paquete(int localizador, float importe, float peso, float altura, List<PuntoDeControl> ruta, Cliente remitente, Cliente destinatario) {
         this.localizador = localizador;
         this.numPuntosControl = ruta.size();
         this.estado = estado.EnTransito;
@@ -69,6 +89,8 @@ public class Paquete implements Serializable {
         this.peso = peso;
         this.altura = altura;
         this.ruta = ruta;
+        this.remitente = remitente;
+        this.destinatario = destinatario;
         this.pasanPaquetes = new ArrayList<PasoPorPuntoDeControl>();
 
         PasoPorPuntoDeControl primero = new PasoPorPuntoDeControl(ruta.get(0), LocalDateTime.now());
@@ -149,14 +171,14 @@ public class Paquete implements Serializable {
     /**
      * @return the pasanPaquetes
      */
-    public ArrayList<PasoPorPuntoDeControl> getPasanPaquetes() {
+    public List<PasoPorPuntoDeControl> getPasanPaquetes() {
         return pasanPaquetes;
     }
 
     /**
      * @param pasanPaquetes the pasanPaquetes to set
      */
-    public void setPasanPaquetes(ArrayList<PasoPorPuntoDeControl> pasanPaquetes) {
+    public void setPasanPaquetes(List<PasoPorPuntoDeControl> pasanPaquetes) {
         this.pasanPaquetes = pasanPaquetes;
     }
 
@@ -181,14 +203,14 @@ public class Paquete implements Serializable {
     /**
      * @return the ruta
      */
-    public ArrayList<PuntoDeControl> getRuta() {
+    public List<PuntoDeControl> getRuta() {
         return ruta;
     }
 
     /**
      * @param ruta the ruta to set
      */
-    public void setRuta(ArrayList<PuntoDeControl> ruta) {
+    public void setRuta(List<PuntoDeControl> ruta) {
         this.ruta = ruta;
 //this.numPuntosControl = ruta.size();
     }
@@ -200,4 +222,24 @@ public class Paquete implements Serializable {
         return localizador;
     }
 
+    
+    public float getImporte() {
+        return importe;
 }
+
+    public float getPeso() {
+        return peso;
+    }
+
+    public float getAltura() {
+        return altura;
+    }
+
+    public Cliente getDestinatario() {
+        return destinatario;
+    }
+    
+    
+
+}
+

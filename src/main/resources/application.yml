@@ -1,5 +1,5 @@
 ## YAML Template.
-spring.datasource.url: jdbc:mysql://localhost:3306/mysql
+spring.datasource.url: jdbc:mysql://localhost:3306/ujapack
 spring.datasource.username: root
 spring.datasource.password: Ujapack1
 spring.jpa.properties.javax.persistence.schema-generation.database.action: drop-and-create

@@ -8,12 +8,14 @@ package es.ujaen.dae.ujapack.beans;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  *
  * @author PCJoseGabriel
  */
+@Service
 public class LimpiadoBaseDeDatos {
 
     @PersistenceContext
@@ -25,7 +27,10 @@ public class LimpiadoBaseDeDatos {
     /**
      * Lista de entidades a borrar.
      */
-    final String[] entidades = {
+    final String[] tablas = {
+        "centro_de_logistica_conexiones",
+        "centro_de_logistica_provincia",
+        "centro_de_logistica",
         "CentroDeLogistica",
         "Cliente",
         "Oficina",
@@ -37,13 +42,15 @@ public class LimpiadoBaseDeDatos {
     final String deleteFrom = "delete from ";
 
    
-    void limpiar() {
+    /** Realizar borrado */
+    public void limpiar() {
         transactionTemplate.executeWithoutResult(transactionStatus -> {
-            for (String tabla : entidades) {
+            for (String tabla : tablas) {
                 em.createQuery(deleteFrom + tabla).executeUpdate();
             }
         });
     }
+
 
 }
 

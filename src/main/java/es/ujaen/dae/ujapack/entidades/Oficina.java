@@ -7,9 +7,10 @@ package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotBlank;
 
 /**
  *
@@ -18,14 +19,16 @@ import javax.validation.constraints.NotBlank;
 @Entity
 public class Oficina extends PuntoDeControl implements Serializable {
 
-    @ManyToOne
-    CentroDeLogistica listaLogistica;
+    @ManyToMany
+    List<CentroDeLogistica> listaLogistica;
 
-    Oficina(int id, String nombre, String localizacion, ArrayList<String> provincia, ArrayList<Integer> conexiones) {
-        super(id, nombre, localizacion, provincia);
+   public  Oficina(int id, String nombre, String localizacion) {
+        super(id, nombre, localizacion);
+        this.nombre = nombre;
+        this.localizacion = localizacion;
     }
 
-    Oficina() {
+    public Oficina() {
     }
-
-}
+  }
+  

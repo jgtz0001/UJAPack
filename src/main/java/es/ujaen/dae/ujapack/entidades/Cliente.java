@@ -6,14 +6,14 @@
 package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -39,11 +39,11 @@ public class Cliente implements Serializable {
     private String localidad;
     @NotBlank
     private String provincia;
-    
-    @OneToMany(mappedBy="Remitente")
+
+    @OneToMany(mappedBy = "remitente")
     List<Paquete> PaquetesRemitente;
-    
-    @OneToMany(mappedBy="Destinatario")
+
+    @OneToMany(mappedBy = "destinatario")
     List<Paquete> PaquetesDestinatario;
 
     public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia) {
@@ -81,4 +81,32 @@ public class Cliente implements Serializable {
         return localidad;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    
+
+    
+
+    /**
+     * Devolver paquetes del usuario
+     *
+     * @return la lista de cuentas
+     */
+    public List<Paquete> verDatos() {
+        return Collections.unmodifiableList(PaquetesRemitente);
+    }
 }
