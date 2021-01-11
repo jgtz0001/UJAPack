@@ -37,30 +37,29 @@ public class UjapackIntegrationTest {
     @Autowired
     RepositorioPuntoDeControl repositorioPuntoDeControl;
 
-    
-@Test
-public void creaEnvio() throws IOException {
+    @Test
+    public void creaEnvio() throws IOException {
 
-Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén","clave");
-Cliente Destinatario0 = new Cliente("12334243", "juan", "pepe","pp@gmail.com", "jaen", "Córdoba", "Córdoba","clave");
-Cliente Destinatario1 = new Cliente("12334244", "kiko", "ola", "ola@gmail.com", "jaen", "Madrid", "Madrid","clave");
-Cliente Destinatario2 = new Cliente("12334245", "pepe", "perez", "ppp@gmail.com", "jaen", "Toledo", "Toledo","clave");
-Cliente Destinatario3 = new Cliente("12334246", "pola", "tere", "hila@gmail.com", "jaen", "Santa Cruz de Tenerife", "Santa Cruz de Tenerife","clave");
+        Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén", "clave");
+        Cliente Destinatario0 = new Cliente("12334243", "juan", "pepe", "pp@gmail.com", "jaen", "Córdoba", "Córdoba", "clave");
+        Cliente Destinatario1 = new Cliente("12334244", "kiko", "ola", "ola@gmail.com", "jaen", "Madrid", "Madrid", "clave");
+        Cliente Destinatario2 = new Cliente("12334245", "pepe", "perez", "ppp@gmail.com", "jaen", "Toledo", "Toledo", "clave");
+        Cliente Destinatario3 = new Cliente("12334246", "pola", "tere", "hila@gmail.com", "jaen", "Santa Cruz de Tenerife", "Santa Cruz de Tenerife", "clave");
 
-Paquete e0 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
-Paquete e1 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario1);
-Paquete e2 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario2);
-Paquete e3 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario3);
+        Paquete e0 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
+        Paquete e1 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario1);
+        Paquete e2 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario2);
+        Paquete e3 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario3);
 
-Assertions.assertEquals(3, e0.getRuta().size());
-Assertions.assertEquals(3, e1.getRuta().size());
-Assertions.assertEquals(4, e2.getRuta().size());
-Assertions.assertEquals(5, e3.getRuta().size());
+        Assertions.assertEquals(3, e0.getRuta().size());
+        Assertions.assertEquals(3, e1.getRuta().size());
+        Assertions.assertEquals(4, e2.getRuta().size());
+        Assertions.assertEquals(5, e3.getRuta().size());
 
-Assertions.assertEquals(0.004000000189989805, serviPack.calcularImporte(3, 1, 1, 1));
+        Assertions.assertEquals(0.004000000189989805, serviPack.calcularImporte(3, 1, 1, 1));
 
-}
-     
+    }
+
 //    @Test
 //    public void testAvisaEstado() throws IOException {
 //        Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
@@ -105,7 +104,6 @@ serviPack.notificarSalida(paquet.getLocalizador(),fechaSalida, punto);
 });
 }
      */
- 
 //@Test
 //public void testRutaIncorrectaPuntoDeRutaAtrasado() throws IOException {
 //Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Jaén", "Jaén", "Jaén","clave");
@@ -120,7 +118,6 @@ serviPack.notificarSalida(paquet.getLocalizador(),fechaSalida, punto);
 //serviPack.notificarSalida(paquet.getLocalizador(),fechaSalida, punto);
 //});
 //}
-     
 //    @Test
 //    public void testRutaIncorrectaPuntoDeRutaAdelantado() throws IOException {
 //        Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Jaén", "Jaén", "Jaén","clave");

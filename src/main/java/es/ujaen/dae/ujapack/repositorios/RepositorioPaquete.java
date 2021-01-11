@@ -25,7 +25,7 @@ public class RepositorioPaquete {
     @PersistenceContext
     EntityManager em;
 
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    @Transactional//(propagation = Propagation.SUPPORTS, readOnly = true)
     public Paquete buscar(int localizador) {
         return em.find(Paquete.class, localizador);
     }

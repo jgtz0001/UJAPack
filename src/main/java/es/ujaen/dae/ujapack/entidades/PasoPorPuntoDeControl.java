@@ -31,7 +31,7 @@ public class PasoPorPuntoDeControl implements Serializable {
     @Column(name = "id")
     private int id;
 // @NotBlank
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     //@JoinColumn(name = "paso_control")
     public PuntoDeControl pasoControl;
     @PastOrPresent

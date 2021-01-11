@@ -35,11 +35,14 @@ public class RepositorioCentroDeLogistica {
         em.persist(centroDeLogistica);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Integer> BuscaIdCL(int id) {
         List<CentroDeLogistica> puntos = em.createQuery("select h from CentroDeLogistica h WHERE h.id = '" + id + "'",
                 CentroDeLogistica.class).getResultList();
-        return puntos.get(0).getConexiones();
+        List<Integer> h = new ArrayList();
+        h = puntos.get(0).getConexiones();
+        return h;
+//        return puntos.get(0).getConexiones();
     }
 
 }

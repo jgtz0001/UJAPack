@@ -8,17 +8,11 @@ package es.ujaen.dae.ujapack.beans;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Paquete;
 import es.ujaen.dae.ujapack.entidades.PuntoDeControl;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import es.ujaen.dae.ujapack.excepciones.DNINoValido;
 import es.ujaen.dae.ujapack.excepciones.IdIncorrecto;
-import java.io.File;
-import java.nio.file.Files;
 import java.util.Collections;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -30,7 +24,6 @@ import es.ujaen.dae.ujapack.repositorios.RepositorioCentroDeLogistica;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPaquete;
 import java.util.ArrayList;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -90,11 +83,14 @@ public class ServicioUjaPack {
 * @return el id localizador.
      */
     public static long getID() {
-        long id = System.currentTimeMillis() % LIMIT;
-        if (id <= last) {
-            id = (last + 1) % LIMIT;
-        }
-        return last = id;
+        int localizador = 0;
+        Long min = 1000000000L;
+        Long max = 9999999999L;
+
+        do {
+            localizador = (int) Math.floor(Math.random() * (max - min + 1) + min);
+        } while (Integer.toString(localizador).length() != 10);
+        return localizador;
     }
 
     /**
@@ -129,7 +125,7 @@ public class ServicioUjaPack {
         while (repositorioPaquete.buscarPaquetes(localizador).isPresent()) {
             localizador = (int) getID();
         }
-        
+
         int idProvinciaRem = obtenerIdProvincia(remitente.getProvincia());
         int idProvinciaDest = obtenerIdProvincia(destinatario.getProvincia());
         List<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
@@ -328,31 +324,19 @@ public class ServicioUjaPack {
         return null;
     }
 
-
-    /*
-* Calcula la ruta del paquete.
-* @param localidadRem Localidad del remitente.
-* @param localidadDes Localidad del destinatario.
-* @param idProvinciaRem Identificador de la provincia donde se encuentra el remitente.
-* @param idProvinciaDest Identificador de la provincia del destinatario.
-     */
     public List<PuntoDeControl> calcularRutaPaquete(String localidadRem, String localidadDes, int idProvinciaRem, int idProvinciaDest) {
         List<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
+        int n=repositorioPuntoDeControl.BuscaIdProvinciaCL(idProvinciaRem);
+        CentroDeLogistica c = repositorioCentroDeLogistica.buscarPorId(n);
+        List<Integer> conexiones = new ArrayList<Integer>();
+        
         if (idProvinciaRem != 0 && idProvinciaDest != 0) {
-            List<Integer> conexion = new ArrayList<Integer>();
-            ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest,
-                    repositorioCentroDeLogistica.BuscaIdCL(repositorioPuntoDeControl.BuscaIdProvinciaCL(idProvinciaRem)));
+            conexiones = repositorioCentroDeLogistica.BuscaIdCL(n);
+            ruta = busquedaAnchura(idProvinciaRem, idProvinciaDest, conexiones);
         }
         return ruta;
     }
 
-    /**
-     * Realiza un login de un cliente
-     *
-     * @param dni el DNI del cliente
-     * @param clave la clave de acceso
-     * @return el objeto de la clase Cliente asociado
-     */
     @Transactional
     public Optional<Cliente> verCliente(@NotBlank String dni) {
         Optional<Cliente> clienteLogin = repositorioClientes.buscar(dni);
