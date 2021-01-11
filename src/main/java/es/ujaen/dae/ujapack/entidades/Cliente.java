@@ -5,8 +5,6 @@
  */
 package es.ujaen.dae.ujapack.entidades;
 
-import es.ujaen.dae.ujapack.util.CodificadorMd5;
-import es.ujaen.dae.ujapack.util.CodificadorPassword;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -41,8 +39,6 @@ public class Cliente implements Serializable {
     private String localidad;
     @NotBlank
     private String provincia;
-    @NotNull
-    private String clave;
 
     @OneToMany(mappedBy = "remitente")
     List<Paquete> PaquetesRemitente;
@@ -50,7 +46,7 @@ public class Cliente implements Serializable {
     @OneToMany(mappedBy = "destinatario")
     List<Paquete> PaquetesDestinatario;
 
-    public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia, String clave) {
+    public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia) {
         this.dni = dni;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -58,7 +54,6 @@ public class Cliente implements Serializable {
         this.direccion = direccion;
         this.localidad = localidad;
         this.provincia = provincia;
-        this.clave = (clave != null ? CodificadorPassword.codificar(clave) : null);
     }
 
     public Cliente() {
@@ -102,19 +97,9 @@ public class Cliente implements Serializable {
         return direccion;
     }
 
-    public String getClave() {
-        return clave;
-    }
+    
 
-    /**
-     * Compara la clave con la del cliente, codificándola en Md5
-     *
-     * @param clave
-     * @return
-     */
-    public boolean claveValida(String clave) {
-        return CodificadorPassword.igual(clave, this.clave);
-    }
+    
 
     /**
      * Devolver paquetes del usuario

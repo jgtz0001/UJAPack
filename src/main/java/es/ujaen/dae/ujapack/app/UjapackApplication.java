@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 @SpringBootApplication(scanBasePackages ={ "es.ujaen.dae.ujapack.beans",
                                            "es.ujaen.dae.ujapack.repositorios",
                                            "es.ujaen.dae.ujapack.controladoresREST",
-                                           //"es.ujaen.dae.ujapack.seguridad"
+                                           "es.ujaen.dae.ujapack.seguridad"
 })
 
 @EntityScan(basePackages = "es.ujaen.dae.ujapack.entidades")

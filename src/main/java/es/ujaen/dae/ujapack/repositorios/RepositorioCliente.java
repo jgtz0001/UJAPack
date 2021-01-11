@@ -29,7 +29,6 @@ public class RepositorioCliente {
         return Optional.ofNullable(em.find(Cliente.class, dni));
     }
 
-    @Transactional
     public void guardar(Cliente cliente) {
         em.persist(cliente);
     }

@@ -73,7 +73,7 @@ public class ServicioUjaPack {
     public ServicioUjaPack() {
     }
 
-    @Transactional(readOnly = true)
+    
     private boolean buscaPorDni(String dni) {
         return repositorioClientes.buscar(dni).isPresent();
     }
@@ -91,23 +91,6 @@ public class ServicioUjaPack {
             localizador = (int) Math.floor(Math.random() * (max - min + 1) + min);
         } while (Integer.toString(localizador).length() != 10);
         return localizador;
-    }
-
-    /**
-     * Realiza un login de un cliente
-     *
-     * @param dni el DNI del cliente
-     * @param clave la clave de acceso
-     * @return el objeto de la clase Cliente asociado
-     */
-    @Transactional
-    public Optional<Cliente> loginCliente(@NotBlank String dni, @NotBlank String clave) {
-        Optional<Cliente> clienteLogin = repositorioClientes.buscar(dni)
-                .filter((cliente) -> cliente.claveValida(clave));
-
-        // Asegurarnos de que se devuelve el cliente con los datos precargados
-        clienteLogin.ifPresent(c -> c.verDatos().size());
-        return clienteLogin;
     }
 
     /*
@@ -361,7 +344,7 @@ public class ServicioUjaPack {
      * @return el paquete asociado al cliente
      */
     public Cliente altaCliente(@NotNull @Valid Cliente cliente) {
-        if (!repositorioClientes.buscar(cliente.getDni()).isPresent()) {
+        if (repositorioClientes.buscar(cliente.getDni()).isPresent()) {
             throw new DNINoValido();
         }
         repositorioClientes.guardar(cliente);

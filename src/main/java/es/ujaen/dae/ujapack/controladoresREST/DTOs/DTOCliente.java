@@ -34,10 +34,8 @@ public class DTOCliente {
     /** Provincia del cliente */
     String provincia;
     
-    /** Clave del cliente */
-    String clave;
 
-    public DTOCliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia, String clave) {
+    public DTOCliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia) {
         this.dni = dni;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -45,7 +43,6 @@ public class DTOCliente {
         this.direccion = direccion;
         this.localidad = localidad;
         this.provincia = provincia;
-        this.clave = clave;
     }
 
     public DTOCliente(Cliente cliente) {
@@ -56,7 +53,6 @@ public class DTOCliente {
         this.direccion = cliente.getDireccion();
         this.localidad = cliente.getLocalidad();
         this.provincia = cliente.getProvincia();
-        this.clave = clave;
     }
 
     public String getDni() {
@@ -86,13 +82,9 @@ public class DTOCliente {
     public String getProvincia() {
         return provincia;
     }
-
-    public String getClave() {
-        return clave;
-    }
-
+    
     public Cliente aCliente() {
-        return new Cliente(dni, nombre, apellidos, email, direccion, localidad, provincia, clave);
+        return new Cliente(dni, nombre, apellidos, email, direccion, localidad, provincia);
     }
 
 }

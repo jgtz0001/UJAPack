@@ -11,7 +11,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  *
@@ -21,25 +20,24 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 public class ServicioSeguridadUjaPack extends WebSecurityConfigurerAdapter{
    
-    @Autowired
-    ServicioDatosCliente servicioDatosCliente;
-    
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(servicioDatosCliente)
-            .passwordEncoder(new BCryptPasswordEncoder());
+        auth.inMemoryAuthentication()
+            .withUser("usuario").roles("USUARIO").password("{noop}usuario")
+            .and()
+            .withUser("admin").roles("ADMIN", "USUARIO").password("{noop}admin");
     }
-
+    
     @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
+    public void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable();
-        
         httpSecurity.httpBasic();
         
-        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/clientes").anonymous();
-        // Permitir el acceso de un cliente sólo a sus recursos asociados 
-        httpSecurity.authorizeRequests().antMatchers("/ujapack/clientes/{dni}/**")
-                .access("hasRole('CLIENTE') and #dni == principal.username");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/").permitAll();
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/paquete/").hasRole("ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/paquete/**").hasRole("ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/clientes/**").hasRole("ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/paquete/**").hasAnyRole("USUARIO", "ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/puntoscontrol/**").hasAnyRole("USUARIO", "ADMIN");
     }
-
 }
