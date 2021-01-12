@@ -28,7 +28,7 @@ public class DTOCentroDeLogistica {
 
     private List<Link> provincias;
 
-    public List<Link> listaOficinas;
+    private List<Link> listaOficinas;
 
     public DTOCentroDeLogistica(int id, String nombre, String localizacion) {
         this.id = id;
@@ -53,6 +53,27 @@ public class DTOCentroDeLogistica {
 
     public String getLocalizacion() {
         return localizacion;
+    }
+
+    /**
+     * @return the conexiones
+     */
+    public List<Link> getConexiones() {
+        return conexiones;
+    }
+
+    /**
+     * @return the provincias
+     */
+    public List<Link> getProvincias() {
+        return provincias;
+    }
+
+    /**
+     * @return the listaOficinas
+     */
+    public List<Link> getListaOficinas() {
+        return listaOficinas;
     }
     
 }
