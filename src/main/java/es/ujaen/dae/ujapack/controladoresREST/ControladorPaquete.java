@@ -7,7 +7,6 @@
 package es.ujaen.dae.ujapack.controladoresREST;
 
 import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
-import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCliente;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPaquete;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTORuta;
 import es.ujaen.dae.ujapack.entidades.Paquete;
@@ -60,9 +59,10 @@ public class ControladorPaquete {
     }
 
     @PostMapping("/paquetes")
-    ResponseEntity<DTOPaquete> altaPaquete(@RequestBody DTOPaquete paquete, @RequestBody DTOCliente remitente, @RequestBody DTOCliente destinatario) {
+    ResponseEntity<DTOPaquete> altaPaquete(@RequestBody DTOPaquete paquete){//, @RequestBody DTOCliente remitente, @RequestBody DTOCliente destinatario) {
         try {
-            Paquete paq = serviPack.altaPaquete(paquete.aPaquete(), remitente.aCliente(), destinatario.aCliente());
+            Paquete paq = paquete.aPaquete();//, remitente.aCliente(), destinatario.aCliente());
+            serviPack.altaPaquete(paquete.aPaquete());
             return ResponseEntity.status(HttpStatus.CREATED).body(new DTOPaquete(paq));
         } catch (PaqueteNoRegistrado e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -71,8 +71,7 @@ public class ControladorPaquete {
 
     @GetMapping("/paquetes/{localizador}")
     ResponseEntity<DTOPaquete> verPaquete(@PathVariable String localizador) {
-        Integer id = Integer.parseInt(localizador);
-        Optional<Paquete> paquete = serviPack.verPaquetes(id);
+        Optional<Paquete> paquete = serviPack.verPaquetes(localizador);
         return paquete.map(p -> ResponseEntity.ok(new DTOPaquete(p)))
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -88,15 +87,15 @@ public class ControladorPaquete {
             throw new LocalizadorNoExiste();
         }
     }
-    
-        //Datos de la ruta del paquete
+
+    //Datos de la ruta del paquete
     @GetMapping("paquetes/{localizador}/estado")
     @ResponseStatus(HttpStatus.OK)
     public DTOPaquete verEstadoPaquete(@PathVariable String localizador) {
         try {
             int id = Integer.parseInt(localizador);
             Paquete p = serviPack.buscarPaquete(id);
-            return new DTOPaquete(id,p.getEstado());
+            return new DTOPaquete(id, p.getEstado());
         } catch (LocalizadorNoExiste exception) {
             throw new LocalizadorNoExiste();
         }

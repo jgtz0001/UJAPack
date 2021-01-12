@@ -7,7 +7,9 @@ package es.ujaen.dae.ujapack.controladoresREST;
 
 import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCliente;
+import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPaquete;
 import es.ujaen.dae.ujapack.entidades.Cliente;
+import es.ujaen.dae.ujapack.entidades.Paquete;
 import es.ujaen.dae.ujapack.excepciones.ClienteNoRegistrado;
 import java.util.Optional;
 import javax.validation.ConstraintViolationException;
@@ -25,7 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
- * @author Pablo
+ * @author Pablo Lozano
+ * @description: agarramela con la mano
  */
 @RestController
 @RequestMapping("/ujapack")

@@ -58,6 +58,7 @@ public class ServicioJson {
     public void rellenarJson() {
         try {
             leerJson();
+            
         } catch (IOException ex) {
             System.out.println(ex.toString());
         }

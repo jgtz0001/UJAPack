@@ -323,8 +323,10 @@ public class ServicioUjaPack {
         return clienteLogin;
     }
 
-    public Optional<Paquete> verPaquetes(@NotBlank Integer localizador) {
-        return repositorioPaquete.buscarPaquetes(localizador);
+    public Optional<Paquete> verPaquetes(@NotBlank String localizador) {
+        int id = Integer.parseInt(localizador);
+        Optional<Paquete> paquete = repositorioPaquete.buscarPaquetes(id);
+        return paquete;
     }
 
     /**
@@ -339,14 +341,13 @@ public class ServicioUjaPack {
         repositorioClientes.guardar(cliente);
     }
 
-    public Paquete altaPaquete(@NotNull Paquete paquete, @NotNull @Valid Cliente remitente, @NotNull @Valid Cliente destinatario) {
+    public void altaPaquete(@NotNull Paquete paquete) {
         if (!repositorioPaquete.buscarPaquetes(paquete.getLocalizador()).isPresent()) {
             throw new LocalizadorNoValido();
         }
-        Paquete paquet = altaEnvio(1, 1, 1, remitente, destinatario);
+        Paquete paquet = altaEnvio(1, 1, 1, null, null);
         repositorioPaquete.guardar(paquete);
 
-        return paquete;
     }
 
     public Paquete buscarPaquete(int localizador) {
