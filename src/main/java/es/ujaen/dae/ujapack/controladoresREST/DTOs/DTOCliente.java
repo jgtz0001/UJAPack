@@ -34,7 +34,8 @@ public class DTOCliente {
     /** Provincia del cliente */
     String provincia;
     
-
+    public DTOCliente (){}
+    
     public DTOCliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia) {
         this.dni = dni;
         this.nombre = nombre;

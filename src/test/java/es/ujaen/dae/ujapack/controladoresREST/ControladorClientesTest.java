@@ -8,6 +8,7 @@ package es.ujaen.dae.ujapack.controladoresREST;
 import es.ujaen.dae.ujapack.beans.LimpiadoBaseDeDatos;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCliente;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import org.assertj.core.api.Assertions;
@@ -40,43 +41,61 @@ public class ControladorClientesTest {
     @Autowired
     LimpiadoBaseDeDatos limpiadoBaseDeDatos;
 
-    TestRestTemplate restTemplate;
+    RestTemplateBuilder restTemplateBuilder;
 
     /**
      * Crear un TestRestTemplate para las pruebas
      */
     @PostConstruct
-    void crearRestTemplate() {
-        RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder()
+    void crearRestTemplateBuilder() {
+        restTemplateBuilder = new RestTemplateBuilder()
                 .rootUri("http://localhost:" + localPort + "/ujapack")
-                .additionalMessageConverters(List.of(springBootJacksonConverter));
+                .additionalMessageConverters(Arrays.asList(springBootJacksonConverter));
     }
+    
+    /**
+     * Intento de creación de un cliente inválido
+     */
+    @Test
+    public void testAltaClienteInvalido() {
+        DTOCliente cliente = new DTOCliente(
+                "11995667D",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenarogmail.com",
+                "Calle La Calle 13",
+                "Jamilena",
+                "Jaén");
 
-//    /**
-//     * Intento de creación de un cliente inválido
-//     */
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
+        ResponseEntity<DTOCliente> respuesta = restTemplate.postForEntity(
+                "/clientes",
+                cliente,
+                DTOCliente.class
+        );
+
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+    
 //    @Test
-//    public void testAltaClienteInvalido() {
+//    public void testAltaCliente() {
 //        DTOCliente cliente = new DTOCliente(
 //                "11995667D",
 //                "Jenaro",
 //                "Camara Colmenero",
-//                "jenarogmail.com",
+//                "jenaro@gmail.com",
 //                "Calle La Calle 13",
-//                "Jamilena",
+//                "Jaén",
 //                "Jaén");
 //
+//        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
 //        ResponseEntity<DTOCliente> respuesta = restTemplate.postForEntity(
 //                "/clientes",
 //                cliente,
 //                DTOCliente.class
 //        );
-//
-//        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-//    }
-
-//    @Test
-//    public void testAltaCliente() {
+//        
+//        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 //
 //    }
 
