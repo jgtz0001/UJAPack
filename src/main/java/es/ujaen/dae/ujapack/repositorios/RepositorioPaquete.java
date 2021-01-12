@@ -38,9 +38,14 @@ public class RepositorioPaquete {
     
     
     public List<PuntoDeControl> buscarRutaPaquetes(int localizador) {
-        Paquete paquete = em.createQuery("select h from Paquete h WHERE h.ruta = '" + localizador + "'",
+        Paquete paquete = em.createQuery("select h from Paquete h WHERE h.id = '" + localizador + "'",
             Paquete.class).getSingleResult();
         return paquete.getRuta();
+    }
+      public Paquete buscarEstadoPaquete(int localizador) {
+        Paquete paquete = em.createQuery("select h from Paquete h WHERE h.id = '" + localizador + "'",
+            Paquete.class).getSingleResult();
+        return paquete;
     }
 
     public void guardar(Paquete paquete) {

@@ -38,6 +38,12 @@ public class DTOPaquete {
         this.destinatario = destinatario;
         this.ruta = ruta;
     }
+        public DTOPaquete(int localizador, String estado) {
+            
+        this.localizador = localizador;
+        this.estado = estado;
+        
+        }
 
     public DTOPaquete(Paquete paquete) {
         this.localizador = paquete.getLocalizador();

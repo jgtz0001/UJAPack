@@ -11,10 +11,12 @@ import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCliente;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPaquete;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTORuta;
 import es.ujaen.dae.ujapack.entidades.Paquete;
+import es.ujaen.dae.ujapack.entidades.PuntoDeControl;
 import es.ujaen.dae.ujapack.excepciones.ClienteNoRegistrado;
 import es.ujaen.dae.ujapack.excepciones.LocalizadorNoExiste;
 import es.ujaen.dae.ujapack.excepciones.LocalizadorNoValido;
 import es.ujaen.dae.ujapack.excepciones.PaqueteNoRegistrado;
+import java.util.List;
 import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +84,19 @@ public class ControladorPaquete {
         try {
             int id = Integer.parseInt(localizador);
             return new DTORuta(serviPack.buscarRutaPaquete(id));
+        } catch (LocalizadorNoExiste exception) {
+            throw new LocalizadorNoExiste();
+        }
+    }
+    
+        //Datos de la ruta del paquete
+    @GetMapping("paquetes/{localizador}/estado")
+    @ResponseStatus(HttpStatus.OK)
+    public DTOPaquete verEstadoPaquete(@PathVariable String localizador) {
+        try {
+            int id = Integer.parseInt(localizador);
+            Paquete p = serviPack.buscarPaquete(id);
+            return new DTOPaquete(id,p.getEstado());
         } catch (LocalizadorNoExiste exception) {
             throw new LocalizadorNoExiste();
         }
