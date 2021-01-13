@@ -6,6 +6,7 @@
 package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import org.springframework.hateoas.Link;
 
 /**
  *
@@ -53,6 +55,8 @@ public class Cliente implements Serializable {
         this.direccion = direccion;
         this.localidad = localidad;
         this.provincia = provincia;
+        this.PaquetesRemitente = null;
+        this.PaquetesDestinatario = null;
     }
 
     public Cliente() {

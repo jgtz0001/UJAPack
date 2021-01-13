@@ -334,11 +334,15 @@ public class ServicioUjaPack {
      *
      * @param cliente el cliente a dar de alta
      */
-    public void altaCliente(@NotNull @Valid Cliente cliente) {
+    public Cliente altaCliente(Cliente cliente) {
         if (repositorioClientes.buscar(cliente.getDni()).isPresent()) {
             throw new DNINoValido();
         }
+        if (cliente.getDni().length() != 8) {
+            throw new DNINoValido();
+        }
         repositorioClientes.guardar(cliente);
+        return cliente;
     }
 
     public void altaPaquete(@NotNull Paquete paquete) {
@@ -365,5 +369,4 @@ public class ServicioUjaPack {
         return l;
     }
 
-   
 }

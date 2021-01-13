@@ -7,6 +7,7 @@ package es.ujaen.dae.ujapack.controladoresREST;
 
 import es.ujaen.dae.ujapack.beans.LimpiadoBaseDeDatos;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCliente;
+import es.ujaen.dae.ujapack.entidades.Cliente;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -59,10 +60,10 @@ public class ControladorClientesTest {
     @Test
     public void testAltaClienteInvalido() {
         DTOCliente cliente = new DTOCliente(
-                "11995667D",
+                "119956672451",
                 "Jenaro",
                 "Camara Colmenero",
-                "jenarogmail.com",
+                "jenaro@gmail.com",
                 "Calle La Calle 13",
                 "Jamilena",
                 "Jaén");
@@ -74,30 +75,30 @@ public class ControladorClientesTest {
                 DTOCliente.class
         );
 
-        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
     
-//    @Test
-//    public void testAltaCliente() {
-//        DTOCliente cliente = new DTOCliente(
-//                "11995667D",
-//                "Jenaro",
-//                "Camara Colmenero",
-//                "jenaro@gmail.com",
-//                "Calle La Calle 13",
-//                "Jaén",
-//                "Jaén");
-//
-//        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
-//        ResponseEntity<DTOCliente> respuesta = restTemplate.postForEntity(
-//                "/clientes",
-//                cliente,
-//                DTOCliente.class
-//        );
-//        
-//        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-//
-//    }
+    @Test
+    public void testAltaCliente() {
+         DTOCliente cliente = new DTOCliente(
+                "11995667",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenaro@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
+        ResponseEntity<DTOCliente> respuesta = restTemplate.postForEntity(
+                "/clientes",
+                cliente,
+                DTOCliente.class
+        );
+        
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+    }
 
 //    @BeforeEach
 //    void limpiadoBaseDeDatos() {

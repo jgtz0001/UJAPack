@@ -15,6 +15,7 @@ import es.ujaen.dae.ujapack.repositorios.RepositorioPuntoDeControl;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -87,44 +88,44 @@ public class UjapackIntegrationTest {
 //        Assertions.assertEquals("Entregado", paquet.getEstado());
 //
 //    }
-//    @Test
-//    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)    
-//    public void testRutaIncorrectaPuntoFueraDeRuta() throws IOException {
-//        Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
-//        Cliente Destinatario0 = new Cliente("12334243", "juan", "pepe", "pp@gmail.com", "jaen", "Córdoba", "Córdoba");
-//
-//        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
-//
-//        LocalDateTime fechaSalida = LocalDateTime.now();
-//
-//        PuntoDeControl punto = new PuntoDeControl(5, "CL Cataluña", "Barcelona");
-//
-//        Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
-//            serviPack.notificarSalida(paquet.getLocalizador(), fechaSalida, punto);
-//        });
-//    }
-//
-//    @Test
-//    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)    
-//    public void testRutaIncorrectaPuntoDeRutaAtrasado() throws IOException {
-//        Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Jaén", "Jaén", "Jaén");
-//        Cliente Destinatario0 = new Cliente("12334243", "Juan", "Pepe", "pp@gmail.com", "Córdoba", "Córdoba", "Córdoba");
-//
-//        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
-//
-//        LocalDateTime fechaSalida = LocalDateTime.now();
-//        PuntoDeControl punto = new PuntoDeControl(16, "Calle Jaén", "Calle Jaén");
-//
-//        Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
-//            serviPack.notificarSalida(paquet.getLocalizador(), fechaSalida, punto);
-//        });
-//    }
+    @Test
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)    
+    public void testRutaIncorrectaPuntoFueraDeRuta() throws IOException {
+        Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
+        Cliente Destinatario0 = new Cliente("12334243", "juan", "pepe", "pp@gmail.com", "jaen", "Córdoba", "Córdoba");
+
+        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
+
+        LocalDateTime fechaSalida = LocalDateTime.now();
+
+        PuntoDeControl punto = new PuntoDeControl(5, "CL Cataluña", "Barcelona");
+
+        Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
+            serviPack.notificarSalida(paquet.getLocalizador(), fechaSalida, punto);
+        });
+    }
 
     @Test
-//    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)    
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)    
+    public void testRutaIncorrectaPuntoDeRutaAtrasado() throws IOException {
+        Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Jaén", "Jaén", "Jaén");
+        Cliente Destinatario0 = new Cliente("12334243", "Juan", "Pepe", "pp@gmail.com", "Córdoba", "Córdoba", "Córdoba");
+
+        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
+
+        LocalDateTime fechaSalida = LocalDateTime.now();
+        PuntoDeControl punto = new PuntoDeControl(16, "Calle Jaén", "Calle Jaén");
+
+        Assertions.assertThrows(PuntoDeControlEquivocado.class, () -> {
+            serviPack.notificarSalida(paquet.getLocalizador(), fechaSalida, punto);
+        });
+    }
+
+    @Test
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)    
     public void testRutaIncorrectaPuntoDeRutaAdelantado() throws IOException {
         Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Jaén", "Jaén", "Jaén");
-        Cliente Destinatario0 = new Cliente("12334243", "Juan", "Pepe", "pp@gmail.com", "Córdoba", "Madrid", "Madrid");
+        Cliente Destinatario0 = new Cliente("12334243", "Juan", "Pepe", "pp@gmail.com", "Córdoba", "Córdoba", "Córdoba");
 
         Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
         LocalDateTime fechaSalida = LocalDateTime.now();

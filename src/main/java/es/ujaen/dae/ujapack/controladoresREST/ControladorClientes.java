@@ -7,10 +7,9 @@ package es.ujaen.dae.ujapack.controladoresREST;
 
 import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCliente;
-import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPaquete;
 import es.ujaen.dae.ujapack.entidades.Cliente;
-import es.ujaen.dae.ujapack.entidades.Paquete;
 import es.ujaen.dae.ujapack.excepciones.ClienteNoRegistrado;
+import es.ujaen.dae.ujapack.excepciones.DNINoValido;
 import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,10 +56,9 @@ public class ControladorClientes {
     @PostMapping("/clientes")
     ResponseEntity<DTOCliente> altaCliente(@RequestBody DTOCliente cliente) {
         try {
-            Cliente cli = cliente.aCliente();
-            serviPack.altaCliente(cliente.aCliente());
+            Cliente cli = serviPack.altaCliente(cliente.aCliente());
             return ResponseEntity.status(HttpStatus.CREATED).body(new DTOCliente(cli));
-        } catch (ClienteNoRegistrado e) {
+        } catch (DNINoValido e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
