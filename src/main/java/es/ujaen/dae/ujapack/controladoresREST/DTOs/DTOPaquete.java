@@ -25,25 +25,19 @@ public class DTOPaquete {
     String destinatario;
     List<PuntoDeControl> ruta;
 
-    public DTOPaquete(int localizador, String estado,
-            float importe, float peso, float altura, String remitente,
-            String destinatario, List<PuntoDeControl> ruta) {
+    public DTOPaquete(){}
+    
+    public DTOPaquete(int localizador, String estado, float importe, float peso, float altura) {
         this.localizador = localizador;
-        this.numPuntosControl = ruta.size();
         this.estado = estado;
         this.importe = importe;
         this.peso = peso;
         this.altura = altura;
-        this.remitente = remitente;
-        this.destinatario = destinatario;
-        this.ruta = ruta;
     }
 
     public DTOPaquete(int localizador, String estado) {
-
         this.localizador = localizador;
         this.estado = estado;
-
     }
 
     public DTOPaquete(Paquete paquete) {
@@ -53,13 +47,10 @@ public class DTOPaquete {
         this.importe = paquete.getImporte();
         this.peso = paquete.getPeso();
         this.altura = paquete.getAltura();
-        System.out.println("aqui llega");
         if (paquete.getRemitente() != null) {
             this.remitente = paquete.getRemitente().getDni();
-            System.out.println("se asigna el remitente");
         } else {
             this.remitente = "";
-            System.out.println(" no se asigna el remitente");
         }
         if (paquete.getDestinatario() != null) {
             this.destinatario = paquete.getDestinatario().getDni();
@@ -67,7 +58,6 @@ public class DTOPaquete {
             this.destinatario = "";
         }
 
-        
         this.ruta = paquete.getRuta();
 
     }

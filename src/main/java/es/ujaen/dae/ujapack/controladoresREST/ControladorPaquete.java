@@ -59,16 +59,15 @@ public class ControladorPaquete {
     }
 
     @PostMapping("/paquetes")
-    ResponseEntity<DTOPaquete> altaPaquete(@RequestBody DTOPaquete paquete){//, @RequestBody DTOCliente remitente, @RequestBody DTOCliente destinatario) {
+    ResponseEntity<DTOPaquete> altaPaquete(@RequestBody DTOPaquete paquete){
         try {
-            Paquete paq = paquete.aPaquete();//, remitente.aCliente(), destinatario.aCliente());
-            serviPack.altaPaquete(paquete.aPaquete());
+            Paquete paq = serviPack.altaPaquete(paquete.aPaquete());
             return ResponseEntity.status(HttpStatus.CREATED).body(new DTOPaquete(paq));
         } catch (PaqueteNoRegistrado e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-    }
-
+    }  
+    
     @GetMapping("/paquetes/{localizador}")
     ResponseEntity<DTOPaquete> verPaquete(@PathVariable String localizador) {
         Optional<Paquete> paquete = serviPack.verPaquetes(localizador);

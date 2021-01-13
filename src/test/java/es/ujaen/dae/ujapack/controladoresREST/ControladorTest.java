@@ -7,7 +7,9 @@ package es.ujaen.dae.ujapack.controladoresREST;
 
 import es.ujaen.dae.ujapack.beans.LimpiadoBaseDeDatos;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCliente;
+import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPaquete;
 import es.ujaen.dae.ujapack.entidades.Cliente;
+import es.ujaen.dae.ujapack.entidades.Paquete;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +33,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
  */
 @SpringBootTest(classes = es.ujaen.dae.ujapack.app.UjapackApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ControladorClientesTest {
+public class ControladorTest {
 
     @LocalServerPort
     int localPort;
@@ -99,6 +101,28 @@ public class ControladorClientesTest {
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
     }
+    
+    @Test
+    public void testAltaPaquete() {
+         DTOPaquete paquete = new DTOPaquete(
+                1111111111,
+                "EnTransito",
+                1,
+                1,
+                1
+         );
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
+        ResponseEntity<DTOPaquete> respuesta = restTemplate.postForEntity(
+                "/paquetes",
+                paquete,
+                DTOPaquete.class
+        );
+        
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+    }
+    
 
 //    @BeforeEach
 //    void limpiadoBaseDeDatos() {

@@ -70,14 +70,16 @@ public class Paquete implements Serializable {
     public Paquete() {
 
     }
-    
+
     public Paquete(int localizador, float importe, float peso, float altura) {
         this.localizador = localizador;
+        this.estado = Estado.EnTransito;
         this.importe = importe;
+        this.numPuntosControl = 1;
         this.peso = peso;
         this.altura = altura;
     }
-    
+
     public Paquete(int localizador, float importe, float peso, float altura, List<PuntoDeControl> ruta) {
         this.localizador = localizador;
         this.importe = importe;
@@ -85,7 +87,7 @@ public class Paquete implements Serializable {
         this.altura = altura;
         this.ruta = ruta;
     }
-    
+
     public Paquete(int localizador, float importe, float peso, float altura, List<PuntoDeControl> ruta, Cliente remitente, Cliente destinatario) {
         this.localizador = localizador;
         this.numPuntosControl = ruta.size();
@@ -117,7 +119,7 @@ public class Paquete implements Serializable {
 
         if (!tama.equals(numPuntosControl)) {
             if (!ruta.get(pasanPaquetes.size()).localizacion.equals(punto.localizacion)) {
-                throw new PuntoDeControlEquivocado(); 
+                throw new PuntoDeControlEquivocado();
             }
         }
 
@@ -125,8 +127,7 @@ public class Paquete implements Serializable {
 
     void controlaExcepcionesEntrada(PuntoDeControl punto) {
         for (int i = 0; i < pasanPaquetes.size(); i++) {
-            if (pasanPaquetes.get(i).pasoControl.localizacion.equals(punto.localizacion))
-            {
+            if (pasanPaquetes.get(i).pasoControl.localizacion.equals(punto.localizacion)) {
                 throw new PuntoDeControlEquivocado();
             }
         }
@@ -138,7 +139,7 @@ public class Paquete implements Serializable {
             }
         }
         if (!esta) {
-            throw new PuntoDeControlEquivocado(); 
+            throw new PuntoDeControlEquivocado();
         }
 
         if (!ruta.get(pasanPaquetes.size()).localizacion.equals(punto.localizacion)) {
@@ -154,7 +155,7 @@ public class Paquete implements Serializable {
     }
 
     public void notificaSalida(LocalDateTime fechaSalida, PuntoDeControl punto) {
-        controlaExcepcionesSalida(punto); 
+        controlaExcepcionesSalida(punto);
         Integer tama = pasanPaquetes.size();
 
         if (tama.equals(numPuntosControl)) {
@@ -223,10 +224,9 @@ public class Paquete implements Serializable {
         return localizador;
     }
 
-    
     public float getImporte() {
         return importe;
-}
+    }
 
     public float getPeso() {
         return peso;
@@ -239,8 +239,5 @@ public class Paquete implements Serializable {
     public Cliente getDestinatario() {
         return destinatario;
     }
-    
-    
 
 }
-

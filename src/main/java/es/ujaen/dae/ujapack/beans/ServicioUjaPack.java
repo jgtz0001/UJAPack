@@ -334,7 +334,7 @@ public class ServicioUjaPack {
      *
      * @param cliente el cliente a dar de alta
      */
-    public Cliente altaCliente(Cliente cliente) {
+    public Cliente altaCliente(@NotNull Cliente cliente) {
         if (repositorioClientes.buscar(cliente.getDni()).isPresent()) {
             throw new DNINoValido();
         }
@@ -345,13 +345,15 @@ public class ServicioUjaPack {
         return cliente;
     }
 
-    public void altaPaquete(@NotNull Paquete paquete) {
-        if (!repositorioPaquete.buscarPaquetes(paquete.getLocalizador()).isPresent()) {
+    public Paquete altaPaquete(@NotNull Paquete paquete) {
+        if (repositorioPaquete.buscarPaquetes(paquete.getLocalizador()).isPresent()) {
             throw new LocalizadorNoValido();
         }
-        Paquete paquet = altaEnvio(1, 1, 1, null, null);
+        if (Integer.toString(paquete.getLocalizador()).length() != 10){
+            throw new LocalizadorNoValido();
+        }
         repositorioPaquete.guardar(paquete);
-
+        return paquete;
     }
 
     public Paquete buscarPaquete(int localizador) {
