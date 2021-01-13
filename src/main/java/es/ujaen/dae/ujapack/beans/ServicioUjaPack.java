@@ -24,7 +24,6 @@ import es.ujaen.dae.ujapack.repositorios.RepositorioCentroDeLogistica;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPaquete;
 import java.util.ArrayList;
 import java.util.Optional;
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,17 +62,10 @@ public class ServicioUjaPack {
         }
     }
 
-    private static final long LIMIT = 10000000000L;
-    private static long last = 0;
-
     /*
 * Constructor de la clase.
      */
     public ServicioUjaPack() {
-    }
-
-    private boolean buscaPorDni(String dni) {
-        return repositorioClientes.buscar(dni).isPresent();
     }
 
     /*
@@ -316,6 +308,14 @@ public class ServicioUjaPack {
         return ruta;
     }
 
+    public Paquete buscarPaquete(int localizador) {
+        if (!repositorioPaquete.buscarPaquetes(localizador).isPresent()) {
+            throw new LocalizadorNoExiste();
+        }
+        return repositorioPaquete.buscar(localizador);
+    }
+
+    //Metodos que usan los controladores
     public Optional<Cliente> verCliente(@NotBlank String dni) {
         Optional<Cliente> clienteLogin = repositorioClientes.buscar(dni);
 
@@ -349,26 +349,11 @@ public class ServicioUjaPack {
         if (repositorioPaquete.buscarPaquetes(paquete.getLocalizador()).isPresent()) {
             throw new LocalizadorNoValido();
         }
-        if (Integer.toString(paquete.getLocalizador()).length() != 10){
+        if (Integer.toString(paquete.getLocalizador()).length() != 10) {
             throw new LocalizadorNoValido();
         }
         repositorioPaquete.guardar(paquete);
         return paquete;
-    }
-
-    public Paquete buscarPaquete(int localizador) {
-        if (!repositorioPaquete.buscarPaquetes(localizador).isPresent()) {
-            throw new LocalizadorNoExiste();
-        }
-        return repositorioPaquete.buscar(localizador);
-    }
-
-    public List<PuntoDeControl> buscarRutaPaquete(int localizador) {
-        List<PuntoDeControl> l = repositorioPaquete.buscarRutaPaquetes(localizador);
-        if (l == null) {
-            throw new LocalizadorNoExiste();
-        }
-        return l;
     }
 
 }

@@ -123,6 +123,27 @@ public class ControladorTest {
 
     }
     
+        @Test
+    public void testAltaPaqueteIncorrecto() {
+         DTOPaquete paquete = new DTOPaquete(
+                1111,
+                "EnTransito",
+                1,
+                1,
+                1
+         );
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
+        ResponseEntity<DTOPaquete> respuesta = restTemplate.postForEntity(
+                "/paquetes",
+                paquete,
+                DTOPaquete.class
+        );
+        
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+
+    }
+    
 
 //    @BeforeEach
 //    void limpiadoBaseDeDatos() {

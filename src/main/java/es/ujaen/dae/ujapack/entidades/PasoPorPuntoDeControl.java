@@ -27,9 +27,7 @@ public class PasoPorPuntoDeControl implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-// @NotBlank
     @ManyToOne(fetch = FetchType.EAGER)
-    //@JoinColumn(name = "paso_control")
     public PuntoDeControl pasoControl;
     @PastOrPresent
     private LocalDateTime fechaLlegada;

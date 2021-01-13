@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  *
  * @author Pablo Lozano
- * @description: agarramela con la mano
  */
 @RestController
 @RequestMapping("/ujapack")
