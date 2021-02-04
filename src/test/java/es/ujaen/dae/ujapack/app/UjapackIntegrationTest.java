@@ -30,7 +30,6 @@ import org.springframework.test.annotation.DirtiesContext.MethodMode;
 @SpringBootTest(classes = es.ujaen.dae.ujapack.app.UjapackApplication.class)
 public class UjapackIntegrationTest {
 
-    
     @Autowired 
     ServicioUjaPack serviPack;
 
