@@ -18,6 +18,7 @@ import javax.validation.constraints.Size;
  *
  * @author zafra
  */
+
 @Entity
 public class Cliente implements Serializable {
 
