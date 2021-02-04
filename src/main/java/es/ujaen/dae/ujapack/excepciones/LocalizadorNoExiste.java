@@ -7,10 +7,9 @@ package es.ujaen.dae.ujapack.excepciones;
 
 /**
  *
- * @author jenar
+ * @author Pablo
  */
-public class LocalizadorNoExiste extends RuntimeException{
+public class LocalizadorNoExiste extends RuntimeException {
     public LocalizadorNoExiste(){
-        
     }
 }

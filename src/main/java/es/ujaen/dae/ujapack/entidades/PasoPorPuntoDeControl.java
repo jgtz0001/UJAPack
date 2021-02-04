@@ -1,17 +1,46 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
  */
 package es.ujaen.dae.ujapack.entidades;
 
 import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.PastOrPresent;
 
 /**
  *
  * @author Pablo
  */
-public class PasoPorPuntoDeControl{
+@Entity
+public class PasoPorPuntoDeControl implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    public PuntoDeControl pasoControl;
+    @PastOrPresent
+    private LocalDateTime fechaLlegada;
+    @PastOrPresent
+    private LocalDateTime fechaSalida;
+
+    public PasoPorPuntoDeControl() {
+    }
+
+    public PasoPorPuntoDeControl(PuntoDeControl p, LocalDateTime fechaEntrada) {
+        fechaLlegada = fechaEntrada;
+        pasoControl = p;
+    }
 
     /**
      * @return the fechaLlegada
@@ -27,17 +56,7 @@ public class PasoPorPuntoDeControl{
         return fechaSalida;
     }
 
-    public PuntoDeControl pasoControl;
-    private LocalDateTime fechaLlegada;
-    private LocalDateTime fechaSalida;
-   
-    
-    public PasoPorPuntoDeControl(PuntoDeControl p, LocalDateTime fechaEntrada){
-        fechaLlegada = fechaEntrada;
-        pasoControl = p;
-    }
-    
-    void salida(){
+    void salida() {
         setFechaSalida(LocalDateTime.now());
     }
 
@@ -67,6 +86,13 @@ public class PasoPorPuntoDeControl{
      */
     public void setFechaSalida(LocalDateTime fechaSalida) {
         this.fechaSalida = fechaSalida;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
     }
 
 }

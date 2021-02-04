@@ -7,11 +7,9 @@ package es.ujaen.dae.ujapack.excepciones;
 
 /**
  *
- * @author jenar
+ * @author Pablo
  */
-public class PuntoDeControlEquivocado extends RuntimeException{
-
-    public PuntoDeControlEquivocado() {
+public class PuntoDeControlEquivocado extends RuntimeException {
+    public PuntoDeControlEquivocado(){
     }
-    
 }

@@ -7,11 +7,10 @@ package es.ujaen.dae.ujapack.excepciones;
 
 /**
  *
- * @author jenar
+ * @author Pablo
  */
 public class FechaIncorrecta extends RuntimeException{
-
-    public FechaIncorrecta() {
-    }
     
+    public FechaIncorrecta(){
+    }
 }

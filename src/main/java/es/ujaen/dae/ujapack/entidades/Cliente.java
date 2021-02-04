@@ -6,20 +6,44 @@
 package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  *
  * @author zafra
  */
+@Entity
 public class Cliente implements Serializable {
 
+     @Id
+    @Size(min = 8, max = 8)
     private String dni;
+    @NotBlank
     private String nombre;
+    @NotBlank
     private String apellidos;
+    @NotBlank
+    @Email
     private String email;
+    @NotBlank
     private String direccion;
+    @NotBlank
     private String localidad;
+    @NotBlank
     private String provincia;
+
+    @OneToMany(mappedBy = "remitente")
+    List<Paquete> PaquetesRemitente;
+
+    @OneToMany(mappedBy = "destinatario")
+    List<Paquete> PaquetesDestinatario;
+
 
     public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia) {
         this.dni = dni;
