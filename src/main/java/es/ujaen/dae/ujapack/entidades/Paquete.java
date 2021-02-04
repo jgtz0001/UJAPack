@@ -4,7 +4,6 @@
 * and open the template in the editor.
  */
 package es.ujaen.dae.ujapack.entidades;
-
 import es.ujaen.dae.ujapack.excepciones.PuntoDeControlEquivocado;
 import java.io.Serializable;
 import java.time.LocalDateTime;
