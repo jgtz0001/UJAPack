@@ -43,7 +43,6 @@ public class RepositorioPaquete {
         em.persist(paquete);
     }
 
-    @Transactional
     public void actualizarPaquete(Paquete paquete) {
         em.merge(paquete);
     }

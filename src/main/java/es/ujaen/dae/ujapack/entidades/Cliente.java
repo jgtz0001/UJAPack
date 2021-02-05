@@ -6,6 +6,7 @@
 package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  *
@@ -38,11 +41,13 @@ public class Cliente implements Serializable {
     @NotBlank
     private String provincia;
 
-    @OneToMany(mappedBy = "remitente")
-    List<Paquete> PaquetesRemitente;
-
-    @OneToMany(mappedBy = "destinatario")
-    List<Paquete> PaquetesDestinatario;
+//    @OneToMany(mappedBy = "remitente")
+//    @Fetch(FetchMode.SUBSELECT)
+//    List<Paquete> PaquetesRemitente;
+//
+//    @OneToMany(mappedBy = "destinatario")
+//    @Fetch(FetchMode.SUBSELECT)
+//    List<Paquete> PaquetesDestinatario;
 
 
     public Cliente(String dni, String nombre, String apellidos, String email, String direccion, String localidad, String provincia) {
@@ -53,6 +58,8 @@ public class Cliente implements Serializable {
         this.direccion = direccion;
         this.localidad = localidad;
         this.provincia = provincia;
+//        this.PaquetesDestinatario = new ArrayList<Paquete>();
+//        this.PaquetesRemitente = new ArrayList<Paquete>();
     }
 
     public Cliente() {
