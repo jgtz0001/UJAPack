@@ -9,7 +9,14 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -17,7 +24,7 @@ import javax.persistence.ManyToMany;
  */
 @Entity
 public class CentroDeLogistica extends PuntoDeControl implements Serializable {
-
+    
     @ElementCollection(targetClass=Integer.class)
     private List<Integer> conexiones;
 

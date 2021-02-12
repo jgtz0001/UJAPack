@@ -8,6 +8,7 @@ package es.ujaen.dae.ujapack.entidades;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 
 /**
@@ -17,7 +18,7 @@ import javax.persistence.ManyToMany;
 @Entity
 public class Oficina extends PuntoDeControl implements Serializable {
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     List<CentroDeLogistica> listaLogistica;
 
    public  Oficina(int id, String nombre, String localizacion) {
