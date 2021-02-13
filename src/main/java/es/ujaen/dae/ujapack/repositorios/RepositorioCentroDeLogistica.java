@@ -8,6 +8,7 @@ package es.ujaen.dae.ujapack.repositorios;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,16 +31,30 @@ public class RepositorioCentroDeLogistica {
         return em.find(CentroDeLogistica.class, id);
     }
 
+    @Transactional
+    public CentroDeLogistica BuscarIdCentro(int id) {
+        List<CentroDeLogistica> puntos = em.createQuery("select h from CentroDeLogistica h WHERE h.id = '" + id + "'",
+                CentroDeLogistica.class).getResultList();
+        return puntos.get(0);
+    }
+
+//    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+//    public Optional<CentroDeLogistica> BuscarIdCentro(int localizador) {
+//        return Optional.ofNullable(em.find(CentroDeLogistica.class, localizador));
+//    }
+
     public void guardar(CentroDeLogistica centroDeLogistica) {
         em.persist(centroDeLogistica);
     }
 
-    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    @Transactional
     public List<Integer> BuscaIdCL(int id) {
         List<CentroDeLogistica> puntos = em.createQuery("select h from CentroDeLogistica h WHERE h.id = '" + id + "'",
                 CentroDeLogistica.class).getResultList();
         List<Integer> h = new ArrayList();
-        h = puntos.get(0).getConexiones();
+        for (int i = 0; i < puntos.get(0).getConexiones().size(); i++) {
+            h.add(puntos.get(0).getConexiones().get(i));
+        }
         return h;
     }
 

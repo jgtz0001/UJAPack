@@ -27,6 +27,7 @@ import java.util.Optional;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Validated
@@ -207,11 +208,12 @@ public class ServicioUjaPack {
 * @return devuelve un nodo con todos sus atributos completos.
      */
     private Nodo nodoConexiones(List<Integer> lista, int id, boolean[] visitados) {
-        CentroDeLogistica centro = repositorioCentroDeLogistica.buscarPorId(id);
-        if (centro == null) {
-            throw new IdIncorrecto();
-        }
-        Nodo n = new Nodo(id, centro.getConexiones());
+//        CentroDeLogistica centro = repositorioCentroDeLogistica.BuscarIdCentro(id);//.orElseThrow(IdIncorrecto::new);
+//        if (centro == null) {
+//            throw new IdIncorrecto();
+//        }
+        List<Integer> conexiones = repositorioCentroDeLogistica.BuscaIdCL(id);
+        Nodo n = new Nodo(id, conexiones);
         for (int j = 0; j < lista.size(); j++) {
             n.lista.add(lista.get(j));
         }
@@ -239,6 +241,7 @@ public class ServicioUjaPack {
 * @param destino Identificador del punto de control a donde llegaría el paquete
 * @param conexiones List que tiene las conexiones del punto de control.
      */
+    @Transactional
     private List<PuntoDeControl> busquedaAnchura(Integer origen, int destino, List<Integer> conexiones) {
         boolean[] visitados = new boolean[11];
         boolean[] conexionesVisitadas = new boolean[11];
@@ -269,7 +272,7 @@ public class ServicioUjaPack {
             primero = arrayBusquedaNodos.get(contador);
             conexionesWhile = arrayBusquedaNodos.get(contador).conexionesId;
             for (int i = 0; i < conexionesWhile.size(); i++) {
-                if (!visitados[contador]) {
+                if (!visitados[arrayBusquedaNodos.get(contador).id]) {
                     List<Integer> auxiliarNo = arrayBusquedaNodos.get(contador).getConexionesId();
 
                     copiaPrimero = primero.lista;
@@ -295,6 +298,7 @@ public class ServicioUjaPack {
         return null;
     }
 
+    @Transactional
     public List<PuntoDeControl> calcularRutaPaquete(String localidadRem, String localidadDes, int idProvinciaRem, int idProvinciaDest) {
         List<PuntoDeControl> ruta = new ArrayList<PuntoDeControl>();
         int n = repositorioPuntoDeControl.BuscaIdProvinciaCL(idProvinciaRem);

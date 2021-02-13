@@ -9,14 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -24,11 +17,11 @@ import org.hibernate.annotations.LazyCollectionOption;
  */
 @Entity
 public class CentroDeLogistica extends PuntoDeControl implements Serializable {
-    
-    @ElementCollection(targetClass=Integer.class)
+
+    @ElementCollection(targetClass = Integer.class)
     private List<Integer> conexiones;
 
-    @ElementCollection(targetClass=String.class)
+    @ElementCollection(targetClass = String.class)
     private List<String> provincias;
 
     @ManyToMany(mappedBy = "listaLogistica")
@@ -42,6 +35,13 @@ public class CentroDeLogistica extends PuntoDeControl implements Serializable {
         this.conexiones = conexiones;
         this.provincias = provincias;
 
+    }
+
+    public CentroDeLogistica(CentroDeLogistica c) {
+        super(c.getId(), c.nombre, c.localizacion);
+        this.conexiones = c.conexiones;
+        this.provincias = c.provincias;
+        this.listaOficinas = c.listaOficinas;
     }
 
     /**

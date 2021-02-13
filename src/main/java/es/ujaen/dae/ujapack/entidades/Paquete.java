@@ -54,10 +54,10 @@ public class Paquete implements Serializable {
     @Fetch(value = FetchMode.SUBSELECT)
     private List<PuntoDeControl> ruta;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne
     private Cliente remitente;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne
     private Cliente destinatario;
 
     public enum Estado {
