@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import es.ujaen.dae.ujapack.excepciones.DNINoValido;
-import es.ujaen.dae.ujapack.excepciones.IdIncorrecto;
 import java.util.Collections;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -116,17 +115,18 @@ public class ServicioUjaPack {
     private List<Integer> completaRuta(List<Integer> ruta, int idProvinciaRem, int idProvinciaDest) {
         List<Integer> rutaDefinitiva = new ArrayList<Integer>();
 
-        if (!ruta.contains(idProvinciaRem)) {
-            rutaDefinitiva.add(idProvinciaRem);
+        if (!ruta.contains(idProvinciaDest)) {
+            rutaDefinitiva.add(idProvinciaDest);
         }
-
+        
         for (int i = 0; i < ruta.size(); i++) {
             rutaDefinitiva.add(ruta.get(i));
         }
 
-        if (!ruta.contains(idProvinciaDest)) {
-            rutaDefinitiva.add(idProvinciaDest);
+        if (!ruta.contains(idProvinciaRem)) {
+            rutaDefinitiva.add(idProvinciaRem);
         }
+        
         return rutaDefinitiva;
     }
 
@@ -160,7 +160,7 @@ public class ServicioUjaPack {
 * @return cadena de caracteres informando al cliente.
      */
     public String notificarSalida(int localizador, LocalDateTime fechaSalida, PuntoDeControl punto) {
-        Paquete p = repositorioPaquete.buscar(localizador);
+        Paquete p = repositorioPaquete.buscarEstadoPaquete(localizador);
         if (p == null) {
             throw new LocalizadorNoExiste();
         }
@@ -169,6 +169,15 @@ public class ServicioUjaPack {
 
         return (fechaSalida + punto.getNombre());
     }
+    
+//    public void arregloPaquete(Paquete p){
+//        for(int i=0; i<p.getRuta().size();i++){
+//            for(int j=1; j<p.getRuta().size();j++){
+//                if(p.getRuta().get(i).getId() == p.getRuta().get(j).getId()){
+//                }
+//            }
+//        }
+//    }
 
     /*
 * Avisa del estado y envia el paquete.
@@ -286,8 +295,7 @@ public class ServicioUjaPack {
                             arrayBusquedaNodos.add(n);
                         }
                         if (n.lista.contains(destinoCentroLogistico)) {
-                            completaRuta(n.lista, origen, destino);
-                            return rutaString(n.lista);
+                            return rutaString(completaRuta(n.lista, origen, destino));
                         }
                     }
                 }

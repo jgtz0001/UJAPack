@@ -18,6 +18,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Positive;
@@ -50,7 +51,7 @@ public class Paquete implements Serializable {
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "pasanPaquetes")
     private List<PasoPorPuntoDeControl> pasanPaquetes;
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<PuntoDeControl> ruta;
 

@@ -42,7 +42,8 @@ public class RepositorioPaquete {
             Paquete.class).getSingleResult();
         return paquete.getRuta();
     }
-      public Paquete buscarEstadoPaquete(int localizador) {
+    
+    public Paquete buscarEstadoPaquete(int localizador) {
         Paquete paquete = em.createQuery("select h from Paquete h WHERE h.id = '" + localizador + "'",
             Paquete.class).getSingleResult();
         return paquete;
