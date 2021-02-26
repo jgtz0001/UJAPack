@@ -48,11 +48,9 @@ public class Paquete implements Serializable {
     private float altura;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JoinColumn(name = "pasanPaquetes")
+//    @Fetch(value = FetchMode.SELECT)
     private List<PasoPorPuntoDeControl> pasanPaquetes;
     @ManyToMany(fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
     private List<PuntoDeControl> ruta;
 
     @ManyToOne

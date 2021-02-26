@@ -160,7 +160,7 @@ public class ServicioUjaPack {
 * @return cadena de caracteres informando al cliente.
      */
     public String notificarSalida(int localizador, LocalDateTime fechaSalida, PuntoDeControl punto) {
-        Paquete p = repositorioPaquete.buscarEstadoPaquete(localizador);
+        Paquete p = repositorioPaquete.buscar(localizador);
         if (p == null) {
             throw new LocalizadorNoExiste();
         }
