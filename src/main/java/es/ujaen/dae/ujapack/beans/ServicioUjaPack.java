@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import org.aspectj.weaver.tools.cache.AsynchronousFileCacheBacking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -118,7 +119,7 @@ public class ServicioUjaPack {
         if (!ruta.contains(idProvinciaDest)) {
             rutaDefinitiva.add(idProvinciaDest);
         }
-        
+
         for (int i = 0; i < ruta.size(); i++) {
             rutaDefinitiva.add(ruta.get(i));
         }
@@ -126,7 +127,7 @@ public class ServicioUjaPack {
         if (!ruta.contains(idProvinciaRem)) {
             rutaDefinitiva.add(idProvinciaRem);
         }
-        
+
         return rutaDefinitiva;
     }
 
@@ -161,15 +162,13 @@ public class ServicioUjaPack {
      */
     public String notificarSalida(int localizador, LocalDateTime fechaSalida, PuntoDeControl punto) {
         Paquete p = repositorioPaquete.buscar(localizador);
-        if (p == null) {
-            throw new LocalizadorNoExiste();
-        }
+        compruebaPaquete(p);
         p.notificaSalida(fechaSalida, punto);
         repositorioPaquete.actualizarPaquete(p);
 
         return (fechaSalida + punto.getNombre());
     }
-    
+
 //    public void arregloPaquete(Paquete p){
 //        for(int i=0; i<p.getRuta().size();i++){
 //            for(int j=1; j<p.getRuta().size();j++){
@@ -304,6 +303,18 @@ public class ServicioUjaPack {
             contador++;
         }
         return null;
+    }
+
+    void compruebaPaquete(Paquete p) {
+        for (int i = 0; i < p.getRuta().size(); i++) {
+            for (int j = 0; j < p.getRuta().size(); j++) {
+                if (i != j) {
+                    if (p.getRuta().get(i).getId() == p.getRuta().get(j).getId()) {
+                        p.getRuta().remove(j);
+                    }
+                }
+            }
+        }
     }
 
     @Transactional

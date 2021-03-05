@@ -25,6 +25,8 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -47,10 +49,12 @@ public class Paquete implements Serializable {
     @Positive
     private float altura;
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
 //    @Fetch(value = FetchMode.SELECT)
     private List<PasoPorPuntoDeControl> pasanPaquetes;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany
     private List<PuntoDeControl> ruta;
 
     @ManyToOne

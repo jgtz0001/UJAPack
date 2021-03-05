@@ -24,7 +24,7 @@ public class CentroDeLogistica extends PuntoDeControl implements Serializable {
     @ElementCollection(targetClass = String.class)
     private List<String> provincias;
 
-    @ManyToMany(mappedBy = "listaLogistica")
+    @ManyToMany(mappedBy = "centroLog")
     public List<Oficina> listaOficinas;
 
     public CentroDeLogistica() {

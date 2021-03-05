@@ -10,6 +10,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -18,8 +19,8 @@ import javax.persistence.ManyToMany;
 @Entity
 public class Oficina extends PuntoDeControl implements Serializable {
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    List<CentroDeLogistica> listaLogistica;
+    @OneToOne
+    CentroDeLogistica centroLog;
 
    public  Oficina(int id, String nombre, String localizacion) {
         super(id, nombre, localizacion);
