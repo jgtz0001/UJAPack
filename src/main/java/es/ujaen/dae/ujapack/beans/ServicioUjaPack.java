@@ -187,9 +187,7 @@ public class ServicioUjaPack {
      */
     public String notificarEntrada(int localizador, LocalDateTime fechaEntrada, PuntoDeControl punto) {
         Paquete p = repositorioPaquete.buscar(localizador);
-        if (p == null) {
-            throw new LocalizadorNoExiste();
-        }
+        compruebaPaquete(p);
         p.notificaEntrada(fechaEntrada, punto);
         repositorioPaquete.actualizarPaquete(p);
         return (fechaEntrada + punto.getNombre());
@@ -311,6 +309,16 @@ public class ServicioUjaPack {
                 if (i != j) {
                     if (p.getRuta().get(i).getId() == p.getRuta().get(j).getId()) {
                         p.getRuta().remove(j);
+                    }
+                }
+            }
+        }
+        
+        for (int i=0; i<p.getPasanPaquetes().size(); i++){
+            for (int j = 0; j < p.getPasanPaquetes().size(); j++) {
+                if (i != j) {
+                    if(p.getPasanPaquetes().get(i).getId() == p.getPasanPaquetes().get(j).getId()){
+                        p.getPasanPaquetes().remove(j);
                     }
                 }
             }

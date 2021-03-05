@@ -50,8 +50,8 @@ public class Paquete implements Serializable {
     private float altura;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-//    @Fetch(value = FetchMode.SELECT)
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})//he cambiado el typeall por persist
+
     private List<PasoPorPuntoDeControl> pasanPaquetes;
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany
