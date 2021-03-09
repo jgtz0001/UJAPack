@@ -50,7 +50,7 @@ public class Paquete implements Serializable {
     private float altura;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})//he cambiado el typeall por persist
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})//he cambiado el typeall por persist
 
     private List<PasoPorPuntoDeControl> pasanPaquetes;
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -170,7 +170,7 @@ public class Paquete implements Serializable {
             if (tama.equals(numPuntosControl - 1)) {
                 estado = estado.EnReparto;
             }
-            this.pasanPaquetes.get(tama - 1).setFechaLlegada(fechaSalida);
+            this.pasanPaquetes.get(tama - 1).setFechaSalida(fechaSalida);
         }
     }
 

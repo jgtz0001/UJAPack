@@ -7,6 +7,7 @@ package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,7 +28,7 @@ public class PasoPorPuntoDeControl implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     public PuntoDeControl pasoControl;
     @PastOrPresent
     private LocalDateTime fechaLlegada;
