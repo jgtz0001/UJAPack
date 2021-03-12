@@ -169,14 +169,6 @@ public class ServicioUjaPack {
         return (fechaSalida + punto.getNombre());
     }
 
-//    public void arregloPaquete(Paquete p){
-//        for(int i=0; i<p.getRuta().size();i++){
-//            for(int j=1; j<p.getRuta().size();j++){
-//                if(p.getRuta().get(i).getId() == p.getRuta().get(j).getId()){
-//                }
-//            }
-//        }
-//    }
 
     /*
 * Avisa del estado y envia el paquete.
@@ -204,6 +196,14 @@ public class ServicioUjaPack {
     public float calcularImporte(int numPuntosControl, float peso, float altura, float anchura) {
         float importe = (peso * altura * anchura * (numPuntosControl + 1) / 1000);
         return importe;
+    }
+    
+    public boolean comprobarImporte(double precio1, float precio2) {
+        return precio1 == precio2;
+    }
+    
+    public boolean comprobarNPuntosRuta(int num1, int num2) {
+        return num1 == num2;
     }
 
     /*

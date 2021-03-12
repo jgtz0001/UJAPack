@@ -40,7 +40,7 @@ public class Paquete implements Serializable {
     private int localizador;
     @Positive
     private int numPuntosControl;
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Estado estado;
     @PositiveOrZero
     private float importe;
@@ -50,9 +50,9 @@ public class Paquete implements Serializable {
     private float altura;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})//he cambiado el typeall por persist
-
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     private List<PasoPorPuntoDeControl> pasanPaquetes;
+    
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany
     private List<PuntoDeControl> ruta;
@@ -66,8 +66,7 @@ public class Paquete implements Serializable {
     public enum Estado {
         EnTransito,
         EnReparto,
-        Entregado,
-        Extraviado;
+        Entregado;
     }
 
     public Paquete() {

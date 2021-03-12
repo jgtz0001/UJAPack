@@ -47,7 +47,7 @@ public class ServicioJson {
     @Autowired
     RepositorioPaquete repositorioPaquete;
     
-     @Autowired
+    @Autowired
     RepositorioOficina repositorioOficina;
     
     
@@ -66,7 +66,6 @@ public class ServicioJson {
     
     
     /*Función que se encarga de leer un Json y añadir los datos a la base de datos. */
-    @Transactional
     private void leerJson() throws IOException {
         String jsonStr = Files.readString(new File("redujapack.json").toPath());
         JsonObject raiz = new Gson().fromJson(jsonStr, JsonObject.class);
