@@ -6,10 +6,7 @@
 package es.ujaen.dae.ujapack.entidades;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
 /**

@@ -39,8 +39,14 @@ public class UjapackIntegrationTest {
     RepositorioPuntoDeControl repositorioPuntoDeControl;
 
     @Test
+    public void TestAccesoServicioUjaPack(){
+        Assertions.assertThat(serviPack).isNotNull();
+    }
+    
+    
+    @Test
     @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)    
-    public void creaEnvio() throws IOException {
+    public void TestPruebaEnvios() throws IOException {
 
         Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
         serviPack.altaCliente(Remitente1);
@@ -68,7 +74,7 @@ public class UjapackIntegrationTest {
     }
     @Test
     @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)    
-    public void testAvisaEstado() throws IOException {
+    public void TestComprobarEstados() throws IOException {
         Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
         serviPack.altaCliente(Remitente1);
         Cliente Destinatario0 = new Cliente("12334243", "juan", "pepe", "pp@gmail.com", "jaen", "Córdoba", "Córdoba");
@@ -97,7 +103,7 @@ public class UjapackIntegrationTest {
     
     @Test
     @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)    
-    public void testRutaIncorrectaPuntoFueraDeRuta() throws IOException {
+    public void TestRutaIncorrectaPuntoFueraDeRuta() throws IOException {
         Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
         serviPack.altaCliente(Remitente1);
         Cliente Destinatario0 = new Cliente("12334243", "juan", "pepe", "pp@gmail.com", "jaen", "Córdoba", "Córdoba");
@@ -117,7 +123,7 @@ public class UjapackIntegrationTest {
 
     @Test
     @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)    
-    public void testRutaIncorrectaPuntoDeRutaAtrasado() throws IOException {
+    public void TestRutaIncorrectaPuntoDeRutaAtrasado() throws IOException {
         Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Jaén", "Jaén", "Jaén");
         serviPack.altaCliente(Remitente1);
         Cliente Destinatario0 = new Cliente("12334243", "Juan", "Pepe", "pp@gmail.com", "Córdoba", "Córdoba", "Córdoba");
@@ -135,7 +141,7 @@ public class UjapackIntegrationTest {
 
     @Test
     @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)    
-    public void testRutaIncorrectaPuntoDeRutaAdelantado() throws IOException {
+    public void TestRutaIncorrectaPuntoDeRutaAdelantado() throws IOException {
         Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Jaén", "Jaén", "Jaén");
         serviPack.altaCliente(Remitente1);
         Cliente Destinatario0 = new Cliente("12334243", "Juan", "Pepe", "pp@gmail.com", "Córdoba", "Córdoba", "Córdoba");
@@ -149,9 +155,10 @@ public class UjapackIntegrationTest {
             serviPack.notificarSalida(paquet.getLocalizador(), fechaSalida, punto);
         });
     }
+    
 
-//    @BeforeEach
-//    void limpiadoBaseDeDatos() {
-//        limpiadoBaseDeDatos.limpiar();
-//    }
+    @BeforeEach
+    void limpiadoBaseDeDatos() {
+        limpiadoBaseDeDatos.limpiar();
+    }
 }

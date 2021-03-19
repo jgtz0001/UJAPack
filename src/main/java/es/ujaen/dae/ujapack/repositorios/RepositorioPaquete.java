@@ -43,13 +43,6 @@ public class RepositorioPaquete {
         return paquete.getRuta();
     }
     
-    @Transactional
-    public Paquete buscarEstadoPaquete(int localizador) {
-        Paquete paquete = em.createQuery("select h from Paquete h WHERE h.id = '" + localizador + "'",
-            Paquete.class).getSingleResult();
-        return paquete;
-    }
-
     public void guardar(Paquete paquete) {
         em.persist(paquete);
     }

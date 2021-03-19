@@ -8,7 +8,6 @@ package es.ujaen.dae.ujapack.repositorios;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,11 +36,6 @@ public class RepositorioCentroDeLogistica {
                 CentroDeLogistica.class).getResultList();
         return puntos.get(0);
     }
-
-//    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-//    public Optional<CentroDeLogistica> BuscarIdCentro(int localizador) {
-//        return Optional.ofNullable(em.find(CentroDeLogistica.class, localizador));
-//    }
 
     public void guardar(CentroDeLogistica centroDeLogistica) {
         em.persist(centroDeLogistica);
