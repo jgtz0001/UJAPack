@@ -157,8 +157,8 @@ public class UjapackIntegrationTest {
     }
     
 
-    @BeforeEach
-    void limpiadoBaseDeDatos() {
-        limpiadoBaseDeDatos.limpiar();
-    }
+//    @BeforeEach
+//    void limpiadoBaseDeDatos() {
+//        limpiadoBaseDeDatos.limpiar();
+//    }
 }
