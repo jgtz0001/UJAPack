@@ -28,12 +28,11 @@ public class LimpiadoBaseDeDatos {
      * Lista de entidades a borrar.
      */
     final String[] tablas = {
-        "CentroDeLogistica",
-        "Cliente",
-        "Oficina",
         "Paquete",
         "PasoPorPuntoDeControl",
-        "PuntoDeControl"
+        "CentroDeLogistica",
+        "PuntoDeControl",
+        "Cliente"
     };
 
     final String deleteFrom = "delete from ";

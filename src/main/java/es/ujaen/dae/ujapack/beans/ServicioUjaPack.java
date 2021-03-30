@@ -154,21 +154,35 @@ public class ServicioUjaPack {
     }
 
     /*
+* Obtiene el ID de la Lista de Puntos de control de la ruta.
+* @param listaRuta lista de la ruta de un paquete.
+* @param localizadorRuta.
+* @return iterador.
+     */
+    int obtenerIdLista(List<PuntoDeControl> listaRuta, int localizadorRuta) {
+        for (int iterador = 0; iterador < listaRuta.size(); iterador++) {
+            if (listaRuta.get(iterador).getId() == localizadorRuta) {
+                return iterador;
+            }
+        }
+        return -1;
+    }
+
+    /*
 * Avisa del estado y envia el paquete.
 * @param localizador Identificador del paquete.
 * @param fechaSalida Fecha de Salida del paquete.
 * @param punto Punto de control al que llega el paquete.
 * @return cadena de caracteres informando al cliente.
      */
-    public String notificarSalida(int localizador, LocalDateTime fechaSalida, PuntoDeControl punto) {
+    public String notificarSalida(int localizador, LocalDateTime fechaSalida, int punto) {
         Paquete p = repositorioPaquete.buscar(localizador);
         compruebaPaquete(p);
-        p.notificaSalida(fechaSalida, punto);
+        PuntoDeControl puntos = p.getRuta().get((obtenerIdLista(p.getRuta(), punto)));
+        p.notificaSalida(fechaSalida, puntos);
         repositorioPaquete.actualizarPaquete(p);
-
-        return (fechaSalida + punto.getNombre());
+        return (fechaSalida.toString());
     }
-
 
     /*
 * Avisa del estado y envia el paquete.
@@ -177,12 +191,13 @@ public class ServicioUjaPack {
 * @param punto Punto de control al que llega el paquete.
 * @return cadena de caracteres informando al cliente.
      */
-    public String notificarEntrada(int localizador, LocalDateTime fechaEntrada, PuntoDeControl punto) {
+    public String notificarEntrada(int localizador, LocalDateTime fechaEntrada, int punto) {
         Paquete p = repositorioPaquete.buscar(localizador);
         compruebaPaquete(p);
-        p.notificaEntrada(fechaEntrada, punto);
+        PuntoDeControl puntos = p.getRuta().get((obtenerIdLista(p.getRuta(), punto)));
+        p.notificaEntrada(fechaEntrada, puntos);
         repositorioPaquete.actualizarPaquete(p);
-        return (fechaEntrada + punto.getNombre());
+        return (fechaEntrada.toString());
     }
 
     /*
@@ -197,11 +212,11 @@ public class ServicioUjaPack {
         float importe = (peso * altura * anchura * (numPuntosControl + 1) / 1000);
         return importe;
     }
-    
+
     public boolean comprobarImporte(double precio1, float precio2) {
         return precio1 == precio2;
     }
-    
+
     public boolean comprobarNPuntosRuta(int num1, int num2) {
         return num1 == num2;
     }
@@ -313,11 +328,11 @@ public class ServicioUjaPack {
                 }
             }
         }
-        
-        for (int i=0; i<p.getPasanPaquetes().size(); i++){
+
+        for (int i = 0; i < p.getPasanPaquetes().size(); i++) {
             for (int j = 0; j < p.getPasanPaquetes().size(); j++) {
                 if (i != j) {
-                    if(p.getPasanPaquetes().get(i).getId() == p.getPasanPaquetes().get(j).getId()){
+                    if (p.getPasanPaquetes().get(i).getId() == p.getPasanPaquetes().get(j).getId()) {
                         p.getPasanPaquetes().remove(j);
                     }
                 }

@@ -53,7 +53,7 @@ public class ServicioJson {
     public ServicioJson (){
         
     }
-    @PostConstruct
+   
     public void rellenarJson() {
         try {
             leerJson();
