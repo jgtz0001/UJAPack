@@ -3,12 +3,10 @@
 * To change this template file, choose Tools | Templates
 * and open the template in the editor.
  */
-package es.ujaen.dae.ujapack.app;
+package es.ujaen.dae.ujapack.beans;
 
-import es.ujaen.dae.ujapack.beans.LimpiadoBaseDeDatos;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Paquete;
-import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
 import es.ujaen.dae.ujapack.entidades.Paquete.Estado;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPuntoDeControl;
 import java.io.IOException;
@@ -24,7 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @author PCJoseGabriel
  */
 @SpringBootTest(classes = es.ujaen.dae.ujapack.app.UjapackApplication.class)
-public class UjapackIntegrationTest {
+public class ServicioUjapackTest {
 
     @Autowired
     ServicioUjaPack serviPack;

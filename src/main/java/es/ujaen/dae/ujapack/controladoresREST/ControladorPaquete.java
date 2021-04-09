@@ -8,9 +8,7 @@ package es.ujaen.dae.ujapack.controladoresREST;
 
 import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPaquete;
-import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTORuta;
 import es.ujaen.dae.ujapack.entidades.Paquete;
-import es.ujaen.dae.ujapack.excepciones.LocalizadorNoExiste;
 import es.ujaen.dae.ujapack.excepciones.LocalizadorNoValido;
 import es.ujaen.dae.ujapack.excepciones.PaqueteNoRegistrado;
 import java.util.Optional;

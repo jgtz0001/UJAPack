@@ -30,8 +30,6 @@ public class LimpiadoBaseDeDatos {
     final String[] tablas = {
         "Paquete",
         "PasoPorPuntoDeControl",
-        "CentroDeLogistica",
-        "PuntoDeControl",
         "Cliente"
     };
 

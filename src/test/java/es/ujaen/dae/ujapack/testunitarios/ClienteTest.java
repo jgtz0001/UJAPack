@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package es.ujaen.dae.ujapack.entidades;
+package es.ujaen.dae.ujapack.testunitarios;
 
+import es.ujaen.dae.ujapack.entidades.Cliente;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
