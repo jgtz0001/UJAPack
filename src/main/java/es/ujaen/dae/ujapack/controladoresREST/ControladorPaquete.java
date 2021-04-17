@@ -7,7 +7,6 @@
 package es.ujaen.dae.ujapack.controladoresREST;
 
 import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
-import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCliente;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPaquete;
 import es.ujaen.dae.ujapack.entidades.Paquete;
 import es.ujaen.dae.ujapack.excepciones.LocalizadorNoValido;
