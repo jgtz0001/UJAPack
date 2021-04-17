@@ -9,7 +9,7 @@ import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCliente;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.excepciones.ClienteNoRegistrado;
-import es.ujaen.dae.ujapack.excepciones.DNINoValido;
+import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +57,7 @@ public class ControladorClientes {
         try {
             Cliente cli = serviPack.altaCliente(cliente.aCliente());
             return ResponseEntity.status(HttpStatus.CREATED).body(new DTOCliente(cli));
-        } catch (DNINoValido e) {
+        } catch (ClienteYaRegistrado e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }

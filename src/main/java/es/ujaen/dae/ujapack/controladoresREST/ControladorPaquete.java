@@ -7,6 +7,7 @@
 package es.ujaen.dae.ujapack.controladoresREST;
 
 import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
+import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCliente;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPaquete;
 import es.ujaen.dae.ujapack.entidades.Paquete;
 import es.ujaen.dae.ujapack.excepciones.LocalizadorNoValido;
@@ -54,7 +55,7 @@ public class ControladorPaquete {
     }
 
     @PostMapping("/paquetes")
-    ResponseEntity<DTOPaquete> altaPaquete(@RequestBody DTOPaquete paquete){
+    ResponseEntity<DTOPaquete> altaPaquete(@RequestBody DTOPaquete paquete){//, @RequestBody DTOCliente remitente, @RequestBody DTOCliente destinatario){
         try {
             Paquete paq = serviPack.altaPaquete(paquete.aPaquete());
             return ResponseEntity.status(HttpStatus.CREATED).body(new DTOPaquete(paq));

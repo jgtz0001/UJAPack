@@ -11,6 +11,7 @@ import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPaquete;
 import java.util.Arrays;
 import javax.annotation.PostConstruct;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -104,7 +105,7 @@ public class ControladorTest {
                 "EnTransito",
                 1,
                 1,
-                1
+                1//hay que pasarle un dto destinatario y origen
          );
 
         TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
@@ -140,8 +141,8 @@ public class ControladorTest {
     }
     
 
-//    @BeforeEach
-//    void limpiadoBaseDeDatos() {
-//        limpiadoBaseDeDatos.limpiar();
-//    }
+    @BeforeEach
+    void limpiadoBaseDeDatos() {
+        limpiadoBaseDeDatos.limpiar();
+    }
 }

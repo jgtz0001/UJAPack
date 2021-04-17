@@ -24,15 +24,21 @@ public class DTOPaquete {
     String remitente;
     String destinatario;
     List<PuntoDeControl> ruta;
+    
+//    DTOCliente rem;
+//    
+//    DTOCliente dest;
 
     public DTOPaquete(){}
     
-    public DTOPaquete(int localizador, String estado, float importe, float peso, float altura) {
+    public DTOPaquete(int localizador, String estado, float importe, float peso, float altura){//, DTOCliente remitente, DTOCliente desti) {
         this.localizador = localizador;
         this.estado = estado;
         this.importe = importe;
         this.peso = peso;
         this.altura = altura;
+//        this.rem = remitente;
+//        this.dest = desti;
     }
 
     public DTOPaquete(int localizador, String estado) {
