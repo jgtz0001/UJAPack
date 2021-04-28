@@ -373,6 +373,11 @@ public class ServicioUjaPack {
         Optional<Paquete> paquete = repositorioPaquete.buscarPaquetes(id);
         return paquete;
     }
+      public Optional<CentroDeLogistica> verCentros(@NotBlank String id) {
+        int idd = Integer.parseInt(id);
+        Optional<CentroDeLogistica> centro = repositorioCentroDeLogistica.buscarCentros(idd);
+        return centro;
+    }
 
     /**
      * Dar de alta cliente y crear una cuenta asociada
