@@ -373,7 +373,8 @@ public class ServicioUjaPack {
         Optional<Paquete> paquete = repositorioPaquete.buscarPaquetes(id);
         return paquete;
     }
-      public Optional<CentroDeLogistica> verCentros(@NotBlank String id) {
+
+    public Optional<CentroDeLogistica> verCentros(@NotBlank String id) {
         int idd = Integer.parseInt(id);
         Optional<CentroDeLogistica> centro = repositorioCentroDeLogistica.buscarCentros(idd);
         return centro;
@@ -404,6 +405,17 @@ public class ServicioUjaPack {
         }
         repositorioPaquete.guardar(paquete);
         return paquete;
+    }
+
+    public Cliente devolverCliente(String dni) {
+        if (repositorioClientes.buscar(dni).isPresent()) {
+            throw new DNINoValido();
+        }
+        if (dni.length() != 8) {
+            throw new DNINoValido();
+        }
+
+        return repositorioClientes.buscarCli(dni);
     }
 
 }

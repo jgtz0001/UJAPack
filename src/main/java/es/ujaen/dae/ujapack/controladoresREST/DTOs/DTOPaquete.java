@@ -6,6 +6,7 @@
 package es.ujaen.dae.ujapack.controladoresREST.DTOs;
 
 import es.ujaen.dae.ujapack.entidades.Paquete;
+import static es.ujaen.dae.ujapack.entidades.Paquete.Estado.EnTransito;
 import es.ujaen.dae.ujapack.entidades.PuntoDeControl;
 import java.util.List;
 
@@ -24,26 +25,40 @@ public class DTOPaquete {
     String remitente;
     String destinatario;
     List<PuntoDeControl> ruta;
-    
-//    DTOCliente rem;
-//    
-//    DTOCliente dest;
 
-    public DTOPaquete(){}
+    private DTOCliente rem;
     
-    public DTOPaquete(int localizador, String estado, float importe, float peso, float altura){//, DTOCliente remitente, DTOCliente desti) {
+    private DTOCliente dest;
+    
+    public DTOPaquete() {
+    }
+
+//    public DTOPaquete(String rem, String dest) {
+//        this.localizador = 0;
+//        this.estado = "";
+//        this.importe = 1;
+//        this.peso = 1;
+//        this.altura = 1;
+//        this.remitente = rem;
+//        this.destinatario = dest;
+//    }
+
+    public DTOPaquete(int localizador, String estado, float importe, float peso, float altura) {//, DTOCliente remitente, DTOCliente desti) {
         this.localizador = localizador;
         this.estado = estado;
         this.importe = importe;
         this.peso = peso;
         this.altura = altura;
-//        this.rem = remitente;
-//        this.dest = desti;
+        this.rem = null;
+        this.dest = null;
     }
 
-    public DTOPaquete(int localizador, String estado) {
-        this.localizador = localizador;
-        this.estado = estado;
+    public DTOPaquete(DTOCliente rem, DTOCliente dest) {
+        this.remitente = rem.nombre;
+        this.destinatario = dest.nombre;
+        this.rem = rem;
+        this.dest = dest;
+        this.estado = EnTransito.toString();
     }
 
     public DTOPaquete(Paquete paquete) {
@@ -106,6 +121,20 @@ public class DTOPaquete {
 
     public Paquete bPaquete() {
         return new Paquete(localizador, importe, peso, altura, ruta);
+    }
+
+    /**
+     * @return the rem
+     */
+    public DTOCliente getRem() {
+        return rem;
+    }
+
+    /**
+     * @return the dest
+     */
+    public DTOCliente getDest() {
+        return dest;
     }
 
 }

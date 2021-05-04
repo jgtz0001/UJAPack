@@ -51,7 +51,7 @@ public class ControladorTest {
                 .rootUri("http://localhost:" + localPort + "/ujapack")
                 .additionalMessageConverters(Arrays.asList(springBootJacksonConverter));
     }
-    
+
     /**
      * Intento de creación de un cliente inválido
      */
@@ -75,10 +75,10 @@ public class ControladorTest {
 
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
-    
+
     @Test
     public void testAltaCliente() {
-         DTOCliente cliente = new DTOCliente(
+        DTOCliente cliente = new DTOCliente(
                 "11995667",
                 "Jenaro",
                 "Camara Colmenero",
@@ -93,20 +93,20 @@ public class ControladorTest {
                 cliente,
                 DTOCliente.class
         );
-        
+
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
     }
-    
+
     @Test
     public void testAltaPaquete() {
-         DTOPaquete paquete = new DTOPaquete(
+        DTOPaquete paquete = new DTOPaquete(
                 1111111111,
                 "EnTransito",
                 1,
                 1,
-                1//hay que pasarle un dto destinatario y origen
-         );
+                1
+        );
 
         TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
         ResponseEntity<DTOPaquete> respuesta = restTemplate.postForEntity(
@@ -114,20 +114,20 @@ public class ControladorTest {
                 paquete,
                 DTOPaquete.class
         );
-        
+
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
     }
-    
-        @Test
+
+    @Test
     public void testAltaPaqueteIncorrecto() {
-         DTOPaquete paquete = new DTOPaquete(
+        DTOPaquete paquete = new DTOPaquete(
                 1111,
                 "EnTransito",
                 1,
                 1,
                 1
-         );
+        );
 
         TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
         ResponseEntity<DTOPaquete> respuesta = restTemplate.postForEntity(
@@ -135,11 +135,43 @@ public class ControladorTest {
                 paquete,
                 DTOPaquete.class
         );
-        
+
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
 
     }
-    
+
+    @Test
+    public void testAltaPaqueteConClientes() {
+        DTOCliente remitente = new DTOCliente(
+                "11995665",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenaroo@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
+        
+        DTOCliente destinatario = new DTOCliente(
+                "11995668",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenarooo@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
+        
+        DTOPaquete paquet = new DTOPaquete(remitente, destinatario);
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
+        ResponseEntity<DTOPaquete> respuesta = restTemplate.postForEntity(
+                "/paquetesClientes",
+                paquet,
+                DTOPaquete.class
+        );
+
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+    }
 
     @BeforeEach
     void limpiadoBaseDeDatos() {

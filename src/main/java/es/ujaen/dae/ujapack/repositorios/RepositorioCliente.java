@@ -29,6 +29,11 @@ public class RepositorioCliente {
         return Optional.ofNullable(em.find(Cliente.class, dni));
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Cliente buscarCli(String dni) {
+        return em.find(Cliente.class, dni);
+    }
+
     public void guardar(Cliente cliente) {
         em.persist(cliente);
     }
