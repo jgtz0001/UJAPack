@@ -57,12 +57,15 @@ public class ControladorPaquete {
     public void handlerLocalizadorNoValido(LocalizadorNoValido e) {
     }
 
-    //Este ya no serviría....
+   
     @PostMapping("/paquetes")
     ResponseEntity<DTOPaquete> altaPaquete(@RequestBody DTOPaquete paquete) {
         try {
-            Paquete paq = serviPack.altaPaquete(paquete.aPaquete());
-            return ResponseEntity.status(HttpStatus.CREATED).body(new DTOPaquete(paq));
+            Cliente rem = serviPack.altaCliente((paquete.getRem()).aCliente());
+            Cliente dest = serviPack.altaCliente((paquete.getDest()).aCliente());
+            Paquete paquet = serviPack.altaEnvio(1, 1, 1, rem, dest);
+           
+            return ResponseEntity.status(HttpStatus.CREATED).body(new DTOPaquete(paquet));
         } catch (PaqueteNoRegistrado e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }

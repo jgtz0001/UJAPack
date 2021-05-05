@@ -101,12 +101,31 @@ public class ControladorTest {
 
     @Test
     public void testAltaPaquete() {
+          DTOCliente remitente = new DTOCliente(
+                "11995665",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenaroo@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
+
+        DTOCliente destinatario = new DTOCliente(
+                "11995668",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenarooo@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
         DTOPaquete paquete = new DTOPaquete(
                 1111111111,
                 "EnTransito",
                 1,
                 1,
-                1
+                1,
+                remitente,
+                destinatario
         );
 
         TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
@@ -122,12 +141,31 @@ public class ControladorTest {
 
     @Test
     public void testAltaPaqueteIncorrecto() {
+         DTOCliente remitente = new DTOCliente(
+                "11995665",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenaroo@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
+
+        DTOCliente destinatario = new DTOCliente(
+                "11995668",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenarooo@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
         DTOPaquete paquete = new DTOPaquete(
                 1111,
                 "EnTransito",
                 1,
                 1,
-                1
+                1,
+                remitente,
+                destinatario
         );
 
         TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));

@@ -33,24 +33,16 @@ public class DTOPaquete {
     public DTOPaquete() {
     }
 
-//    public DTOPaquete(String rem, String dest) {
-//        this.localizador = 0;
-//        this.estado = "";
-//        this.importe = 1;
-//        this.peso = 1;
-//        this.altura = 1;
-//        this.remitente = rem;
-//        this.destinatario = dest;
-//    }
-
-    public DTOPaquete(int localizador, String estado, float importe, float peso, float altura) {//, DTOCliente remitente, DTOCliente desti) {
+    public DTOPaquete(int localizador, String estado, float importe, float peso, float altura, DTOCliente remitente, DTOCliente desti) {
         this.localizador = localizador;
         this.estado = estado;
         this.importe = importe;
         this.peso = peso;
         this.altura = altura;
-        this.rem = null;
-        this.dest = null;
+        this.rem = remitente;
+        this.dest = desti;
+        this.remitente = remitente.nombre;
+        this.destinatario = desti.nombre;
     }
 
     public DTOPaquete(DTOCliente rem, DTOCliente dest) {
