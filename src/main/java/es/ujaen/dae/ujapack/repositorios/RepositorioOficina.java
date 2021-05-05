@@ -26,34 +26,20 @@ public class RepositorioOficina {
     EntityManager em;
 
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public PuntoDeControl buscarPC(int id) {
-        return em.find(PuntoDeControl.class, id);
+    public Oficina buscarOficina(int id) {
+        return em.find(Oficina.class, id);
     }
 
     @Transactional
-    public void guardar(PuntoDeControl puntoDeControl) {
-        em.persist(puntoDeControl);
+    public void guardar(Oficina oficina) {
+        em.persist(oficina);
     }
 
     @Transactional
-    public int BuscaIdProvincia(String provincia) {
-        PuntoDeControl punto = em.createQuery("select h from PuntoDeControl h WHERE h.localizacion = '" + provincia + "'",
-                PuntoDeControl.class).getSingleResult();
-        return punto.getId();
-    }
-
-    @Transactional
-    public int BuscaIdProvinciaCL(int id) {
-        PuntoDeControl punto = em.createQuery("select h from PuntoDeControl h WHERE h.id = '" + id + "'",
-                PuntoDeControl.class).getSingleResult();
-        return punto.getIdCL();
-    }
-
-    @Transactional
-    public PuntoDeControl getPuntoDeControl(int id) {
-        PuntoDeControl punto = em.createQuery("select h from PuntoDeControl h WHERE h.id = '" + id + "'",
-                PuntoDeControl.class).getSingleResult();
-        return punto;
+    public PuntoDeControl getOficina(int id) {
+        Oficina oficina = em.createQuery("select h from Oficina h WHERE h.id = '" + id + "'",
+                Oficina.class).getSingleResult();
+        return oficina;
     }
     
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

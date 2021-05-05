@@ -65,7 +65,7 @@ public class ControladorPaquete {
         try {
             Cliente rem = serviPack.altaCliente((paquete.getRem()).aCliente());
             Cliente dest = serviPack.altaCliente((paquete.getDest()).aCliente());
-            Paquete paquet = serviPack.altaEnvio(1, 1, 1, rem, dest);
+            Paquete paquet = serviPack.altaEnvio(1, 1, 1, rem, dest, paquete.getLocalizador());
            
             return ResponseEntity.status(HttpStatus.CREATED).body(new DTOPaquete(paquet));
         } catch (PaqueteNoRegistrado e) {
@@ -78,7 +78,7 @@ public class ControladorPaquete {
         try {
             Cliente rem = serviPack.altaCliente((paqueteDto.getRem()).aCliente());
             Cliente dest = serviPack.altaCliente((paqueteDto.getDest()).aCliente());
-            Paquete paquete = serviPack.altaEnvio(1, 1, 1, rem, dest);
+            Paquete paquete = serviPack.altaEnvio(1, 1, 1, rem, dest, paqueteDto.getLocalizador());
             
             return ResponseEntity.status(HttpStatus.CREATED).body(new DTOPaquete(paquete));
         } catch (PaqueteNoRegistrado e) {
@@ -106,4 +106,5 @@ public class ControladorPaquete {
         return oficina.map(p -> ResponseEntity.ok(new DTOOficina(p)))
                 .orElse(ResponseEntity.notFound().build());
     }
+ 
 }

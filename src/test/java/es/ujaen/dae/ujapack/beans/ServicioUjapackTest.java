@@ -54,10 +54,10 @@ public class ServicioUjapackTest {
         Cliente Destinatario3 = new Cliente("12334246", "pola", "tere", "hila@gmail.com", "jaen", "Santa Cruz de Tenerife", "Santa Cruz de Tenerife");
         serviPack.altaCliente(Destinatario3);
         
-        Paquete e0 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
-        Paquete e1 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario1);
-        Paquete e2 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario2);
-        Paquete e3 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario3);
+        Paquete e0 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0, 0);
+        Paquete e1 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario1, 0);
+        Paquete e2 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario2, 0);
+        Paquete e3 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario3, 0);
 
         Assertions.assertThat(serviPack.comprobarNPuntosRuta(3, e0.getRuta().size()));
         Assertions.assertThat(serviPack.comprobarNPuntosRuta(4, e1.getRuta().size()));
@@ -76,7 +76,7 @@ public class ServicioUjapackTest {
         serviPack.altaCliente(Destinatario0);
         
 
-        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
+        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0, 0);
 
         
         Assertions.assertThat(paquet.getEstado().equals(Estado.EnTransito));
@@ -104,7 +104,7 @@ public class ServicioUjapackTest {
         Cliente Destinatario0 = new Cliente("12334243", "juan", "pepe", "pp@gmail.com", "jaen", "Córdoba", "Córdoba");
         serviPack.altaCliente(Destinatario0);
 
-        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
+        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0, 0);
 
         LocalDateTime fechaSalida = LocalDateTime.now();
        
@@ -121,7 +121,7 @@ public class ServicioUjapackTest {
         Cliente Destinatario0 = new Cliente("12334243", "Juan", "Pepe", "pp@gmail.com", "Córdoba", "Córdoba", "Córdoba");
         serviPack.altaCliente(Destinatario0);
 
-        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
+        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0, 0);
 
         LocalDateTime fechaSalida = LocalDateTime.now();
         Assertions.assertThatThrownBy(() -> {
@@ -137,7 +137,7 @@ public class ServicioUjapackTest {
         Cliente Destinatario0 = new Cliente("12334243", "Juan", "Pepe", "pp@gmail.com", "Córdoba", "Córdoba", "Córdoba");
         serviPack.altaCliente(Destinatario0);
 
-        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0);
+        Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0, 0);
         LocalDateTime fechaSalida = LocalDateTime.now();
         
         Assertions.assertThatThrownBy(() -> {
