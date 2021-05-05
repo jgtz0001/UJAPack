@@ -210,6 +210,39 @@ public class ControladorTest {
         DTOPaquete paqueteEstado = respuesta.getBody();
         Assertions.assertThat(paqueteEstado.getEstado()).isEqualTo((Paquete.Estado.EnTransito).toString());
     }
+    
+    @Test
+    public void testBuscarPaquete() {
+
+        DTOCliente remitente = new DTOCliente(
+                "11995668",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenarooo@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
+
+        DTOCliente destinatario = new DTOCliente(
+                "11995665",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenaroo@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
+
+        DTOPaquete paq = new DTOPaquete(remitente,destinatario);
+
+       TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
+       ResponseEntity<DTOPaquete> respuesta = restTemplate.postForEntity(
+                "/paquetesClientes",
+                paq,
+                DTOPaquete.class
+        );
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
 
     @BeforeEach
     void limpiadoBaseDeDatos() {
