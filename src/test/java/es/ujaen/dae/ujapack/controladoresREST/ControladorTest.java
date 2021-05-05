@@ -8,6 +8,7 @@ package es.ujaen.dae.ujapack.controladoresREST;
 import es.ujaen.dae.ujapack.beans.LimpiadoBaseDeDatos;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCliente;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPaquete;
+import es.ujaen.dae.ujapack.entidades.Paquete;
 import java.util.Arrays;
 import javax.annotation.PostConstruct;
 import org.assertj.core.api.Assertions;
@@ -150,7 +151,7 @@ public class ControladorTest {
                 "Calle La Calle 13",
                 "Jaén",
                 "Jaén");
-        
+
         DTOCliente destinatario = new DTOCliente(
                 "11995668",
                 "Jenaro",
@@ -159,7 +160,7 @@ public class ControladorTest {
                 "Calle La Calle 13",
                 "Jaén",
                 "Jaén");
-        
+
         DTOPaquete paquet = new DTOPaquete(remitente, destinatario);
 
         TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
@@ -171,6 +172,43 @@ public class ControladorTest {
 
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
+    }
+
+    @Test
+    public void testConsultarEstadoPaquete() {
+
+        DTOCliente remitente = new DTOCliente(
+                
+                "11995665",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenaroo@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
+
+        DTOCliente destinatario = new DTOCliente(
+                
+                "11995668",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenarooo@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
+
+        DTOPaquete paq = new DTOPaquete(remitente, destinatario);
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
+        ResponseEntity<DTOPaquete> respuesta = restTemplate.postForEntity(
+                "/paquetesClientes",
+                paq,
+                DTOPaquete.class
+        );
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        DTOPaquete paqueteEstado = respuesta.getBody();
+        Assertions.assertThat(paqueteEstado.getEstado()).isEqualTo((Paquete.Estado.EnTransito).toString());
     }
 
     @BeforeEach
