@@ -11,6 +11,7 @@ import es.ujaen.dae.ujapack.entidades.PuntoDeControl;
 import java.time.LocalDateTime;
 import java.util.List;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
+import es.ujaen.dae.ujapack.entidades.Oficina;
 import es.ujaen.dae.ujapack.excepciones.DNINoValido;
 import java.util.Collections;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import es.ujaen.dae.ujapack.excepciones.LocalizadorNoValido;
 import es.ujaen.dae.ujapack.repositorios.RepositorioCliente;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPuntoDeControl;
 import es.ujaen.dae.ujapack.repositorios.RepositorioCentroDeLogistica;
+import es.ujaen.dae.ujapack.repositorios.RepositorioOficina;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPaquete;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -43,6 +45,9 @@ public class ServicioUjaPack {
 
     @Autowired
     RepositorioPaquete repositorioPaquete;
+    
+    @Autowired
+    RepositorioOficina repositorioOficina;
 
     class Nodo {
 
@@ -379,6 +384,13 @@ public class ServicioUjaPack {
         Optional<CentroDeLogistica> centro = repositorioCentroDeLogistica.buscarCentros(idd);
         return centro;
     }
+    
+    public Optional<Oficina> verOficinas(@NotBlank String id) {
+        int idd = Integer.parseInt(id);
+        Optional<Oficina> oficina = repositorioOficina.buscarOficinas(idd);
+        return oficina;
+    }
+    
 
     /**
      * Dar de alta cliente y crear una cuenta asociada

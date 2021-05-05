@@ -5,7 +5,9 @@
  */
 package es.ujaen.dae.ujapack.repositorios;
 
+import es.ujaen.dae.ujapack.entidades.Oficina;
 import es.ujaen.dae.ujapack.entidades.PuntoDeControl;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +54,11 @@ public class RepositorioOficina {
         PuntoDeControl punto = em.createQuery("select h from PuntoDeControl h WHERE h.id = '" + id + "'",
                 PuntoDeControl.class).getSingleResult();
         return punto;
+    }
+    
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Optional<Oficina> buscarOficinas(int id) {
+        return Optional.ofNullable(em.find(Oficina.class, id));
     }
 
 }

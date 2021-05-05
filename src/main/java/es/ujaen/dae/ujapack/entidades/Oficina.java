@@ -27,5 +27,11 @@ public class Oficina extends PuntoDeControl implements Serializable {
 
     public Oficina() {
     }
+
+    public CentroDeLogistica getCentroLog() {
+        return centroLog;
+    }
+    
+    
   }
   
