@@ -8,7 +8,6 @@ package es.ujaen.dae.ujapack.controladoresREST;
 
 import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCentrosDeLogistica;
-import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCliente;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOOficina;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPaquete;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
@@ -69,7 +68,6 @@ public class ControladorPaquete {
     ResponseEntity<DTOPaquete> altaPaquete(@RequestBody DTOPaquete paquete) {
         try {
             Cliente rem = serviPack.altaCliente((paquete.getRem()).aCliente());
-            Cliente reem = serviPack.altaCliente((paquete.getRem()).aCliente());
             Cliente dest = serviPack.altaCliente((paquete.getDest()).aCliente());
             Paquete paquet = serviPack.altaEnvio(paquete.getPeso(), paquete.getAltura(), paquete.getImporte(), rem, dest, paquete.getLocalizador());
 

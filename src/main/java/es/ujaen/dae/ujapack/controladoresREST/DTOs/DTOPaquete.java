@@ -17,14 +17,10 @@ import java.util.List;
 public class DTOPaquete {
 
     int localizador;
-    int numPuntosControl;
     String estado;
     float importe;
     float peso;
     float altura;
-    String remitente;
-    String destinatario;
-    List<PuntoDeControl> ruta;
 
     private DTOCliente rem;
     
@@ -41,13 +37,9 @@ public class DTOPaquete {
         this.altura = altura;
         this.rem = remitente;
         this.dest = desti;
-        this.remitente = remitente.nombre;
-        this.destinatario = desti.nombre;
     }
 
     public DTOPaquete(DTOCliente rem, DTOCliente dest) {
-        this.remitente = rem.nombre;
-        this.destinatario = dest.nombre;
         this.rem = rem;
         this.dest = dest;
         this.estado = EnTransito.toString();
@@ -55,32 +47,14 @@ public class DTOPaquete {
 
     public DTOPaquete(Paquete paquete) {
         this.localizador = paquete.getLocalizador();
-        this.numPuntosControl = paquete.getControl();
         this.estado = paquete.getEstado();
         this.importe = paquete.getImporte();
         this.peso = paquete.getPeso();
         this.altura = paquete.getAltura();
-        if (paquete.getRemitente() != null) {
-            this.remitente = paquete.getRemitente().getDni();
-        } else {
-            this.remitente = "";
-        }
-        if (paquete.getDestinatario() != null) {
-            this.destinatario = paquete.getDestinatario().getDni();
-        } else {
-            this.destinatario = "";
-        }
-
-        this.ruta = paquete.getRuta();
-
     }
 
     public int getLocalizador() {
         return localizador;
-    }
-
-    public int getNumPuntosControl() {
-        return numPuntosControl;
     }
 
     public String getEstado() {
@@ -99,20 +73,12 @@ public class DTOPaquete {
         return altura;
     }
 
-    public String getRemitente() {
-        return remitente;
-    }
-
-    public String getDestinatario() {
-        return destinatario;
-    }
-
     public Paquete aPaquete() {
         return new Paquete(localizador, importe, peso, altura);
     }
 
     public Paquete bPaquete() {
-        return new Paquete(localizador, importe, peso, altura, ruta);
+        return new Paquete(localizador, importe, peso, altura);
     }
 
     /**
