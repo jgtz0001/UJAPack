@@ -51,6 +51,8 @@ public class DTOPaquete {
         this.importe = paquete.getImporte();
         this.peso = paquete.getPeso();
         this.altura = paquete.getAltura();
+        this.rem = new DTOCliente(paquete.getRemitente());
+        this.dest = new DTOCliente(paquete.getDestinatario());
     }
 
     public int getLocalizador() {
