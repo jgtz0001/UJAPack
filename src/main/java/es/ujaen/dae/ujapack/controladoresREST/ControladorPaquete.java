@@ -71,7 +71,7 @@ public class ControladorPaquete {
             Cliente dest = serviPack.altaCliente((paquete.getDest()).aCliente());
             Paquete paquet = serviPack.altaEnvio(paquete.getPeso(), paquete.getAltura(), paquete.getImporte(), rem, dest, paquete.getLocalizador());
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(new DTOPaquete(paquet));
+            return ResponseEntity.status(HttpStatus.CREATED).body(paquete);
         } catch (PaqueteNoRegistrado e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } catch (ClienteYaRegistrado e) {

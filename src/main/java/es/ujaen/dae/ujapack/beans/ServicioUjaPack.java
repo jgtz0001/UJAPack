@@ -99,10 +99,10 @@ public class ServicioUjaPack {
 + @return Devuelve el paquete.
      */
     public Paquete altaEnvio(float peso, float anchura, float altura, Cliente remitente, Cliente destinatario, int id) {
-        if (id != 0 && (repositorioPaquete.buscarPaquetes(id).isPresent() || Integer.toString(id).length() != 10)) {
+        int localizador = id;
+        if (localizador != 0 && (repositorioPaquete.buscarPaquetes(localizador).isPresent() || Integer.toString(localizador).length() != 10)) {
             throw new LocalizadorNoValido();
         }
-        int localizador = (int) getID();
         while (repositorioPaquete.buscarPaquetes(localizador).isPresent()) {
             localizador = (int) getID();
         }
