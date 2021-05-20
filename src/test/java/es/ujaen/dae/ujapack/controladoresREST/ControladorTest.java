@@ -138,8 +138,8 @@ public class ControladorTest {
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
     }
-
-    @Test
+    
+        @Test
     public void testAltaPaqueteIncorrecto() {
          DTOCliente remitente = new DTOCliente(
                 "11995665",
@@ -179,38 +179,38 @@ public class ControladorTest {
 
     }
 
-    @Test
-    public void testAltaPaqueteConClientes() {
-        DTOCliente remitente = new DTOCliente(
-                "11995665",
-                "Jenaro",
-                "Camara Colmenero",
-                "jenaroo@gmail.com",
-                "Calle La Calle 13",
-                "Jaén",
-                "Jaén");
-
-        DTOCliente destinatario = new DTOCliente(
-                "11995668",
-                "Jenaro",
-                "Camara Colmenero",
-                "jenarooo@gmail.com",
-                "Calle La Calle 13",
-                "Jaén",
-                "Jaén");
-
-        DTOPaquete paquet = new DTOPaquete(remitente, destinatario);
-
-        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
-        ResponseEntity<DTOPaquete> respuesta = restTemplate.postForEntity(
-                "/paquetesClientes",
-                paquet,
-                DTOPaquete.class
-        );
-
-        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
-    }
+//    @Test
+//    public void testAltaPaqueteConClientes() {
+//        DTOCliente remitente = new DTOCliente(
+//                "11995665",
+//                "Jenaro",
+//                "Camara Colmenero",
+//                "jenaroo@gmail.com",
+//                "Calle La Calle 13",
+//                "Jaén",
+//                "Jaén");
+//
+//        DTOCliente destinatario = new DTOCliente(
+//                "11995668",
+//                "Jenaro",
+//                "Camara Colmenero",
+//                "jenarooo@gmail.com",
+//                "Calle La Calle 13",
+//                "Jaén",
+//                "Jaén");
+//
+//        DTOPaquete paquet = new DTOPaquete(remitente, destinatario);
+//
+//        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
+//        ResponseEntity<DTOPaquete> respuesta = restTemplate.postForEntity(
+//                "/paquetes",
+//                paquet,
+//                DTOPaquete.class
+//        );
+//
+//        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+//
+//    }
 
     @Test
     public void testConsultarEstadoPaquete() {
@@ -239,7 +239,7 @@ public class ControladorTest {
 
         TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
         ResponseEntity<DTOPaquete> respuesta = restTemplate.postForEntity(
-                "/paquetesClientes",
+                "/paquetes",
                 paq,
                 DTOPaquete.class
         );
@@ -274,7 +274,7 @@ public class ControladorTest {
 
        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
        ResponseEntity<DTOPaquete> respuesta = restTemplate.postForEntity(
-                "/paquetesClientes",
+                "/paquetes",
                 paq,
                 DTOPaquete.class
         );

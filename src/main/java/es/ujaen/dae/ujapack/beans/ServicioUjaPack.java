@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import es.ujaen.dae.ujapack.entidades.Oficina;
+import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.DNINoValido;
 import java.util.Collections;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,7 @@ public class ServicioUjaPack {
 
     @Autowired
     RepositorioPaquete repositorioPaquete;
-    
+
     @Autowired
     RepositorioOficina repositorioOficina;
 
@@ -98,8 +99,8 @@ public class ServicioUjaPack {
 + @return Devuelve el paquete.
      */
     public Paquete altaEnvio(float peso, float anchura, float altura, Cliente remitente, Cliente destinatario, int id) {
-        if (id != 0 && (repositorioPaquete.buscarPaquetes(id).isPresent() || Integer.toString(id).length() != 10)){
-           throw new LocalizadorNoValido();
+        if (id != 0 && (repositorioPaquete.buscarPaquetes(id).isPresent() || Integer.toString(id).length() != 10)) {
+            throw new LocalizadorNoValido();
         }
         int localizador = (int) getID();
         while (repositorioPaquete.buscarPaquetes(localizador).isPresent()) {
@@ -386,13 +387,12 @@ public class ServicioUjaPack {
         Optional<CentroDeLogistica> centro = repositorioCentroDeLogistica.buscarCentros(idd);
         return centro;
     }
-    
+
     public Optional<Oficina> verOficinas(@NotBlank String id) {
         int idd = Integer.parseInt(id);
         Optional<Oficina> oficina = repositorioOficina.buscarOficinas(idd);
         return oficina;
     }
-    
 
     /**
      * Dar de alta cliente y crear una cuenta asociada
@@ -400,13 +400,15 @@ public class ServicioUjaPack {
      * @param cliente el cliente a dar de alta
      */
     public Cliente altaCliente(@NotNull Cliente cliente) {
-        if (repositorioClientes.buscar(cliente.getDni()).isPresent()) {
-            throw new DNINoValido();
-        }
+
         if (cliente.getDni().length() != 8) {
             throw new DNINoValido();
         }
-        repositorioClientes.guardar(cliente);
+
+        if (!repositorioClientes.buscar(cliente.getDni()).isPresent()) {
+            repositorioClientes.guardar(cliente);
+        }
+
         return cliente;
     }
 

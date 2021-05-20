@@ -15,6 +15,7 @@ import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Oficina;
 import es.ujaen.dae.ujapack.entidades.Paquete;
+import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.LocalizadorNoValido;
 import es.ujaen.dae.ujapack.excepciones.PaqueteNoRegistrado;
 import java.util.Optional;
@@ -59,29 +60,23 @@ public class ControladorPaquete {
     public void handlerLocalizadorNoValido(LocalizadorNoValido e) {
     }
 
-   
+    @ExceptionHandler(ClienteYaRegistrado.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public void handlerClienteNoRegistrado(ClienteYaRegistrado e) {
+    }
+
     @PostMapping("/paquetes")
     ResponseEntity<DTOPaquete> altaPaquete(@RequestBody DTOPaquete paquete) {
         try {
             Cliente rem = serviPack.altaCliente((paquete.getRem()).aCliente());
+            Cliente reem = serviPack.altaCliente((paquete.getRem()).aCliente());
             Cliente dest = serviPack.altaCliente((paquete.getDest()).aCliente());
-            Paquete paquet = serviPack.altaEnvio(1, 1, 1, rem, dest, paquete.getLocalizador());
-           
+            Paquete paquet = serviPack.altaEnvio(paquete.getPeso(), paquete.getAltura(), paquete.getImporte(), rem, dest, paquete.getLocalizador());
+
             return ResponseEntity.status(HttpStatus.CREATED).body(new DTOPaquete(paquet));
         } catch (PaqueteNoRegistrado e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-    }
-
-    @PostMapping("/paquetesClientes")
-    ResponseEntity<DTOPaquete> altaPaqueteClientes(@RequestBody DTOPaquete paqueteDto) {
-        try {
-            Cliente rem = serviPack.altaCliente((paqueteDto.getRem()).aCliente());
-            Cliente dest = serviPack.altaCliente((paqueteDto.getDest()).aCliente());
-            Paquete paquete = serviPack.altaEnvio(1, 1, 1, rem, dest, paqueteDto.getLocalizador());
-            
-            return ResponseEntity.status(HttpStatus.CREATED).body(new DTOPaquete(paquete));
-        } catch (PaqueteNoRegistrado e) {
+        } catch (ClienteYaRegistrado e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
@@ -99,12 +94,12 @@ public class ControladorPaquete {
         return centro.map(p -> ResponseEntity.ok(new DTOCentrosDeLogistica(p)))
                 .orElse(ResponseEntity.notFound().build());
     }
-    
-     @GetMapping("/oficina/{id}")
+
+    @GetMapping("/oficina/{id}")
     ResponseEntity<DTOOficina> verOficina(@PathVariable String id) {
         Optional<Oficina> oficina = serviPack.verOficinas(id);
         return oficina.map(p -> ResponseEntity.ok(new DTOOficina(p)))
                 .orElse(ResponseEntity.notFound().build());
     }
- 
+
 }
