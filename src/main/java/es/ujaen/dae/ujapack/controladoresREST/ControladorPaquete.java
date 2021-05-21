@@ -10,6 +10,7 @@ import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCentrosDeLogistica;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOOficina;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPaquete;
+import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTORuta;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Oficina;
@@ -86,7 +87,19 @@ public class ControladorPaquete {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/centro/{id}")
+    @GetMapping("/paqueteruta/{localizador}")
+    @ResponseStatus(HttpStatus.OK)
+    public DTORuta verRutaPaquete(@PathVariable String localizador) {
+        try {
+            int id = Integer.parseInt(localizador);
+            return new DTORuta(serviPack.buscarPaquete(id));
+        } catch (NumberFormatException e) {
+            throw new LocalizadorNoValido();  
+        }
+    }
+
+
+@GetMapping("/centro/{id}")
     ResponseEntity<DTOCentrosDeLogistica> verCentro(@PathVariable String id) {
         Optional<CentroDeLogistica> centro = serviPack.verCentros(id);
         return centro.map(p -> ResponseEntity.ok(new DTOCentrosDeLogistica(p)))
