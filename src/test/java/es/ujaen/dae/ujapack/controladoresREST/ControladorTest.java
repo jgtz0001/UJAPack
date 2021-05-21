@@ -8,7 +8,10 @@ package es.ujaen.dae.ujapack.controladoresREST;
 import es.ujaen.dae.ujapack.beans.LimpiadoBaseDeDatos;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCliente;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPaquete;
+import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Paquete;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import javax.annotation.PostConstruct;
 import org.assertj.core.api.Assertions;
@@ -119,11 +122,11 @@ public class ControladorTest {
                 "Jaén",
                 "Jaén");
         DTOPaquete paquete = new DTOPaquete(
-                1111111111,
+                1111111118,
                 "EnTransito",
-                10,
-                5,
-                3,
+                10.0f,
+                5.1f,
+                3.0f,
                 remitente,
                 destinatario
         );
@@ -161,9 +164,9 @@ public class ControladorTest {
         DTOPaquete paquete = new DTOPaquete(
                 1111,
                 "EnTransito",
-                14,
-                6,
-                3,
+                14.0f,
+                6.4f,
+                3.0f,
                 remitente,
                 destinatario
         );
@@ -204,11 +207,11 @@ public class ControladorTest {
                 "Jaén");
         
         DTOPaquete paquete = new DTOPaquete(
-                1111111111,
+                1111111113,
                 "EnTransito",
                 8,
                 5,
-                3,
+                3.2f,
                 remitente,
                 destinatario
         );
@@ -247,11 +250,11 @@ public class ControladorTest {
                 "Jaén");
         
         DTOPaquete paq = new DTOPaquete(
-                1111111111,
+                1111111112,
                 "EnTransito",
-                20,
-                3,
-                9,
+                20.0f,
+                3.5f,
+                9.0f,
                 remitente,
                 destinatario
         );
@@ -269,6 +272,105 @@ public class ControladorTest {
         ResponseEntity<DTOPaquete> respuestaEnvio = restTemplateUsuario.getForEntity("/paquetes/{localizador}", DTOPaquete.class, PaqueteCreado.getLocalizador());
         Assertions.assertThat(respuestaEnvio.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+    @Test
+       public void TestComprobarProvinciasIncorrectas() throws IOException {
+       DTOCliente remitente = new DTOCliente(
+                "11995668",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenarooo@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
+        
+          DTOCliente destinatario = new DTOCliente(
+                "11995665",
+                "Jose Gabriel",
+                "De Torre Zafra",
+                "zafra@gmail.com",
+                "Calle Jaén 13",
+                "Madd",
+                "Madd");
+
+           DTOPaquete paq = new DTOPaquete(
+                1111111115,
+                "EnTransito",
+                3.0f,
+                3.0f,
+                9.0f,
+                remitente,
+                destinatario
+        );
+             TestRestTemplate restTemplateUsuario = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
+              ResponseEntity<DTOPaquete> respuesta = restTemplateUsuario.postForEntity(
+                "/paquetes",
+                paq,
+                DTOPaquete.class
+        );
+        DTOPaquete PaqueteCreado = respuesta.getBody();
+        ResponseEntity<DTOPaquete> respuestaEnvio = restTemplateUsuario.getForEntity("/paquetes/{localizador}", DTOPaquete.class, PaqueteCreado.getLocalizador());
+        Assertions.assertThat(respuestaEnvio.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+       }
+
+//       @Test
+//     
+//    public void TestComprobarEstados() throws IOException {
+//       DTOCliente remitente = new DTOCliente(
+//                "11995668",
+//                "Jenaro",
+//                "Camara Colmenero",
+//                "jenarooo@gmail.com",
+//                "Calle La Calle 13",
+//                "Jaén",
+//                "Jaén");
+//        
+//          DTOCliente destinatario = new DTOCliente(
+//                "11995665",
+//                "Jose Gabriel",
+//                "De Torre Zafra",
+//                "zafra@gmail.com",
+//                "Calle Jaén 13",
+//                "Madrid",
+//                "Madrid");
+//
+//           DTOPaquete paq = new DTOPaquete(
+//                1111111115,
+//                "EnTransito",
+//                3.0f,
+//                3.0f,
+//                9.0f,
+//                remitente,
+//                destinatario
+//        );
+//
+//        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
+//          ResponseEntity<DTOPaquete> respuesta = restTemplate.postForEntity(
+//                "/paquetes",
+//                paq,
+//                DTOPaquete.class
+//        );
+//        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+//
+//        DTOPaquete PaqueteCreado = respuesta.getBody();
+//        TestRestTemplate restTemplateUsuario = new TestRestTemplate(restTemplateBuilder.basicAuthentication("usuario", "usuario"));
+//        ResponseEntity<DTOPaquete> respuestaEnvio = restTemplateUsuario.getForEntity("/paquetes/{localizador}", DTOPaquete.class, PaqueteCreado.getEstado());
+//        Assertions.assertThat(respuestaEnvio.getStatusCode()).isEqualTo(HttpStatus.OK);
+//        Assertions.assertThat(paquet.getEstado().equals(Paquete.Estado.EnTransito));
+//
+//        serviPack.notificarSalida(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(1).getId());
+//        serviPack.notificarEntrada(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(1).getId());
+//
+//        Assertions.assertThat(paquet.getEstado().equals(Paquete.Estado.EnTransito));
+//
+//        serviPack.notificarSalida(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(2).getId());
+//        serviPack.notificarEntrada(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(2).getId());
+//
+//        Assertions.assertThat(paquet.getEstado().equals(Paquete.Estado.EnReparto));
+//
+//        serviPack.notificarSalida(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(2).getId());
+//
+//        Assertions.assertThat(paquet.getEstado().equals(Paquete.Estado.Entregado));
+//    }
 
 
     @BeforeEach
