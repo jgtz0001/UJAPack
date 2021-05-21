@@ -272,6 +272,47 @@ public class ControladorTest {
         ResponseEntity<DTOPaquete> respuestaEnvio = restTemplateUsuario.getForEntity("/paquetes/{localizador}", DTOPaquete.class, PaqueteCreado.getLocalizador());
         Assertions.assertThat(respuestaEnvio.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+    
+    @Test
+       public void TestComprobarProvinciasCorrectas() throws IOException {
+       DTOCliente remitente = new DTOCliente(
+                "11995668",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenarooo@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
+        
+          DTOCliente destinatario = new DTOCliente(
+                "11995665",
+                "Jose Gabriel",
+                "De Torre Zafra",
+                "zafra@gmail.com",
+                "Calle Jaén 13",
+                "Madrid",
+                "Madrid");
+
+           DTOPaquete paq = new DTOPaquete(
+                1111111115,
+                "EnTransito",
+                3.0f,
+                3.0f,
+                9.0f,
+                remitente,
+                destinatario
+        );
+              TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
+        ResponseEntity<DTOCliente> respuesta = restTemplate.postForEntity(
+                "/clientes",
+                destinatario,
+                DTOCliente.class
+        );
+
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+       }
+
+    
     @Test
        public void TestComprobarProvinciasIncorrectas() throws IOException {
        DTOCliente remitente = new DTOCliente(
