@@ -121,9 +121,9 @@ public class ControladorTest {
         DTOPaquete paquete = new DTOPaquete(
                 1111111111,
                 "EnTransito",
-                1,
-                1,
-                1,
+                10,
+                5,
+                3,
                 remitente,
                 destinatario
         );
@@ -161,9 +161,9 @@ public class ControladorTest {
         DTOPaquete paquete = new DTOPaquete(
                 1111,
                 "EnTransito",
-                1,
-                1,
-                1,
+                14,
+                6,
+                3,
                 remitente,
                 destinatario
         );
@@ -206,9 +206,9 @@ public class ControladorTest {
         DTOPaquete paquete = new DTOPaquete(
                 1111111111,
                 "EnTransito",
-                1,
-                1,
-                1,
+                8,
+                5,
+                3,
                 remitente,
                 destinatario
         );
@@ -249,9 +249,9 @@ public class ControladorTest {
         DTOPaquete paq = new DTOPaquete(
                 1111111111,
                 "EnTransito",
-                1,
-                1,
-                1,
+                20,
+                3,
+                9,
                 remitente,
                 destinatario
         );
