@@ -89,17 +89,20 @@ public class ControladorPaquete {
 
     @GetMapping("/paqueteruta/{localizador}")
     @ResponseStatus(HttpStatus.OK)
-    public DTORuta verRutaPaquete(@PathVariable String localizador) {
-        try {
-            int id = Integer.parseInt(localizador);
-            return new DTORuta(serviPack.buscarPaquete(id));
-        } catch (NumberFormatException e) {
-            throw new LocalizadorNoValido();  
-        }
+    public ResponseEntity<DTORuta> verRutaPaquete(@PathVariable String localizador) {
+//        try {
+//            int id = Integer.parseInt(localizador);
+//            return new DTORuta(serviPack.buscarPaquete(id));
+//        } catch (NumberFormatException e) {
+//            throw new LocalizadorNoValido();  
+//        }
+        int id = Integer.parseInt(localizador);
+        Optional<Paquete> paquete = serviPack.verPaquetes(localizador);
+        return paquete.map(p -> ResponseEntity.ok(new DTORuta(p)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
-
-@GetMapping("/centro/{id}")
+    @GetMapping("/centro/{id}")
     ResponseEntity<DTOCentrosDeLogistica> verCentro(@PathVariable String id) {
         Optional<CentroDeLogistica> centro = serviPack.verCentros(id);
         return centro.map(p -> ResponseEntity.ok(new DTOCentrosDeLogistica(p)))
