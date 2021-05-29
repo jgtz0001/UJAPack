@@ -10,11 +10,13 @@ import es.ujaen.dae.ujapack.beans.ServicioUjaPack;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCentrosDeLogistica;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOOficina;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPaquete;
+import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPuntoDeControl;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTORuta;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Oficina;
 import es.ujaen.dae.ujapack.entidades.Paquete;
+import es.ujaen.dae.ujapack.entidades.PuntoDeControl;
 import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.LocalizadorNoValido;
 import es.ujaen.dae.ujapack.excepciones.PaqueteNoRegistrado;
@@ -89,16 +91,16 @@ public class ControladorPaquete {
 
     @GetMapping("/paqueteruta/{localizador}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<DTORuta> verRutaPaquete(@PathVariable String localizador) {
-//        try {
-//            int id = Integer.parseInt(localizador);
-//            return new DTORuta(serviPack.buscarPaquete(id));
-//        } catch (NumberFormatException e) {
-//            throw new LocalizadorNoValido();  
-//        }
-        int id = Integer.parseInt(localizador);
-        Optional<Paquete> paquete = serviPack.verPaquetes(localizador);
-        return paquete.map(p -> ResponseEntity.ok(new DTORuta(p)))
+    public ResponseEntity<DTOPuntoDeControl> verPuntoPaquete(@PathVariable String localizador) {
+        // try {
+        // int id = Integer.parseInt(localizador);
+        // return new DTORuta(serviPack.buscarPaquete(id));
+        // } catch (NumberFormatException e) {
+        // throw new LocalizadorNoValido();
+        // }
+        // int id = Integer.parseInt(idpc);
+        Optional<PuntoDeControl> pc = serviPack.verPunto(localizador);
+        return pc.map(p -> ResponseEntity.ok(new DTOPuntoDeControl(p)))
                 .orElse(ResponseEntity.notFound().build());
     }
 

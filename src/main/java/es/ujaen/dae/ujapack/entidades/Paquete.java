@@ -152,6 +152,10 @@ public class Paquete implements Serializable {
         PasoPorPuntoDeControl nuevo = new PasoPorPuntoDeControl(punto, fechaEntrada);
         pasanPaquetes.add(nuevo);
     }
+    
+    public PuntoDeControl getPuntoActual(){
+        return ruta.get(pasanPaquetes.size());
+    }
 
     public void notificaSalida(LocalDateTime fechaSalida, PuntoDeControl punto) {
         controlaExcepcionesSalida(punto);

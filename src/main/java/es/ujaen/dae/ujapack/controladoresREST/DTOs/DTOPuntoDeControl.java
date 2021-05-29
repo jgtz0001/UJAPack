@@ -32,6 +32,7 @@ public class DTOPuntoDeControl {
         this.id = puntoDeControl.getId();
         this.nombre = puntoDeControl.getNombre();
         this.localizacion = puntoDeControl.getLocalizacion();
+        this.idCL = puntoDeControl.getIdCL();
     }
     
     public int getId() {

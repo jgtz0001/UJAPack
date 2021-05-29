@@ -382,6 +382,20 @@ public class ServicioUjaPack {
         return paquete;
     }
 
+    public Optional<PuntoDeControl> verPunto(@NotBlank String localizador) {
+        int id = Integer.parseInt(localizador);
+        Paquete paquet = repositorioPaquete.buscar(id);
+        Optional<PuntoDeControl> pc = Optional.ofNullable(paquet.getPuntoActual());
+//        Optional<PuntoDeControl> pc = repositorioPuntoDeControl.buscarPunto(id);
+        return pc;
+    }
+
+//    public Optional<PuntoDeControl> verPunto(@NotBlank String idpc) {
+//        int id = Integer.parseInt(idpc);
+//        Optional<PuntoDeControl> pc = repositorioPuntoDeControl.buscarPunto(id);
+//        return pc;
+//    }
+    
     public Optional<CentroDeLogistica> verCentros(@NotBlank String id) {
         int idd = Integer.parseInt(id);
         Optional<CentroDeLogistica> centro = repositorioCentroDeLogistica.buscarCentros(idd);

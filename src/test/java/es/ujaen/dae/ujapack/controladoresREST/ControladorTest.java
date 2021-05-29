@@ -352,59 +352,6 @@ public class ControladorTest {
         Assertions.assertThat(respuestaEnvio.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
-//    @Test
-//    public void TestPuntosRuta() throws IOException {
-//        DTOCliente remitente = new DTOCliente(
-//                "11995665",
-//                "Jenaro",
-//                "Camara Colmenero",
-//                "jenaroo@gmail.com",
-//                "Calle La Calle 13",
-//                "Jaén",
-//                "Jaén");
-//
-//        DTOCliente destinatario = new DTOCliente(
-//                "11995668",
-//                "Jenaro",
-//                "Camara Colmenero",
-//                "jenarooo@gmail.com",
-//                "Calle La Calle 13",
-//                "Jaén",
-//                "Jaén");
-//        DTOPaquete paq = new DTOPaquete(
-//                1111111118,
-//                "EnTransito",
-//                10.0f,
-//                5.1f,
-//                3.0f,
-//                remitente,
-//                destinatario
-//        );
-//
-//        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
-//        ResponseEntity<DTORuta> respuesta = restTemplate.postForEntity(
-//                "/paqueteruta",
-//                paq,
-//                DTORuta.class
-//        );
-//        DTORuta rutaCreada = respuesta.getBody();
-//        ResponseEntity<DTORuta> respuestaRuta = restTemplate.postForEntity("/paqueteruta/{localizador}", DTORuta.class, rutaCreada.getRuta());
-//
-//        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-//
-//        List<DTOPuntoDeControl> rutaEnvioCreado = rutaCreada.getRuta();
-//        String fechaOriginal = rutaEnvioCreado.get(1).getFechaSalida();
-//
-//        ResponseEntity<Void> respuestaNotificarPasoCentroLogistico = restTemplate.postForEntity("/{localizador}/notificarcentrologistico/{idCentro}", "salida", Void.class, rutaCreada.getLocalizador(), 1);
-//        Assertions.assertThat(respuestaNotificarPasoCentroLogistico.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-//
-//        ResponseEntity<DTORuta> respuestaRutaEnvioModificado = restTemplate.getForEntity("/{localizador}/ruta", DTORuta.class, rutaCreada.getLocalizador());
-//        Assertions.assertThat(respuestaRutaEnvioModificado.getStatusCode()).isEqualTo(HttpStatus.OK);
-//        DTORuta rutaEnvioModificado = respuestaRutaEnvioModificado.getBody();
-//        String fechaModificada = rutaEnvioModificado.getRuta().get(1).getFechaSalida();
-//
-//        Assertions.assertThat(!fechaOriginal.equals(fechaModificada));
-//    }
      
     @Test
     public void testConsultarEstadoEnvio(){
