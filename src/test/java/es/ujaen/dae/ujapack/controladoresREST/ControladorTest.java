@@ -352,10 +352,9 @@ public class ControladorTest {
         Assertions.assertThat(respuestaEnvio.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
-     
     @Test
-    public void testConsultarEstadoEnvio(){
-     DTOCliente remitente = new DTOCliente(
+    public void testConsultarEstadoEnvio() {
+        DTOCliente remitente = new DTOCliente(
                 "11995668",
                 "Jenaro",
                 "Camara Colmenero",
@@ -393,10 +392,13 @@ public class ControladorTest {
         DTOPaquete envioEstado = respuesta.getBody();
         Assertions.assertThat(envioEstado.getEstado()).isEqualTo(Paquete.Estado.EnTransito.toString());
     }
-    
-     @Test
-    public void testActualizarPasoPuntoControlCentro(){
-       DTOCliente remitente = new DTOCliente(
+
+    /*
+    * Actualiza el punto de control, indicando la salida de este.
+    */
+    @Test
+    public void testActualizarPasoPuntoControlCentro() {
+        DTOCliente remitente = new DTOCliente(
                 "11995668",
                 "Jenaro",
                 "Camara Colmenero",
@@ -431,18 +433,184 @@ public class ControladorTest {
                 DTOPaquete.class
         );
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        
+
         DTOPaquete paqueteCreado = respuesta.getBody();
-        DTORuta rutaEnvioCreado = new DTORuta (paqueteCreado.getRuta(), paqueteCreado.getEstado());
-        
+        DTORuta rutaEnvioCreado = new DTORuta(paqueteCreado.getRuta(), paqueteCreado.getEstado());
+
         ResponseEntity<Void> respuesta2 = restTemplate.postForEntity(
                 "/paquetes/{localizador}/notificarcentrologistico/{idCentro}",
-                "salida",Void.class,paqueteCreado.getLocalizador(),16
+                "salida", Void.class, paqueteCreado.getLocalizador(), rutaEnvioCreado.getRuta().get(0).getId()
         );
-        
+
         Assertions.assertThat(respuesta2.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
+    /*
+    * Actualizará la llegada del paquete al centro logístico.
+    */
+    @Test
+    public void testActualizarLlegadaPuntoControlCentro() {
+        DTOCliente remitente = new DTOCliente(
+                "11995668",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenarooo@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
+
+        DTOCliente destinatario = new DTOCliente(
+                "11995665",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenaroo@gmail.com",
+                "Calle La Calle 13",
+                "Córdoba",
+                "Córdoba");
+
+        DTOPaquete paq = new DTOPaquete(
+                1111111113,
+                "EnTransito",
+                20.0f,
+                3.5f,
+                9.0f,
+                remitente,
+                destinatario
+        );
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
+        ResponseEntity<DTOPaquete> respuesta = restTemplate.postForEntity(
+                "/paquetes",
+                paq,
+                DTOPaquete.class
+        );
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        DTOPaquete paqueteCreado = respuesta.getBody();
+        DTORuta rutaEnvioCreado = new DTORuta(paqueteCreado.getRuta(), paqueteCreado.getEstado());
+
+        ResponseEntity<Void> respuesta2 = restTemplate.postForEntity(
+                "/paquetes/{localizador}/notificarcentrologistico/{idCentro}",
+                "salida", Void.class, paqueteCreado.getLocalizador(), 16
+        );
+
+        Assertions.assertThat(respuesta2.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        
+        ResponseEntity<Void> respuesta3 = restTemplate.postForEntity(
+                "/paquetes/{localizador}/notificarsalidacentrologistico/{idCentro}",
+                "entrada", Void.class, paqueteCreado.getLocalizador(), 1
+        );
+
+        Assertions.assertThat(respuesta3.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+    
+    /*
+    * Este test, quiere actualizar la llegada a un punto de control,
+    * sin embargo este todavia no ha salido del anterior, lo que generará un error.
+    */
+    @Test
+    public void testActualizarLlegadaPuntoControlCentroIncorrecto() {
+        DTOCliente remitente = new DTOCliente(
+                "11995668",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenarooo@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
+
+        DTOCliente destinatario = new DTOCliente(
+                "11995665",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenaroo@gmail.com",
+                "Calle La Calle 13",
+                "Córdoba",
+                "Córdoba");
+
+        DTOPaquete paq = new DTOPaquete(
+                1111111113,
+                "EnTransito",
+                20.0f,
+                3.5f,
+                9.0f,
+                remitente,
+                destinatario
+        );
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
+        ResponseEntity<DTOPaquete> respuesta = restTemplate.postForEntity(
+                "/paquetes",
+                paq,
+                DTOPaquete.class
+        );
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        DTOPaquete paqueteCreado = respuesta.getBody();
+        DTORuta rutaEnvioCreado = new DTORuta(paqueteCreado.getRuta(), paqueteCreado.getEstado());
+        
+        ResponseEntity<Void> respuesta2 = restTemplate.postForEntity(
+                "/paquetes/{localizador}/notificarsalidacentrologistico/{idCentro}",
+                "salida", Void.class, paqueteCreado.getLocalizador(), 1
+        );
+
+        Assertions.assertThat(respuesta2.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
+    
+    /*
+    * Actualiza el punto de control, indicando la salida de este, sin embargo
+    * El punto de control es incorrecto, lo que generará un error.
+    */
+    @Test
+    public void testActualizarPasoPuntoControlCentroIncorrecto() {
+        DTOCliente remitente = new DTOCliente(
+                "11995668",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenarooo@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
+
+        DTOCliente destinatario = new DTOCliente(
+                "11995665",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenaroo@gmail.com",
+                "Calle La Calle 13",
+                "Córdoba",
+                "Córdoba");
+
+        DTOPaquete paq = new DTOPaquete(
+                1111111113,
+                "EnTransito",
+                20.0f,
+                3.5f,
+                9.0f,
+                remitente,
+                destinatario
+        );
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
+        ResponseEntity<DTOPaquete> respuesta = restTemplate.postForEntity(
+                "/paquetes",
+                paq,
+                DTOPaquete.class
+        );
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        DTOPaquete paqueteCreado = respuesta.getBody();
+        DTORuta rutaEnvioCreado = new DTORuta(paqueteCreado.getRuta(), paqueteCreado.getEstado());
+
+        ResponseEntity<Void> respuesta2 = restTemplate.postForEntity(
+                "/paquetes/{localizador}/notificarcentrologistico/{idCentro}",
+                "salida", Void.class, paqueteCreado.getLocalizador(), 1
+        );
+
+        Assertions.assertThat(respuesta2.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
+    
+    
     @BeforeEach
     void limpiadoBaseDeDatos() {
         limpiadoBaseDeDatos.limpiar();

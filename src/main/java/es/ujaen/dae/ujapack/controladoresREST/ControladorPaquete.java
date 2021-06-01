@@ -21,6 +21,7 @@ import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.LocalizadorNoValido;
 import es.ujaen.dae.ujapack.excepciones.PaqueteNoRegistrado;
 import es.ujaen.dae.ujapack.excepciones.PaqueteYaEntregado;
+import es.ujaen.dae.ujapack.excepciones.PuntoDeControlEquivocado;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import javax.validation.ConstraintViolationException;
@@ -118,9 +119,19 @@ public class ControladorPaquete {
         try {
             serviPack.notificarSalida(localizador, LocalDateTime.now(), idCentro);
             return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (PaqueteYaEntregado e) {
+        } catch (PuntoDeControlEquivocado e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
+        @PostMapping("/paquetes/{localizador}/notificarsalidacentrologistico/{idCentro}")
+    ResponseEntity<Void> notificarEntradaCentroLogistico(@PathVariable int localizador, @PathVariable int idCentro) {
+        try {
+            serviPack.notificarEntrada(localizador, LocalDateTime.now(), idCentro);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (PuntoDeControlEquivocado e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+    }
+    
 }

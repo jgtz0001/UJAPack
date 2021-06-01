@@ -49,7 +49,7 @@ public class Paquete implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     private List<PasoPorPuntoDeControl> pasanPaquetes;
-    
+
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany
     private List<PuntoDeControl> ruta;
@@ -117,7 +117,7 @@ public class Paquete implements Serializable {
         }
 
         if (!tama.equals(numPuntosControl)) {
-            if (!ruta.get(pasanPaquetes.size()-1).localizacion.equals(punto.localizacion)) {
+            if (!ruta.get(pasanPaquetes.size() - 1).localizacion.equals(punto.localizacion)) {
                 throw new PuntoDeControlEquivocado();
             }
         }
@@ -144,6 +144,12 @@ public class Paquete implements Serializable {
         if (!ruta.get(pasanPaquetes.size()).localizacion.equals(punto.localizacion)) {
             throw new PuntoDeControlEquivocado();
         }
+
+        for (int iterador = 0; iterador < pasanPaquetes.size(); iterador++) {
+            if (pasanPaquetes.get(iterador).getFechaSalida() == null) {
+                throw new PuntoDeControlEquivocado();
+            }
+        }
     }
 
     public void notificaEntrada(LocalDateTime fechaEntrada, PuntoDeControl punto) {
@@ -152,8 +158,8 @@ public class Paquete implements Serializable {
         PasoPorPuntoDeControl nuevo = new PasoPorPuntoDeControl(punto, fechaEntrada);
         pasanPaquetes.add(nuevo);
     }
-    
-    public PuntoDeControl getPuntoActual(){
+
+    public PuntoDeControl getPuntoActual() {
         return ruta.get(pasanPaquetes.size());
     }
 
