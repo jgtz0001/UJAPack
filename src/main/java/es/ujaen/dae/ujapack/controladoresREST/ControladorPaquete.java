@@ -20,6 +20,8 @@ import es.ujaen.dae.ujapack.entidades.PuntoDeControl;
 import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.LocalizadorNoValido;
 import es.ujaen.dae.ujapack.excepciones.PaqueteNoRegistrado;
+import es.ujaen.dae.ujapack.excepciones.PaqueteYaEntregado;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,13 +94,6 @@ public class ControladorPaquete {
     @GetMapping("/paqueteruta/{localizador}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<DTOPuntoDeControl> verPuntoPaquete(@PathVariable String localizador) {
-        // try {
-        // int id = Integer.parseInt(localizador);
-        // return new DTORuta(serviPack.buscarPaquete(id));
-        // } catch (NumberFormatException e) {
-        // throw new LocalizadorNoValido();
-        // }
-        // int id = Integer.parseInt(idpc);
         Optional<PuntoDeControl> pc = serviPack.verPunto(localizador);
         return pc.map(p -> ResponseEntity.ok(new DTOPuntoDeControl(p)))
                 .orElse(ResponseEntity.notFound().build());
@@ -116,6 +111,16 @@ public class ControladorPaquete {
         Optional<Oficina> oficina = serviPack.verOficinas(id);
         return oficina.map(p -> ResponseEntity.ok(new DTOOficina(p)))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/paquetes/{localizador}/notificarcentrologistico/{idCentro}")
+    ResponseEntity<Void> notificarPasoCentroLogistico(@PathVariable int localizador, @PathVariable int idCentro) {
+        try {
+            serviPack.notificarSalida(localizador, LocalDateTime.now(), idCentro);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (PaqueteYaEntregado e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 
 }

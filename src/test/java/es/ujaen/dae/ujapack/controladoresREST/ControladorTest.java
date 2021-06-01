@@ -393,6 +393,55 @@ public class ControladorTest {
         DTOPaquete envioEstado = respuesta.getBody();
         Assertions.assertThat(envioEstado.getEstado()).isEqualTo(Paquete.Estado.EnTransito.toString());
     }
+    
+     @Test
+    public void testActualizarPasoPuntoControlCentro(){
+       DTOCliente remitente = new DTOCliente(
+                "11995668",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenarooo@gmail.com",
+                "Calle La Calle 13",
+                "Jaén",
+                "Jaén");
+
+        DTOCliente destinatario = new DTOCliente(
+                "11995665",
+                "Jenaro",
+                "Camara Colmenero",
+                "jenaroo@gmail.com",
+                "Calle La Calle 13",
+                "Córdoba",
+                "Córdoba");
+
+        DTOPaquete paq = new DTOPaquete(
+                1111111113,
+                "EnTransito",
+                20.0f,
+                3.5f,
+                9.0f,
+                remitente,
+                destinatario
+        );
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
+        ResponseEntity<DTOPaquete> respuesta = restTemplate.postForEntity(
+                "/paquetes",
+                paq,
+                DTOPaquete.class
+        );
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        
+        DTOPaquete paqueteCreado = respuesta.getBody();
+        DTORuta rutaEnvioCreado = new DTORuta (paqueteCreado.getRuta(), paqueteCreado.getEstado());
+        
+        ResponseEntity<Void> respuesta2 = restTemplate.postForEntity(
+                "/paquetes/{localizador}/notificarcentrologistico/{idCentro}",
+                "salida",Void.class,paqueteCreado.getLocalizador(),16
+        );
+        
+        Assertions.assertThat(respuesta2.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
 
     @BeforeEach
     void limpiadoBaseDeDatos() {

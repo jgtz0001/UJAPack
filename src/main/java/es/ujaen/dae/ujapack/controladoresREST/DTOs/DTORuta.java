@@ -19,7 +19,6 @@ public class DTORuta {
     private List<DTOPuntoDeControl> ruta;
     //punto de ruta por el que va 
     String estado;
-    private DTOPaquete paquete;
 
     public DTORuta() {
         this.estado = "EnTransito";
@@ -33,14 +32,7 @@ public class DTORuta {
             this.ruta.add(new DTOPuntoDeControl(puntoControl));
         }
     }
-    public DTORuta(List<PuntoDeControl> ruta, String estado, DTOPaquete paquete) {
-        this.estado = estado;
-        this.paquete = paquete;
-        this.ruta = new ArrayList<>();
-        for (PuntoDeControl puntoControl : ruta) {
-            this.ruta.add(new DTOPuntoDeControl(puntoControl));
-        }
-    }
+   
 
     public DTORuta(Paquete paquete) {
         this.estado = paquete.getEstado();

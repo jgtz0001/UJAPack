@@ -208,7 +208,7 @@ public class ServicioUjaPack {
     }
 
     /*
-* Devuleve el importe al crear un paquete.
+* Devuelve el importe al crear un paquete.
 * @param numPuntosControl Número de puntos de control por los que pasa el paquete.
 * @param peso Peso del paquete.
 * @param altura Altura del paquete.
@@ -236,10 +236,6 @@ public class ServicioUjaPack {
 * @return devuelve un nodo con todos sus atributos completos.
      */
     private Nodo nodoConexiones(List<Integer> lista, int id, boolean[] visitados) {
-//        CentroDeLogistica centro = repositorioCentroDeLogistica.BuscarIdCentro(id);//.orElseThrow(IdIncorrecto::new);
-//        if (centro == null) {
-//            throw new IdIncorrecto();
-//        }
         List<Integer> conexiones = repositorioCentroDeLogistica.BuscaIdCL(id);
         Nodo n = new Nodo(id, conexiones);
         for (int j = 0; j < lista.size(); j++) {
@@ -386,15 +382,8 @@ public class ServicioUjaPack {
         int id = Integer.parseInt(localizador);
         Paquete paquet = repositorioPaquete.buscar(id);
         Optional<PuntoDeControl> pc = Optional.ofNullable(paquet.getPuntoActual());
-//        Optional<PuntoDeControl> pc = repositorioPuntoDeControl.buscarPunto(id);
         return pc;
     }
-
-//    public Optional<PuntoDeControl> verPunto(@NotBlank String idpc) {
-//        int id = Integer.parseInt(idpc);
-//        Optional<PuntoDeControl> pc = repositorioPuntoDeControl.buscarPunto(id);
-//        return pc;
-//    }
     
     public Optional<CentroDeLogistica> verCentros(@NotBlank String id) {
         int idd = Integer.parseInt(id);
@@ -409,7 +398,7 @@ public class ServicioUjaPack {
     }
 
     /**
-     * Dar de alta cliente y crear una cuenta asociada
+     * Dar de alta cliente
      *
      * @param cliente el cliente a dar de alta
      */

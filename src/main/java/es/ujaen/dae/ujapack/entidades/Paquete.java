@@ -117,7 +117,7 @@ public class Paquete implements Serializable {
         }
 
         if (!tama.equals(numPuntosControl)) {
-            if (!ruta.get(pasanPaquetes.size()).localizacion.equals(punto.localizacion)) {
+            if (!ruta.get(pasanPaquetes.size()-1).localizacion.equals(punto.localizacion)) {
                 throw new PuntoDeControlEquivocado();
             }
         }

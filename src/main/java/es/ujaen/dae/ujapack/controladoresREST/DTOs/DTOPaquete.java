@@ -65,8 +65,9 @@ public class DTOPaquete {
         this.altura = paquete.getAltura();
         this.rem = new DTOCliente(paquete.getRemitente());
         this.dest = new DTOCliente(paquete.getDestinatario());
+        this.ruta = paquete.getRuta();
     }
-
+    
     public int getLocalizador() {
         return localizador;
     }

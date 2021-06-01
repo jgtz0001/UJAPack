@@ -81,12 +81,12 @@ public class ServicioUjapackTest {
         
         Assertions.assertThat(paquet.getEstado().equals(Estado.EnTransito));
 
-        serviPack.notificarSalida(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(1).getId());
+        serviPack.notificarSalida(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(0).getId());
         serviPack.notificarEntrada(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(1).getId());
 
         Assertions.assertThat(paquet.getEstado().equals(Estado.EnTransito));
 
-        serviPack.notificarSalida(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(2).getId());
+        serviPack.notificarSalida(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(1).getId());
         serviPack.notificarEntrada(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(2).getId());
 
         Assertions.assertThat(paquet.getEstado().equals(Estado.EnReparto));
@@ -125,7 +125,7 @@ public class ServicioUjapackTest {
 
         LocalDateTime fechaSalida = LocalDateTime.now();
         Assertions.assertThatThrownBy(() -> {
-            serviPack.notificarSalida(paquet.getLocalizador(), fechaSalida, 16);
+            serviPack.notificarSalida(paquet.getLocalizador(), fechaSalida, 1);
         });
     }
 
