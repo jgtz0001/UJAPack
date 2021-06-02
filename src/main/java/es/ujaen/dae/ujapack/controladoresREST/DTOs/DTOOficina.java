@@ -5,7 +5,6 @@
  */
 package es.ujaen.dae.ujapack.controladoresREST.DTOs;
 
-import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import es.ujaen.dae.ujapack.entidades.Oficina;
 
 /**
@@ -14,21 +13,24 @@ import es.ujaen.dae.ujapack.entidades.Oficina;
  */
 public class DTOOficina {
 
-    CentroDeLogistica centroLog;
+    int idCentroLog;
+    String localizacion;
 
     public DTOOficina() {
     }
 
-    public DTOOficina(CentroDeLogistica centro) {
-        this.centroLog = centro;
+    public DTOOficina(int centro, String localizacion) {
+        this.idCentroLog = centro;
+        this.localizacion = localizacion;
     }
     
     public DTOOficina(Oficina oficina) {
-        this.centroLog = oficina.getCentroLog();
+        this.idCentroLog = oficina.getCentroLog().getId();
+        this.localizacion = oficina.getLocalizacion();
     }
 
-    public CentroDeLogistica getCentroLog() {
-        return centroLog;
+    public int getIdCentroLog() {
+        return idCentroLog;
     }
 
     
