@@ -18,31 +18,31 @@ import org.junit.jupiter.api.Test;
  * @author Pablo
  */
 public class PaqueteTest {
-    
-    public PaqueteTest(){
+
+    public PaqueteTest() {
     }
-    
+
     @Test
     void testValidaPaquete() {
-        
+
         Paquete paquete = new Paquete(12345678, 25.0f, 2.0f, 1.0f);
-        
+
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        
+
         Set<ConstraintViolation<Paquete>> violations = validator.validate(paquete);
-        
+
         Assertions.assertThat(violations).isEmpty();
     }
-    
+
     @Test
     void testNoValidaRutaPaquete() {
-        
+
         Paquete paquete = new Paquete(12345678, 25.0f, 2.0f, 1.0f);
-        
+
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        
+
         Set<ConstraintViolation<Paquete>> violations = validator.validate(paquete);
-        
+
         Assertions.assertThat(violations).isEmpty();
     }
 }

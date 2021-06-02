@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import es.ujaen.dae.ujapack.entidades.CentroDeLogistica;
 import es.ujaen.dae.ujapack.entidades.Oficina;
-import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.DNINoValido;
 import java.util.Collections;
 import org.springframework.stereotype.Service;

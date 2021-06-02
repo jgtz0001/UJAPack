@@ -18,14 +18,14 @@ import org.junit.jupiter.api.Test;
  * @author Pablo
  */
 public class ClienteTest {
-    
+
     public ClienteTest() {
-   
+
     }
-    
+
     @Test
     void testValidaCliente() {
-        
+
         Cliente cliente = new Cliente(
                 "11993325",
                 "Jenaro",
@@ -37,13 +37,13 @@ public class ClienteTest {
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Cliente>> violations = validator.validate(cliente);
-                
+
         Assertions.assertThat(violations).isEmpty();
     }
-    
+
     @Test
     void testNoValidaCliente() {
-        
+
         Cliente cliente = new Cliente(
                 "11993323356",
                 "Jenaro",
@@ -55,8 +55,8 @@ public class ClienteTest {
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Cliente>> violations = validator.validate(cliente);
-                
+
         Assertions.assertThat(violations).isNotEmpty();
     }
-    
+
 }

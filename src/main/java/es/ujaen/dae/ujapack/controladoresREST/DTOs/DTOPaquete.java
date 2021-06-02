@@ -23,11 +23,11 @@ public class DTOPaquete {
     float altura;
 
     private DTOCliente rem;
-    
+
     private DTOCliente dest;
-    
-     private List<PuntoDeControl> ruta;
-    
+
+    private List<PuntoDeControl> ruta;
+
     public DTOPaquete() {
     }
 
@@ -40,8 +40,8 @@ public class DTOPaquete {
         this.rem = remitente;
         this.dest = desti;
     }
-    
-    public DTOPaquete(int localizador, String estado, float importe, float peso, float altura, DTOCliente remitente, DTOCliente desti, List<PuntoDeControl> ruta ) {
+
+    public DTOPaquete(int localizador, String estado, float importe, float peso, float altura, DTOCliente remitente, DTOCliente desti, List<PuntoDeControl> ruta) {
         this.localizador = localizador;
         this.estado = estado;
         this.importe = importe;
@@ -51,6 +51,7 @@ public class DTOPaquete {
         this.dest = desti;
         this.ruta = ruta;
     }
+
     public DTOPaquete(DTOCliente rem, DTOCliente dest) {
         this.rem = rem;
         this.dest = dest;
@@ -67,7 +68,7 @@ public class DTOPaquete {
         this.dest = new DTOCliente(paquete.getDestinatario());
         this.ruta = paquete.getRuta();
     }
-    
+
     public int getLocalizador() {
         return localizador;
     }

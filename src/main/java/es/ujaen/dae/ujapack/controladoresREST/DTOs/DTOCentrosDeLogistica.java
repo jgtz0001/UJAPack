@@ -14,30 +14,31 @@ import java.util.List;
  * @author PCJoseGabriel
  */
 public class DTOCentrosDeLogistica {
-     
+
     private List<Integer> conexiones;
 
     private List<String> provincias;
 
     private List<Oficina> listaOficinas;
 
-    
-    public DTOCentrosDeLogistica (){}
+    public DTOCentrosDeLogistica() {
+    }
 
-       public DTOCentrosDeLogistica ( List<Integer> conexiones,List<String> provincias, List<Oficina> listaOficinas){
-       
-         this.conexiones=conexiones;
-         this.listaOficinas=listaOficinas;
-         this.provincias=provincias;
-       
-       }
-       public DTOCentrosDeLogistica (CentroDeLogistica centrologistica){
-           
-         this.conexiones = centrologistica.getConexiones();
-         this.listaOficinas = centrologistica.getListaOficinas();
-         this.provincias = centrologistica.getProvincias();
-       }
-       
+    public DTOCentrosDeLogistica(List<Integer> conexiones, List<String> provincias, List<Oficina> listaOficinas) {
+
+        this.conexiones = conexiones;
+        this.listaOficinas = listaOficinas;
+        this.provincias = provincias;
+
+    }
+
+    public DTOCentrosDeLogistica(CentroDeLogistica centrologistica) {
+
+        this.conexiones = centrologistica.getConexiones();
+        this.listaOficinas = centrologistica.getListaOficinas();
+        this.provincias = centrologistica.getProvincias();
+    }
+
     public List<Integer> getConexiones() {
         return conexiones;
     }
@@ -49,5 +50,5 @@ public class DTOCentrosDeLogistica {
     public List<Oficina> getListaOficinas() {
         return listaOficinas;
     }
-    
+
 }

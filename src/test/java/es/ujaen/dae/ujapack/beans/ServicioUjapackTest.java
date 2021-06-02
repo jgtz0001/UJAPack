@@ -34,13 +34,12 @@ public class ServicioUjapackTest {
     RepositorioPuntoDeControl repositorioPuntoDeControl;
 
     @Test
-    public void TestAccesoServicioUjaPack(){
+    public void TestAccesoServicioUjaPack() {
         Assertions.assertThat(serviPack).isNotNull();
     }
-    
-    
+
     @Test
-     
+
     public void TestPruebaEnvios() throws IOException {
 
         Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
@@ -53,7 +52,7 @@ public class ServicioUjapackTest {
         serviPack.altaCliente(Destinatario2);
         Cliente Destinatario3 = new Cliente("12334246", "pola", "tere", "hila@gmail.com", "jaen", "Santa Cruz de Tenerife", "Santa Cruz de Tenerife");
         serviPack.altaCliente(Destinatario3);
-        
+
         Paquete e0 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0, 0);
         Paquete e1 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario1, 0);
         Paquete e2 = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario2, 0);
@@ -67,18 +66,17 @@ public class ServicioUjapackTest {
         Assertions.assertThat(serviPack.comprobarImporte(0.004000000189989805, serviPack.calcularImporte(3, 1, 1, 1)));
 
     }
+
     @Test
-     
+
     public void TestComprobarEstados() throws IOException {
         Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
         serviPack.altaCliente(Remitente1);
         Cliente Destinatario0 = new Cliente("12334243", "juan", "pepe", "pp@gmail.com", "jaen", "Córdoba", "Córdoba");
         serviPack.altaCliente(Destinatario0);
-        
 
         Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0, 0);
 
-        
         Assertions.assertThat(paquet.getEstado().equals(Estado.EnTransito));
 
         serviPack.notificarSalida(paquet.getLocalizador(), LocalDateTime.now(), paquet.getRuta().get(0).getId());
@@ -95,9 +93,9 @@ public class ServicioUjapackTest {
 
         Assertions.assertThat(paquet.getEstado().equals(Estado.Entregado));
     }
-    
+
     @Test
-       
+
     public void TestRutaIncorrectaPuntoFueraDeRuta() throws IOException {
         Cliente Remitente1 = new Cliente("12323234", "jose", "camara", "jj@gmail.com", "jaen", "Jaén", "Jaén");
         serviPack.altaCliente(Remitente1);
@@ -107,14 +105,14 @@ public class ServicioUjapackTest {
         Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0, 0);
 
         LocalDateTime fechaSalida = LocalDateTime.now();
-       
+
         Assertions.assertThatThrownBy(() -> {
             serviPack.notificarSalida(paquet.getLocalizador(), fechaSalida, 5);
         });
     }
 
     @Test
-     
+
     public void TestRutaIncorrectaPuntoDeRutaAtrasado() throws IOException {
         Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Jaén", "Jaén", "Jaén");
         serviPack.altaCliente(Remitente1);
@@ -130,7 +128,7 @@ public class ServicioUjapackTest {
     }
 
     @Test
-      
+
     public void TestRutaIncorrectaPuntoDeRutaAdelantado() throws IOException {
         Cliente Remitente1 = new Cliente("12323234", "Jose", "Camara", "jj@gmail.com", "Jaén", "Jaén", "Jaén");
         serviPack.altaCliente(Remitente1);
@@ -139,12 +137,11 @@ public class ServicioUjapackTest {
 
         Paquete paquet = serviPack.altaEnvio(1, 1, 1, Remitente1, Destinatario0, 0);
         LocalDateTime fechaSalida = LocalDateTime.now();
-        
+
         Assertions.assertThatThrownBy(() -> {
             serviPack.notificarSalida(paquet.getLocalizador(), fechaSalida, 13);
         });
     }
-    
 
     @BeforeEach
     void limpiadoBaseDeDatos() {

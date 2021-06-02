@@ -17,7 +17,6 @@ import java.util.List;
 public class DTORuta {
 
     private List<DTOPuntoDeControl> ruta;
-    //punto de ruta por el que va 
     String estado;
 
     public DTORuta() {
@@ -32,12 +31,11 @@ public class DTORuta {
             this.ruta.add(new DTOPuntoDeControl(puntoControl));
         }
     }
-   
 
     public DTORuta(Paquete paquete) {
         this.estado = paquete.getEstado();
         this.ruta = new ArrayList<>();
-        for (int i = 0; i < paquete.getRuta().size(); i++){
+        for (int i = 0; i < paquete.getRuta().size(); i++) {
             this.ruta.add(new DTOPuntoDeControl(paquete.getRuta().get(i)));
         }
     }
@@ -51,4 +49,3 @@ public class DTORuta {
     }
 
 }
-

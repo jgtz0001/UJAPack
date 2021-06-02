@@ -19,7 +19,7 @@ public class Oficina extends PuntoDeControl implements Serializable {
     @OneToOne
     CentroDeLogistica centroLog;
 
-   public  Oficina(int id, String nombre, String localizacion) {
+    public Oficina(int id, String nombre, String localizacion) {
         super(id, nombre, localizacion);
         this.nombre = nombre;
         this.localizacion = localizacion;
@@ -31,7 +31,5 @@ public class Oficina extends PuntoDeControl implements Serializable {
     public CentroDeLogistica getCentroLog() {
         return centroLog;
     }
-    
-    
-  }
-  
+
+}

@@ -27,7 +27,6 @@ public class CentroDeLogistica extends PuntoDeControl implements Serializable {
     @ManyToMany(mappedBy = "centroLog")
     public List<Oficina> listaOficinas;
 
- 
     public CentroDeLogistica() {
     }
 
@@ -58,7 +57,8 @@ public class CentroDeLogistica extends PuntoDeControl implements Serializable {
     public List<String> getProvincias() {
         return provincias;
     }
-   public List<Oficina> getListaOficinas() {
+
+    public List<Oficina> getListaOficinas() {
         return listaOficinas;
     }
 

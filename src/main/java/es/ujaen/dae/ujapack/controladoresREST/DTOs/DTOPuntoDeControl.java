@@ -34,7 +34,7 @@ public class DTOPuntoDeControl {
         this.localizacion = puntoDeControl.getLocalizacion();
         this.idCL = puntoDeControl.getIdCL();
     }
-    
+
     public int getId() {
         return id;
     }
@@ -50,5 +50,5 @@ public class DTOPuntoDeControl {
     public int getIdCL() {
         return idCL;
     }
-   
+
 }

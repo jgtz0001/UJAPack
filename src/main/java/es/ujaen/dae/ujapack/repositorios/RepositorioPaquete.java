@@ -35,23 +35,20 @@ public class RepositorioPaquete {
     public Optional<Paquete> buscarPaquetes(int localizador) {
         return Optional.ofNullable(em.find(Paquete.class, localizador));
     }
-    
+
     @Transactional
     public List<PuntoDeControl> buscarRutaPaquetes(int localizador) {
         Paquete paquete = em.createQuery("select h from Paquete h WHERE h.id = '" + localizador + "'",
-            Paquete.class).getSingleResult();
+                Paquete.class).getSingleResult();
         return paquete.getRuta();
     }
-    
+
     public void guardar(Paquete paquete) {
         em.persist(paquete);
     }
 
-    
     public void actualizarPaquete(Paquete paquete) {
         em.merge(paquete);
     }
-    
-    
 
 }

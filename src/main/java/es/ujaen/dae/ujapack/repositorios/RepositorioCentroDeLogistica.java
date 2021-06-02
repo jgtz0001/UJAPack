@@ -30,6 +30,7 @@ public class RepositorioCentroDeLogistica {
     public CentroDeLogistica buscarPorId(int id) {
         return em.find(CentroDeLogistica.class, id);
     }
+
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Optional<CentroDeLogistica> buscarCentros(int id) {
         return Optional.ofNullable(em.find(CentroDeLogistica.class, id));

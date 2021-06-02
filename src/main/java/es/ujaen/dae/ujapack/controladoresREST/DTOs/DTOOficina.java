@@ -23,7 +23,7 @@ public class DTOOficina {
         this.idCentroLog = centro;
         this.localizacion = localizacion;
     }
-    
+
     public DTOOficina(Oficina oficina) {
         this.idCentroLog = oficina.getCentroLog().getId();
         this.localizacion = oficina.getLocalizacion();
@@ -33,5 +33,4 @@ public class DTOOficina {
         return idCentroLog;
     }
 
-    
 }

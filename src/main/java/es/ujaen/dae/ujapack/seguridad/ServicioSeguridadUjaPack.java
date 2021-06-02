@@ -15,27 +15,31 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  *
  * @author Pablo
  */
-
 @Configuration
-public class ServicioSeguridadUjaPack extends WebSecurityConfigurerAdapter{
-   
+public class ServicioSeguridadUjaPack extends WebSecurityConfigurerAdapter {
+
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-            .withUser("usuario").roles("USUARIO").password("{noop}usuario")
-            .and()
-            .withUser("admin").roles("ADMIN", "USUARIO").password("{noop}admin");
+                .withUser("usuario").roles("USUARIO").password("{noop}usuario")
+                .and()
+                .withUser("admin").roles("ADMIN", "USUARIO").password("{noop}admin");
     }
-    
+
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable();
         httpSecurity.httpBasic();
-        
+
         httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/").permitAll();
         httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/paquetes/").hasRole("ADMIN");
         httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/clientes/").hasRole("ADMIN");
-        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/clientes/**").hasAnyRole("USUARIO","ADMIN");
-        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/paquetes/**").hasAnyRole("USUARIO","ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/clientes/**").hasAnyRole("USUARIO", "ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/paquetes/{localizador}").hasAnyRole("USUARIO", "ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/centro/**").hasAnyRole("USUARIO", "ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/oficina/**").hasAnyRole("USUARIO", "ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/paqueteruta/{localizador}").hasAnyRole("USUARIO", "ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/paquetes/{localizador}/notificarcentrologistico/{idCentro}").hasRole("ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/paquetes/{localizador}/notificarsalidacentrologistico/{idCentro}").hasRole("ADMIN");    
     }
 }

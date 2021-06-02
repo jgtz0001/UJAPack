@@ -35,8 +35,9 @@ public class LimpiadoBaseDeDatos {
 
     final String deleteFrom = "delete from ";
 
-   
-    /** Realizar borrado */
+    /**
+     * Realizar borrado
+     */
     public void limpiar() {
         transactionTemplate.executeWithoutResult(transactionStatus -> {
             for (String tabla : tablas) {
@@ -45,6 +46,4 @@ public class LimpiadoBaseDeDatos {
         });
     }
 
-
 }
-

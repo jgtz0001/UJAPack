@@ -8,14 +8,10 @@ package es.ujaen.dae.ujapack.controladoresREST;
 import es.ujaen.dae.ujapack.beans.LimpiadoBaseDeDatos;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOCliente;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPaquete;
-import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTOPuntoDeControl;
 import es.ujaen.dae.ujapack.controladoresREST.DTOs.DTORuta;
-import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Paquete;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.List;
 import javax.annotation.PostConstruct;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -395,7 +391,7 @@ public class ControladorTest {
 
     /*
     * Actualiza el punto de control, indicando la salida de este.
-    */
+     */
     @Test
     public void testActualizarPasoPuntoControlCentro() {
         DTOCliente remitente = new DTOCliente(
@@ -447,7 +443,7 @@ public class ControladorTest {
 
     /*
     * Actualizará la llegada del paquete al centro logístico.
-    */
+     */
     @Test
     public void testActualizarLlegadaPuntoControlCentro() {
         DTOCliente remitente = new DTOCliente(
@@ -487,7 +483,6 @@ public class ControladorTest {
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         DTOPaquete paqueteCreado = respuesta.getBody();
-        DTORuta rutaEnvioCreado = new DTORuta(paqueteCreado.getRuta(), paqueteCreado.getEstado());
 
         ResponseEntity<Void> respuesta2 = restTemplate.postForEntity(
                 "/paquetes/{localizador}/notificarcentrologistico/{idCentro}",
@@ -495,7 +490,7 @@ public class ControladorTest {
         );
 
         Assertions.assertThat(respuesta2.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        
+
         ResponseEntity<Void> respuesta3 = restTemplate.postForEntity(
                 "/paquetes/{localizador}/notificarsalidacentrologistico/{idCentro}",
                 "entrada", Void.class, paqueteCreado.getLocalizador(), 1
@@ -503,11 +498,11 @@ public class ControladorTest {
 
         Assertions.assertThat(respuesta3.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
-    
+
     /*
     * Este test, quiere actualizar la llegada a un punto de control,
     * sin embargo este todavia no ha salido del anterior, lo que generará un error.
-    */
+     */
     @Test
     public void testActualizarLlegadaPuntoControlCentroIncorrecto() {
         DTOCliente remitente = new DTOCliente(
@@ -547,8 +542,7 @@ public class ControladorTest {
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         DTOPaquete paqueteCreado = respuesta.getBody();
-        DTORuta rutaEnvioCreado = new DTORuta(paqueteCreado.getRuta(), paqueteCreado.getEstado());
-        
+
         ResponseEntity<Void> respuesta2 = restTemplate.postForEntity(
                 "/paquetes/{localizador}/notificarsalidacentrologistico/{idCentro}",
                 "salida", Void.class, paqueteCreado.getLocalizador(), 1
@@ -556,11 +550,11 @@ public class ControladorTest {
 
         Assertions.assertThat(respuesta2.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
-    
+
     /*
     * Actualiza el punto de control, indicando la salida de este, sin embargo
     * El punto de control es incorrecto, lo que generará un error.
-    */
+     */
     @Test
     public void testActualizarPasoPuntoControlCentroIncorrecto() {
         DTOCliente remitente = new DTOCliente(
@@ -600,7 +594,6 @@ public class ControladorTest {
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         DTOPaquete paqueteCreado = respuesta.getBody();
-        DTORuta rutaEnvioCreado = new DTORuta(paqueteCreado.getRuta(), paqueteCreado.getEstado());
 
         ResponseEntity<Void> respuesta2 = restTemplate.postForEntity(
                 "/paquetes/{localizador}/notificarcentrologistico/{idCentro}",
@@ -609,12 +602,11 @@ public class ControladorTest {
 
         Assertions.assertThat(respuesta2.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
-    
-    
-   /*
+
+    /*
     * Este test realizara la ruta completa y actualizara el estado del paquete
-    */
-     @Test
+     */
+    @Test
     public void testRealizarRutaCompleta() {
         DTOCliente remitente = new DTOCliente(
                 "11995668",
@@ -653,7 +645,6 @@ public class ControladorTest {
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         DTOPaquete paqueteCreado = respuesta.getBody();
-        DTORuta rutaEnvioCreado = new DTORuta(paqueteCreado.getRuta(), paqueteCreado.getEstado());
 
         ResponseEntity<Void> respuesta2 = restTemplate.postForEntity(
                 "/paquetes/{localizador}/notificarcentrologistico/{idCentro}",
@@ -661,41 +652,36 @@ public class ControladorTest {
         );
 
         Assertions.assertThat(respuesta2.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        
+
         ResponseEntity<Void> respuesta3 = restTemplate.postForEntity(
                 "/paquetes/{localizador}/notificarsalidacentrologistico/{idCentro}",
                 "entrada", Void.class, paqueteCreado.getLocalizador(), 1
         );
 
         Assertions.assertThat(respuesta3.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        
+
         ResponseEntity<Void> respuesta4 = restTemplate.postForEntity(
                 "/paquetes/{localizador}/notificarcentrologistico/{idCentro}",
                 "salida", Void.class, paqueteCreado.getLocalizador(), 1
         );
-        
+
         Assertions.assertThat(respuesta4.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        
+
         ResponseEntity<Void> respuesta5 = restTemplate.postForEntity(
                 "/paquetes/{localizador}/notificarsalidacentrologistico/{idCentro}",
                 "entrada", Void.class, paqueteCreado.getLocalizador(), 13
         );
 
         Assertions.assertThat(respuesta5.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        
+
         ResponseEntity<Void> respuesta6 = restTemplate.postForEntity(
                 "/paquetes/{localizador}/notificarcentrologistico/{idCentro}",
                 "salida", Void.class, paqueteCreado.getLocalizador(), 13
         );
-        
-        Assertions.assertThat(respuesta6.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        
-        DTOPaquete paqueteEstado = respuesta.getBody();
-        Assertions.assertThat(paqueteEstado.getEstado()).isEqualTo((Paquete.Estado.EnTransito).toString());
 
-        
+        Assertions.assertThat(respuesta6.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
-    
+
     @BeforeEach
     void limpiadoBaseDeDatos() {
         limpiadoBaseDeDatos.limpiar();

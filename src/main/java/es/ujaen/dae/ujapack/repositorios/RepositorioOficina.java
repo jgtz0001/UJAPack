@@ -41,7 +41,7 @@ public class RepositorioOficina {
                 Oficina.class).getSingleResult();
         return oficina;
     }
-    
+
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Optional<Oficina> buscarOficinas(int id) {
         return Optional.ofNullable(em.find(Oficina.class, id));
